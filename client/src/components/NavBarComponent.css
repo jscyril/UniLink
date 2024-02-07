@@ -1,0 +1,189 @@
+.divheader-navbar1 {
+  width: 100%;
+  position: relative;
+  background-color: #1a1a1b;
+  height: 85px;
+  z-index: 0;
+}
+.header-navbarlogovector-icon1 {
+  width: 40px;
+  position: relative;
+  height: 43px;
+  object-fit: cover;
+}
+.header-navbarlogotext1 {
+  position: relative;
+  font-size: 29px;
+  font-family: Kanit;
+  color: #707dff;
+  text-align: left;
+}
+.header-navbarlogo1 {
+  cursor: pointer;
+  border: 0;
+  padding: 6px 23px;
+  background-color: transparent;
+  width: 199px;
+  height: 55px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  gap: 13px;
+}
+.header-navbarsearch-bar1 {
+  border: 1px solid rgba(52, 53, 54, 0.6);
+  outline: 0;
+  font-family: Inter;
+  font-size: 14px;
+  background-color: rgba(39, 39, 41, 0.9);
+  width: 564px;
+  border-radius: 41px;
+  box-sizing: border-box;
+  height: 40px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 10px 16px;
+  color: #ffffff;
+}
+.header-navbarprofile-dropdown-icon3 {
+  width: 18px;
+  position: relative;
+  height: 20px;
+  object-fit: cover;
+}
+.header-navbarprofile-dropdown-icon4 {
+  width: 25px;
+  position: relative;
+  height: 25px;
+  object-fit: cover;
+}
+.header-navbarprofile-dropdown9 {
+  position: relative;
+  font-size: 14px;
+  font-family: Kanit;
+  color: #fff;
+  text-align: left;
+}
+.header-navbarprofile-dropdown8 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.header-navbarprofile-dropdown-icon5 {
+  width: 11px;
+  position: relative;
+  border-radius: 1px;
+  height: 6px;
+  object-fit: cover;
+}
+.header-navbarprofile-dropdown6,
+.header-navbarprofile-dropdown7 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.header-navbarprofile-dropdown7 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  gap: 47px;
+}
+.header-navbarprofile-dropdown6 {
+  width: 147px;
+  height: 25px;
+  position: relative;
+  display: inline-block;
+}
+.header-navbarprofile-dropdown5 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 80px;
+}
+.header-navbar1 {
+  margin: 0 !important;
+  width: 100%;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 70px;
+  box-sizing: border-box;
+  z-index: 1;
+}
+.navbar-component1 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+  gap: 10px;
+}
+
+.addpost{
+  background: none;
+  border: none;
+  cursor: pointer;
+  height: 25px;
+  width: 25px;
+  position: relative;
+  left: 50px;
+  
+}
+
+.dropdowncontent {
+  display: none;
+  position: absolute;
+  background-color: #1a1a1b; /* Set background color */
+  min-width: 160px; /* Adjust width as needed */
+  border-radius: 8px; /* Add border radius for better appearance */
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); /* Add box shadow */
+  z-index: 1;
+  font-size: 14px;
+  font-family: Kanit;
+  color: #fff;
+  text-align: center; /* Ensure dropdown is above other elements */
+}
+
+.dropdowncontent a {
+  color: white; /* Set text color to white */
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+
+
+.header-navbarprofile-dropdown6 {
+  position: relative; /* Add position relative for proper positioning */
+}
+
+.header-navbarprofile-dropdown7 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  color: white; /* Set text color to white */
+}
+
+.header-navbarprofile-dropdown7:hover {
+  color: #707dff; /* Change text color on hover */
+}
+
+.header-navbarprofile-dropdown6:hover .dropdowncontent {
+  display: block; /* Show dropdown content on hover */
+}

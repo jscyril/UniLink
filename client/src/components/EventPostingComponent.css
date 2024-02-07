@@ -1,0 +1,130 @@
+.event-postingdiv-containerdi1 {
+  position: relative;
+  font-weight: 300;
+}
+.event-postingdiv-containerdi2 {
+  border: 1px solid #707dff;
+  outline: 0;
+  background-color: #28282a;
+  width: 600px;
+  position: relative;
+  border-radius: 8px;
+  box-sizing: border-box;
+  height: 40px;
+}
+.event-postingdiv-containerdi {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 9px;
+}
+.event-postingdiv-containerdi5 {
+  border: 1px solid #707dff;
+  outline: 0;
+  background-color: #28282a;
+  width: 600px;
+  position: relative;
+  border-radius: 8px;
+  box-sizing: border-box;
+  height: 130px;
+}
+.event-postingdiv-containerdi3 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+.event-postingdiv-containerdi-child {
+  width: 27px;
+  position: relative;
+  height: 27.5px;
+}
+.event-postingdiv-containerdi9 {
+  cursor: pointer;
+  border: 1px dashed #707dff;
+  padding: 8px 283px;
+  background-color: #28282a;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.event-postingdiv-containerdi7 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 21px;
+}
+.rectangle-input {
+  margin: 0;
+  width: 20px;
+  border: 2px solid #707dff;
+  box-sizing: border-box;
+  height: 20px;
+}
+.allow-comments,
+.rectangle-input {
+  position: relative;
+}
+.event-postingdiv-containerdi10 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+}
+.event-postingdiv-containerdi6 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 22px;
+}
+.post1 {
+  position: relative;
+  font-size: 24px;
+  font-weight: 500;
+  font-family: Montserrat;
+  color: #000;
+  text-align: left;
+}
+.event-postingdiv-container,
+.event-postingdiv-containerbu {
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.event-postingdiv-containerbu {
+  cursor: pointer;
+  border: 0;
+  padding: 10px 119px;
+  background-color: #707dff;
+  overflow: hidden;
+  flex-direction: row;
+}
+.event-postingdiv-container {
+  flex-direction: column;
+  gap: 15px;
+}
+.event-posting-component {
+  border-radius: 8px;
+  background-color: #1a1a1b;
+  box-shadow: 0 10px 12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 29px 48px;
+  text-align: left;
+  font-size: 24px;
+  color: #fff;
+  font-family: Montserrat;
+}

@@ -1,0 +1,215 @@
+.side-nav-bardiv-optionsbutto10 {
+  width: 29px;
+  position: relative;
+  height: 23px;
+  object-fit: cover;
+}
+.side-nav-bardiv-optionsbutto11 {
+  position: relative;
+  padding: 10px;
+  font-size: 24px;
+  font-weight: 300;
+  font-family: Montserrat;
+  color: #fff;
+  text-align: left;
+}
+.side-nav-bardiv-optionsbutto9 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+}
+
+.side-nav-bardiv-optionsbutto9,
+.side-nav-bardiv-optionsbutto12,
+.side-nav-bardiv-optionsbutto15 {
+  margin-left: 20px;
+}
+
+.side-nav-bardiv-optionsbutto13 {
+  width: 22.4px;
+  position: relative;
+  height: 21.3px;
+  object-fit: cover;
+}
+.side-nav-bardiv-optionsbutto12 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 0 0 3px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 17px;
+}
+.side-nav-bardiv-optionsbutto16 {
+  width: 22px;
+  position: relative;
+  height: 19px;
+  overflow: hidden;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.side-nav-bardiv-optionsbutto15 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 0 0 3px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.side-nav-bardiv-options1 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 0 0 16px;
+  gap: 22px;
+}
+.side-nav-bardivider1 {
+  width: 100%;
+  position: relative;
+  height: 2px;
+  object-fit: contain;
+}
+.side-nav-bardiv-clubsclubact7 {
+  width: 30px;
+  position: relative;
+  height: 30px;
+  object-fit: cover;
+}
+.side-nav-bardiv-clubsclubact6 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+.see-all1 {
+  position: relative;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: Montserrat;
+  color: #fff;
+  text-decoration: none;
+}
+.side-nav-bardiv-clubsclubact5 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+.side-nav-bardiv-clubsclubact9 {
+  display: inline-block;
+  position: relative;
+  left: 30px;
+  cursor: pointer;
+  border: 0.9px solid #d9d9d9;
+  padding: 1px 6px;
+  background-color: transparent;
+  border-radius: 5.17px;
+  overflow: hidden;
+}
+.side-nav-bardiv-clubsclubact5 {
+  gap: 71px;
+}
+.my-clubs1 {
+  width: 101px;
+  position: relative;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: Montserrat;
+  color: #e3e3e3;
+  text-align: left;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.my-clubs1 {
+  margin-top: 8px;
+}
+
+.side-nav-bardiv-clubsclublis9 {
+  cursor: pointer;
+  border: 0;
+  padding: 0 4px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.side-nav-bardiv-clubsclublis10 {
+  margin-top: 5px;
+  width: 30%;
+  position: relative;
+  border-top: 2px solid #262628;
+  box-sizing: border-box;
+  height: 2px;
+}
+.side-nav-bardiv-clubsclublis11 {
+  margin-top: 5px;
+  width: 55px;
+  position: relative;
+  font-weight: 300;
+  display: inline-block;
+}
+.side-nav-bardiv-clubsclublis8 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+.side-nav-bardiv-clubsclublis12,
+.side-nav-bardiv-clubsclublis13 {
+  width: 100px;
+  margin-top: 10px;
+  position: relative;
+  font-weight: 300;
+  display: block;
+}
+.side-nav-bardiv-clubsclublis13 {
+  width: 114px;
+}
+.side-nav-bar-component1,
+.side-nav-bardiv-clubs1,
+.side-nav-bardiv-clubsclublis7 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+}
+.side-nav-bar-component1,
+.side-nav-bardiv-clubs1 {
+  padding: 0 0 0 16px;
+  gap: 20px;
+}
+.side-nav-bar-component1 {
+  margin-left: 5%;
+  margin-top: 2%;
+  width: 15%;
+  border-radius: 10px;
+  background-color: #1a1a1b;
+  box-shadow: 0 10px 12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  padding: 44px 12px 274px;
+  gap: 31px;
+  text-align: left;
+  font-size: 24px;
+  color: #8e8686;
+  font-family: Montserrat;
+}

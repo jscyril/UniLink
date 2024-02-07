@@ -1,0 +1,138 @@
+.profile-cardiv-containerdiv-icon {
+  width: 90px;
+  position: relative;
+  height: 90px;
+  object-fit: cover;
+}
+.profile-cardiv-containerdiv-3 {
+  position: relative;
+  font-weight: 300;
+}
+.profile-cardiv-containerdiv-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 21px;
+}
+.profile-cardiv-containerdiv-child {
+  position: absolute;
+  top: 0;
+  left: 1.8px;
+  width: 25.9px;
+  height: 26.5px;
+  object-fit: contain;
+}
+.profile-cardiv-containerdiv-item {
+  position: absolute;
+  top: 27.2px;
+  left: 0;
+  max-height: 100%;
+  width: 26.3px;
+}
+.profile-cardiv-containerdiv-4 {
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  width: 27.6px;
+  position: relative;
+  height: 27.2px;
+}
+.profile-cardiv-containerdiv-1 {
+  width: 600px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 0 0 242px;
+  box-sizing: border-box;
+  gap: 212px;
+}
+.profile-cardiv-containerdiv-5 {
+  position: relative;
+  font-size: 12px;
+  font-weight: 300;
+}
+.profile-cardiv-containerdiv- {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 43px;
+}
+.user {
+  position: relative;
+}
+.profile-cardiv-containerdiv-9 {
+  border-radius: 39.77px;
+  background-color: rgba(50, 48, 55, 0.5);
+  border: 1.5px solid #707dff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15.296552658081055px;
+  font-size: 18.4px;
+}
+.profile-cardiv-containerdiv-7 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 9px;
+}
+.swo-wrapper {
+  background-color: rgba(50, 48, 55, 0.5);
+  border: 1.6px solid #707dff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15.518943786621094px;
+}
+.profile-cardiv-containerdiv-12 {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 15px;
+  font-size: 18.6px;
+}
+.profile-cardiv-containerdiv-10 {
+  gap: 8px;
+}
+.profile-cardiv-container,
+.profile-cardiv-containerdiv-10,
+.profile-cardiv-containerdiv-6 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.profile-cardiv-containerdiv-6 {
+  padding: 0 1px;
+  gap: 9px;
+  font-size: 32px;
+  font-family: Kanit;
+}
+.profile-cardiv-container {
+  position: absolute;
+  top: 40px;
+  left: calc(50% - 300px);
+  gap: 15px;
+}
+.profile-card-component {
+  width: 700px;
+  border-radius: 6px;
+  background-color: #1a1a1b;
+  box-shadow: 0 10px 12px rgba(27, 29, 39, 0.25);
+  height: 470px;
+  overflow: hidden;
+  text-align: left;
+  font-size: 24px;
+  color: #fff;
+  font-family: Montserrat;
+}
