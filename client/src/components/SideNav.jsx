@@ -50,7 +50,9 @@ export default function SideNav(props) {
               Clubs
             </h2>
           </button>
-          <div className="relative text-white">See All</div>
+          <a href="#" className="relative text-inherit no-underline">
+            See All
+          </a>
         </div>
         <div className="self-stretch flex flex-col items-start justify-start gap-[10px] text-base text-gray-100 font-abeezee">
           <div className="self-stretch h-[23px] flex flex-col items-start justify-between">
@@ -62,13 +64,14 @@ export default function SideNav(props) {
             <div className="w-20 relative box-border h-0.5 border-t-[2px] border-solid border-gray-300" />
           </div>
           {props.clubs.map((club) => (
-            <div key={club.id} className="self-stretch relative">
+            <a
+              key={club.id}
+              href={club.refLink}
+              className="self-stretch relative no-underline text-inherit"
+            >
               {club.clubName}
-            </div>
+            </a>
           ))}
-          {/* <div className="self-stretch relative">SWO</div>
-          <div className="self-stretch relative">CUSBMA</div>
-          <div className="self-stretch relative">SAMAGRA</div> */}
         </div>
       </div>
     </div>

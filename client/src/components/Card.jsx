@@ -28,9 +28,9 @@ export default function Card(props) {
   return (
     <div
       key={props.cardInfo.id}
-      className=" relative flex-row items-start justify-start text-base lg:flex-1 md:flex-[unset] md:self-stretch sm:flex-[unset] sm:self-stretch"
+      className=" my-2 relative flex-row items-start justify-start text-base lg:flex-1 md:flex-[unset] md:self-stretch sm:flex-[unset] sm:self-stretch"
     >
-      <div className=" flex-row items-center justify-start gap-[12px] border-r-[1px] border-solid border-darkslategray-100 border-l-[1px] lg:flex-col lg:gap-[12px] md:w-auto md:[align-self:unset] md:flex-col">
+      <div className=" flex-row items-center justify-start gap-[12px] rounded border-r-[1px] border-solid border-darkslategray-100 border-l-[1px] lg:flex-col lg:gap-[12px] md:w-auto md:[align-self:unset] md:flex-col">
         <div className=" sm:ml-auto sm:mt-1 w-[794px] box-border flex flex-col items-start justify-center py-0 px-7 gap-[20px] border-t-[1px] border-b-[1px] border-solid border-darkslategray-100 lg:self-stretch lg:w-auto md:self-stretch md:w-auto sm:self-stretch sm:w-auto ">
           <div className="self-stretch flex flex-row items-center justify-between">
             <div className="w-[196px] flex flex-row items-center justify-between">
