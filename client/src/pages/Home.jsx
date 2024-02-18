@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import NavBar from "../components/NavBar";
 import SideNav from "../components/SideNav";
 import Card from "../components/Card";
@@ -37,18 +36,15 @@ export default function Home() {
             <div className=" relative right-[150px] w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
               <SideNav clubs={postValue?.clubs} />
             </div>
-            <button
-              type="button"
-              className=" cursor-pointer bg-transparent text-inherit text-left font-inter"
-            >
-              <div className="lg:flex-row">
-                {postValue?.post.map((post) => (
-                  <Card key={post.id} cardInfo={post} />
-                ))}
-              </div>
-            </button>
+
+            <div className="lg:flex-row">
+              {postValue?.post.map((post) => (
+                <Card key={post.id} cardInfo={post} />
+              ))}
+            </div>
+
             <div className=" relative left-[150px] w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
-              <EventsBar />
+              <EventsBar events={postValue.events} />
             </div>
           </div>
         )}

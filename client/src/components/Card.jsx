@@ -1,4 +1,5 @@
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 export default function Card(props) {
   const getTimeAgo = (timestamp) => {
@@ -54,15 +55,18 @@ export default function Card(props) {
               </div>
             </button>
           </div>
-          <h2 className="m-0 relative text-5xl font-normal font-inherit">
-            {props.cardInfo.heading}
-          </h2>
+          <Link to="/post" className=" text-inherit no-underline">
+            <h2 className="m-0 relative text-5xl font-normal font-inherit">
+              {props.cardInfo.heading}
+            </h2>
+          </Link>
           <div className="self-stretch flex flex-row items-end justify-between text-xs">
             <div className="relative">{props.cardInfo.text}</div>
           </div>
           <div className="relative flex text-xs">
             {getTimeAgo(props.cardInfo.timestamp)}
           </div>
+
           {props.cardInfo.img && (
             <img
               className="self-stretch relative max-w-full overflow-hidden"

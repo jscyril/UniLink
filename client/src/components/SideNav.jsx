@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 export default function SideNav(props) {
   return (
     <div className=" sticky w-[235px] flex flex-col items-center justify-start gap-[24px] lg:hidden sm:hidden">
@@ -18,8 +19,11 @@ export default function SideNav(props) {
             alt=""
             src="/side-nav-bardivoptionsbuttonprofileicon@2x.png"
           />
+
           <h3 className="m-0 flex-1 relative text-base font-normal font-inter text-white text-left">
-            Profile
+            <Link to="/profile" className=" text-inherit no-underline">
+              Profile
+            </Link>
           </h3>
         </button>
         <button className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px]">
@@ -40,7 +44,7 @@ export default function SideNav(props) {
       />
       <div className="self-stretch flex flex-col items-start justify-start gap-[32px]">
         <div className="self-stretch flex flex-row items-end justify-between">
-          <button className="cursor-pointer [border:none] p-0 bg-[transparent] flex-1 flex flex-row items-center justify-start gap-[15px]">
+          <div className="flex-1 flex flex-row items-center justify-start gap-[15px]">
             <img
               className="w-[30px] relative h-[30px] object-cover"
               alt=""
@@ -49,10 +53,10 @@ export default function SideNav(props) {
             <h2 className="m-0 flex-1 relative text-5xl font-normal font-inter text-white text-left">
               Clubs
             </h2>
-          </button>
-          <a href="#" className="relative text-inherit no-underline">
+          </div>
+          <Link to="/clubs" className="relative text-inherit no-underline">
             See All
-          </a>
+          </Link>
         </div>
         <div className="self-stretch flex flex-col items-start justify-start gap-[10px] text-base text-gray-100 font-abeezee">
           <div className="self-stretch h-[23px] flex flex-col items-start justify-between">

@@ -1,6 +1,4 @@
-import Home from "../unilink/src/pages/Home";
-
-const homePageJSON = {
+export const homePageJSON = {
   username: "Jacob",
   clubs: [
     { id: 0, clubName: "SAMAGARA", refLink: "#" },
@@ -51,11 +49,8 @@ const homePageJSON = {
   ],
   events: [
     { id: 0, eventName: "Blossoms", refLink: "#" },
-    { id: 1, eventName: "Blossoms", refLink: "#" },
-    { id: 2, eventName: "Darpan", refLink: "#" },
+    { id: 1, eventName: "Darpan", refLink: "#" },
     { id: 2, eventName: "Bhasha Utsav", refLink: "#" },
     { id: 3, eventName: "Pedagogic League", refLink: "#" },
   ],
 };
-
-export default homePageJSON;

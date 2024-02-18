@@ -1,7 +1,7 @@
 import express from "express";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { homePageJSON } from "/home/jacobsc/Documents/Projects/Unilink/server/home.js";
+import { homePageJSON } from "./home.js";
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -16,7 +16,12 @@ const port = 3000;
 console.log(homePageJSON);
 
 app.get("/", (req, res) => {
-  res.send(homePageJSON);
+  res.json(homePageJSON);
+  // res.send("This is home page json");
+});
+
+app.get("/post", (req, res) => {
+  res.send("This is post page");
 });
 
 app.listen(port, () => {
