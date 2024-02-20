@@ -2,6 +2,7 @@ import express from "express";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { homePageJSON } from "./home.js";
+import { profileInfo } from "./profile.js";
 const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -22,6 +23,10 @@ app.get("/", (req, res) => {
 
 app.get("/post", (req, res) => {
   res.send("This is post page");
+});
+
+app.get("/profile", (req, res) => {
+  res.json(profileInfo);
 });
 
 app.listen(port, () => {

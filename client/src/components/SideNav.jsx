@@ -3,7 +3,22 @@ export default function SideNav(props) {
   return (
     <div className=" sticky w-[235px] flex flex-col items-center justify-start gap-[24px] lg:hidden sm:hidden">
       <div className="self-stretch flex flex-col items-start justify-start gap-[22px]">
-        <button className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]">
+        {/* <button className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]">
+          <img
+            className="w-[29px] relative h-[23px] object-cover"
+            alt=""
+            src="/side-nav-bardivoptionsbuttonhomeicon@2x.png"
+          />
+          <h3 className="m-0 flex-1 relative text-base font-normal font-inter text-white text-left">
+            <Link to="/" className=" text-inherit no-underline">
+              Home
+            </Link>
+          </h3>
+        </button> */}
+        <Link
+          to="/"
+          className=" text-inherit no-underline cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]"
+        >
           <img
             className="w-[29px] relative h-[23px] object-cover"
             alt=""
@@ -12,8 +27,11 @@ export default function SideNav(props) {
           <h3 className="m-0 flex-1 relative text-base font-normal font-inter text-white text-left">
             Home
           </h3>
-        </button>
-        <button className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px]">
+        </Link>
+        <Link
+          to="/profile"
+          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline"
+        >
           <img
             className="w-[22.4px] relative h-[21.3px] object-cover"
             alt=""
@@ -21,12 +39,13 @@ export default function SideNav(props) {
           />
 
           <h3 className="m-0 flex-1 relative text-base font-normal font-inter text-white text-left">
-            <Link to="/profile" className=" text-inherit no-underline">
-              Profile
-            </Link>
+            Profile
           </h3>
-        </button>
-        <button className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px]">
+        </Link>
+        <Link
+          to="/announcements"
+          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline"
+        >
           <img
             className="w-[22px] relative h-[19px] overflow-hidden shrink-0 object-cover"
             alt=""
@@ -35,7 +54,7 @@ export default function SideNav(props) {
           <h3 className="m-0 flex-1 relative text-base font-normal font-inter text-white text-left">
             Announcements
           </h3>
-        </button>
+        </Link>
       </div>
       <img
         className="self-stretch relative max-w-full overflow-hidden h-[1.9px] shrink-0 object-contain"
