@@ -69,9 +69,12 @@ export default function SideNav(props) {
               alt=""
               src="/side-nav-bardivclubsclubactionsbuttonclubsicon@2x.png"
             />
+            <Link to="/clubs" className="relative text-inherit no-underline">
             <h2 className="m-0 flex-1 relative text-5xl font-normal font-inter text-white text-left">
               Clubs
             </h2>
+          </Link>
+            
           </div>
           <Link to="/clubs" className="relative text-inherit no-underline">
             See All

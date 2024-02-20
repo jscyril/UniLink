@@ -23,11 +23,11 @@ export default function NavBar(props) {
         </div>
       </button>
       <form>
-        <input
-          className=" bg-search-icon bg-no-repeat bg-scroll bg-left  bg-[length:20px_20px] bg- pl-7 relative [outline:none] font-inter text-sm bg-gray-600 h-10 w-[440px] rounded-22xl box-border overflow-hidden shrink-0 flex flex-row items-center justify-start py-2.5 px-4 text-gray-200 border-[1px] border-solid border-gray-600 border-l-8 md:w-auto md:[align-self:unset] sm:bg-gray-500 sm:flex sm:w-auto sm:[align-self:unset] sm:h-auto sm:items-start sm:justify-start sm:pl-2 sm:pr-2 sm:box-border sm:border-[1px] sm:border-solid sm:border-darkslategray-200"
-          placeholder="Search for posts or clubs"
-          type="text"
-        />
+          <input
+            className="  pl-7 relative [outline:none] font-inter text-sm bg-gray-600 h-10 w-[440px] rounded-22xl box-border overflow-hidden shrink-0 flex flex-row items-center justify-start py-2.5 px-4 text-gray-200 border-[1px] border-solid border-gray-600 border-l-8 md:w-auto md:[align-self:unset] sm:bg-gray-500 sm:flex sm:w-auto sm:[align-self:unset] sm:h-auto sm:items-start sm:justify-start sm:pl-2 sm:pr-2 sm:box-border sm:border-[1px] sm:border-solid sm:border-darkslategray-200"
+            placeholder="Search"
+            type="text"
+          />
       </form>
       <button className=" bg-transparent cursor-pointer">
         <img
