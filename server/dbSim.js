@@ -54,3 +54,49 @@ export const homePageJSON = {
     { id: 3, eventName: "Pedagogic League", refLink: "#" },
   ],
 };
+
+export const profileInfo = {
+  userID: "123456",
+  username: "Jacob",
+  joinDate: "2022-02-16T08:30:00Z",
+  role: "Admin",
+  clubs: [
+    { id: 0, clubName: "ACC", refLink: "#" },
+    { id: 1, clubName: "SWO", refLink: "#" },
+  ],
+};
+
+export const clubsList = {
+  clubArr: [
+    {
+      id: 0,
+      clubName: "ACC",
+      avatar: "/acc.jpg",
+      postCount: 8,
+    },
+    {
+      id: 1,
+      clubName: "SWO",
+      avatar: "/swo.jpg",
+      postCount: 5,
+    },
+    {
+      id: 2,
+      clubName: "OZARK Prod",
+      avatar: "/ozark.png",
+      postCount: 3,
+    },
+    {
+      id: 3,
+      clubName: "SAMAGRA",
+      avatar: "/samagra.png",
+      postCount: 2,
+    },
+    {
+      id: 4,
+      clubName: "CUSBMA",
+      avatar: "/cusbma.png",
+      postCount: 2,
+    },
+  ],
+};

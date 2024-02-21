@@ -1,7 +1,9 @@
 import express from "express";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { homePageJSON } from "./home.js";
+import { homePageJSON } from "./dbSim.js";
+import { profileInfo } from "./dbSim.js";
+import { clubsList } from "./dbSim.js";
 import cors from "cors";
 const app = express();
 
