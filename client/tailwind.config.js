@@ -15,6 +15,8 @@ module.exports = {
           400: "#1a1a1b",
           500: "rgba(39, 39, 41, 0)",
           600: "rgba(39, 39, 41, 0.9)",
+          700: "#272729",
+          800: "#28282a",
         },
         mediumslateblue: "#707dff",
         darkslategray: {
@@ -31,6 +33,8 @@ module.exports = {
       fontFamily: {
         inter: "Inter",
         abeezee: "ABeeZee",
+        inherit: "inherit",
+        kanit: "Kanit",
       },
       borderRadius: {
         "12xl": "31px",
@@ -43,8 +47,16 @@ module.exports = {
       base: "16px",
       "5xl": "24px",
       xs: "12px",
+      xl: "20px",
       sm: "14px",
       "10xl": "29px",
+      "13xl": "32px",
+      "lg-6": "18.6px",
+      "lg-4": "18.4px",
+      "9xl": "28px",
+      "3xl": "22px",
+      "21xl": "40px",
+      mid: "17px",
       inherit: "inherit",
     },
     screens: {

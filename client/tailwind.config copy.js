@@ -11,12 +11,15 @@ module.exports = {
           400: "#1a1a1b",
           500: "rgba(39, 39, 41, 0)",
           600: "rgba(39, 39, 41, 0.9)",
+          700: "#272729",
+          800: "#28282a",
         },
         mediumslateblue: "#707dff",
         darkslategray: {
           100: "#323232",
           200: "rgba(52, 53, 54, 0)",
           300: "rgba(52, 53, 54, 0.6)",
+          400: "#2d2f2f",
         },
         white: "#fff",
         black: "#000",
@@ -27,6 +30,8 @@ module.exports = {
       fontFamily: {
         inter: "Inter",
         abeezee: "ABeeZee",
+        inherit: "inherit",
+        kanit: "Kanit",
       },
       borderRadius: {
         "12xl": "31px",

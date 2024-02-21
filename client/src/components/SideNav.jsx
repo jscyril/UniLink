@@ -16,9 +16,8 @@ export default function SideNav(props) {
           </h3>
         </button> */}
         <Link
-          to="/"
-          className=" text-inherit no-underline cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]"
-        >
+          to="/home"
+          className=" text-inherit no-underline cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]">
           <img
             className="w-[29px] relative h-[23px] object-cover"
             alt=""
@@ -30,8 +29,7 @@ export default function SideNav(props) {
         </Link>
         <Link
           to="/profile"
-          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline"
-        >
+          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline">
           <img
             className="w-[22.4px] relative h-[21.3px] object-cover"
             alt=""
@@ -44,8 +42,7 @@ export default function SideNav(props) {
         </Link>
         <Link
           to="/announcements"
-          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline"
-        >
+          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline">
           <img
             className="w-[22px] relative h-[19px] overflow-hidden shrink-0 object-cover"
             alt=""
@@ -70,11 +67,10 @@ export default function SideNav(props) {
               src="/side-nav-bardivclubsclubactionsbuttonclubsicon@2x.png"
             />
             <Link to="/clubs" className="relative text-inherit no-underline">
-            <h2 className="m-0 flex-1 relative text-5xl font-normal font-inter text-white text-left">
-              Clubs
-            </h2>
-          </Link>
-            
+              <h2 className="m-0 flex-1 relative text-5xl font-normal font-inter text-white text-left">
+                Clubs
+              </h2>
+            </Link>
           </div>
           <Link to="/clubs" className="relative text-inherit no-underline">
             See All
@@ -93,8 +89,7 @@ export default function SideNav(props) {
             <a
               key={club.id}
               href={club.refLink}
-              className="self-stretch relative no-underline text-inherit"
-            >
+              className="self-stretch relative no-underline text-inherit">
               {club.clubName}
             </a>
           ))}
