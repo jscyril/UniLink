@@ -38,7 +38,7 @@ export default function Card(props) {
             <div className="w-[196px] flex flex-row items-center justify-between">
               <div className="flex flex-row items-center justify-start gap-[14px]">
                 <img
-                  className="w-10 relative rounded-[50%] h-10 object-cover"
+                  className="w-10 relative rounded-[50%] h-10 object-cover mt-[5px]"
                   alt=""
                   src={props.cardInfo.avatar}
                 />

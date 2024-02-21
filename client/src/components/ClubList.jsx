@@ -20,7 +20,7 @@ export default function ClubList() {
     fetchData();
   }, []);
   return (
-    <div className="w-[720px] box-border flex flex-col items-center justify-start py-0 px-5 gap-[30px_0px] border-r-[1px] border-solid border-darkslategray-100 border-l-[1px] lg:flex-col lg:gap-[30px_0px] md:w-auto md:[align-self:unset] md:flex-col sm:flex-1 sm:pl-0 sm:pr-0 sm:box-border">
+    <div className="w-[720px] box-border flex  rounded-md flex-col items-center justify-start py-3 px-5 gap-[30px_0px] border-solid border-darkslategray-100 border-[1px] lg:flex-col lg:gap-[30px_0px] md:w-auto md:[align-self:unset] md:flex-col sm:flex-1 sm:pl-0 sm:pr-0 sm:box-border">
       {postValue?.clubArr.map((club) => (
         <div
           key={club.id}
