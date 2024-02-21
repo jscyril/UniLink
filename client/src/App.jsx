@@ -12,11 +12,7 @@ const App = () => {
         <Route path="/post" element={<Post />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/clubs" element={<Clubs />} />
-<<<<<<< HEAD
         <Route path="/announcements" element={<Annoucement />} />
-=======
-        {/* <Route path="/add-post" element={} /> */}
->>>>>>> 0edadbfeb4e4ceea850fb88c7e01dc3a808bb9dc
       </Routes>
     </Router>
   );

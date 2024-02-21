@@ -2,11 +2,7 @@ import express from "express";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { homePageJSON } from "./home.js";
-<<<<<<< HEAD
 import cors from "cors";
-=======
-import { profileInfo } from "./profile.js";
->>>>>>> 0edadbfeb4e4ceea850fb88c7e01dc3a808bb9dc
 const app = express();
 
 app.use(cors());
