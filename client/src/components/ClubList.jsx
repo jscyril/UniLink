@@ -17,9 +17,6 @@ export default function ClubList() {
         console.error("Error fetching data:", error);
       }
     };
-    if (postValue) {
-      console.log(postValue.clubArr);
-    }
     fetchData();
   }, []);
   return (
