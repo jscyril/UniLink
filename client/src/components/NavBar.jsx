@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 export default function NavBar(props) {
   const [showLogout, setShowLogout] = useState(false);
 
@@ -23,11 +24,11 @@ export default function NavBar(props) {
         </div>
       </button>
       <form>
-          <input
-            className="  pl-7 relative [outline:none] font-inter text-sm bg-gray-600 h-10 w-[440px] rounded-22xl box-border overflow-hidden shrink-0 flex flex-row items-center justify-start py-2.5 px-4 text-gray-200 border-[1px] border-solid border-gray-600 border-l-8 md:w-auto md:[align-self:unset] sm:bg-gray-500 sm:flex sm:w-auto sm:[align-self:unset] sm:h-auto sm:items-start sm:justify-start sm:pl-2 sm:pr-2 sm:box-border sm:border-[1px] sm:border-solid sm:border-darkslategray-200"
-            placeholder="Search"
-            type="text"
-          />
+        <input
+          className="  pl-7 relative [outline:none] font-inter text-sm bg-gray-600 h-10 w-[440px] rounded-22xl box-border overflow-hidden shrink-0 flex flex-row items-center justify-start py-2.5 px-4 text-gray-200 border-[1px] border-solid border-gray-600 border-l-8 md:w-auto md:[align-self:unset] sm:bg-gray-500 sm:flex sm:w-auto sm:[align-self:unset] sm:h-auto sm:items-start sm:justify-start sm:pl-2 sm:pr-2 sm:box-border sm:border-[1px] sm:border-solid sm:border-darkslategray-200"
+          placeholder="Search"
+          type="text"
+        />
       </form>
       <button className=" bg-transparent cursor-pointer">
         <img
@@ -55,12 +56,14 @@ export default function NavBar(props) {
                 width: "calc(101px + 20px)", // Adjust the calculation as needed
               }}
             >
-              <button
-                className="text-white hover:bg-red-500 hover:text-black bg-transparent border border-red-500 rounded p-2 cursor-pointer transition duration-300"
-                onClick={handleLogoutClick}
-              >
-                Log Out
-              </button>
+              <Link to="/">
+                <button
+                  className="text-white hover:bg-red-500 hover:text-black bg-transparent border border-red-500 rounded p-2 cursor-pointer transition duration-300"
+                  onClick={handleLogoutClick}
+                >
+                  Log Out
+                </button>
+              </Link>
             </div>
           </div>
         )}

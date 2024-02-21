@@ -1,5 +1,6 @@
 import moment from "moment";
 import { Link } from "react-router-dom";
+import Button from "./JoinButton";
 
 export default function Card(props) {
   const getTimeAgo = (timestamp) => {
@@ -27,9 +28,12 @@ export default function Card(props) {
     }
   };
   return (
-    <div key={props.cardInfo.id} className=" flex flex-row items-start justify-start lg:flex-1">
-      <div className=" flex flex-col items-center justify-start gap-[12px_0px] border-r-[1px] border-solid border-darkslategray-100 border-l-[1px] lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col">
-        <div className=" sm:ml-auto sm:mt-1 w-[794px] box-border flex flex-col items-start justify-center py-0 px-7 gap-[20px] border-t-[1px] border-b-[1px] border-solid border-darkslategray-100 lg:self-stretch lg:w-auto md:self-stretch md:w-auto sm:self-stretch sm:w-auto ">
+    <div
+      key={props.cardInfo.id}
+      className=" flex flex-row items-start justify-start lg:flex-1"
+    >
+      <div className=" flex flex-col items-center justify-start gap-[12px_0px] border-[1px] mb-2 rounded-md border-solid border-darkslategray-100 lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col">
+        <div className=" sm:ml-auto sm:mt-1 w-[794px] box-border flex flex-col items-start justify-center py-0 px-7 gap-[20px] border-solid border-darkslategray-100 lg:self-stretch lg:w-auto md:self-stretch md:w-auto sm:self-stretch sm:w-auto ">
           <div className="self-stretch flex flex-row items-center justify-between">
             <div className="w-[196px] flex flex-row items-center justify-between">
               <div className="flex flex-row items-center justify-start gap-[14px]">
@@ -46,11 +50,12 @@ export default function Card(props) {
                 </div>
               </button>
             </div>
-            <button className="cursor-pointer [border:none] py-0 px-10 bg-mediumslateblue rounded-12xl flex flex-row items-center justify-center">
+            {/* <button className="cursor-pointer [border:none] py-0 px-10 bg-mediumslateblue rounded-12xl flex flex-row items-center justify-center">
               <div className="relative text-base font-inter text-black text-left">
                 Join
               </div>
-            </button>
+            </button> */}
+            <Button />
           </div>
           <Link to="/post" className=" text-inherit no-underline">
             <h2 className="m-0 relative text-5xl font-normal font-inherit">
