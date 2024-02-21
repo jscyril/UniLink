@@ -33,6 +33,10 @@ app.get("/profile", (req, res) => {
   res.json(profileInfo);
 });
 
+app.get("/clubs",(req,res)=>{
+  res.json(clubsList);
+});
+
 app.listen(port, () => {
   console.log(`Server running on ${port}`);
 });

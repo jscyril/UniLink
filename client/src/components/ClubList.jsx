@@ -16,14 +16,15 @@ export default function ClubList() {
         console.error("Error fetching data:", error);
       }
     };
-    
-
+    if(postValue){
+      console.log(postValue.clubArr); 
+    }
     fetchData();
   }, []);
   return ( 
 
       <div className="w-[720px] box-border flex flex-col items-center justify-start py-0 px-5 gap-[30px_0px] border-r-[1px] border-solid border-darkslategray-100 border-l-[1px] lg:flex-col lg:gap-[30px_0px] md:w-auto md:[align-self:unset] md:flex-col sm:flex-1 sm:pl-0 sm:pr-0 sm:box-border">
-        {postValue.clubArr.map((club)=>(
+        {postValue?.clubArr.map((club)=>(
           <div key={club.id} className="self-stretch flex flex-col items-center justify-start gap-[20px_0px] lg:w-auto lg:[align-self:unset] p-4 box-content rounded-md border-[1px] border-solid border-darkslategray-100">
           <img
             className="w-[400px] relative rounded-full h-[400px] object-cover"
