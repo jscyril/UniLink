@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   return (
-    <div className="w-full relative h-[974px] overflow-hidden flex flex-col items-center justify-center bg-[url('../public/landing-page-unilink@3x.png')] bg-cover bg-no-repeat bg-[top]">
+    <div className="w-full relative h-[974px] overflow-hidden flex flex-col items-center justify-center bg-[url('/landing-page-unilink@3x.png')] bg-cover bg-no-repeat bg-[top]">
       <section className="self-stretch flex-1 flex flex-col items-center justify-center gap-[120px_0px] text-center text-[56px] text-white font-kanit">
         <div className="self-stretch flex flex-row items-start justify-between">
           <header className="w-[386px] h-20 flex flex-row items-center justify-center">
@@ -10,7 +10,7 @@ export default function LandingPage() {
               <img
                 className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] max-w-full overflow-hidden max-h-full object-cover"
                 alt=""
-                src="../public/vector@2x.png"
+                src="/vector@2x.png"
               />
             </button>
             <div className="w-[100px] h-20 overflow-hidden shrink-0 flex flex-col items-center justify-end ml-[-8px]">
