@@ -7,6 +7,8 @@ import Annoucement from "./pages/Announcement";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import LandingPage from "./pages/LandingPage";
+import Postopen from "./pages/PostOpen";
+import CreatePost from "./pages/CreatePost";
 const App = () => {
   return (
     <Router>
@@ -19,6 +21,8 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/clubs" element={<Clubs />} />
         <Route path="/announcements" element={<Annoucement />} />
+        <Route path="/add-post" element={<CreatePost />} />
+        <Route path="/postopen" element={<Postopen />} />
       </Routes>
     </Router>
   );

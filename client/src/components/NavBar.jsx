@@ -30,13 +30,15 @@ export default function NavBar(props) {
           type="text"
         />
       </form>
-      <button className=" bg-transparent cursor-pointer">
-        <img
-          className="w-[18px] relative h-5 object-cover sm:flex"
-          alt=""
-          src="/post@2x.png"
-        />
-      </button>
+      <Link to="/add-post">
+        <button className=" bg-transparent cursor-pointer">
+          <img
+            className="w-[18px] relative h-5 object-cover sm:flex"
+            alt=""
+            src="/post@2x.png"
+          />
+        </button>
+      </Link>
 
       <div className="self-stretch relative flex flex-row items-center justify-start gap-[20px] sm:flex sm:w-auto sm:[align-self:unset] sm:pl-3 sm:pr-3 sm:box-border">
         <div className="w-[101px] flex flex-row items-center justify-center gap-[8px] sm:flex sm:w-auto sm:[align-self:unset]">
