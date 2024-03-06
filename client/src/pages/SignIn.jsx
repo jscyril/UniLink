@@ -1,5 +1,41 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Prepare the data to be sent to the server
+    const formData = {
+      email,
+      password
+    };
+
+    try {
+      // Send the form data to the server
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+
+      // Handle successful response
+      if (response.ok) {
+        // Redirect or handle success as needed
+        console.log("Login successful");
+      } else {
+        // Handle error response
+        console.error("Login failed");
+      }
+    } catch (error) {
+      // Handle network errors
+      console.error("Error sending data to server:", error);
+    }
+  };
   return (
     <div className="w-full relative h-[1201px] flex flex-col items-start justify-start p-2.5 box-border sm:w-auto sm:[align-self:unset] sm:h-auto">
       <main className="self-stretch flex-1 bg-gray-400 overflow-hidden flex flex-col items-center justify-start py-[115px] px-0 sm:self-stretch sm:w-auto sm:flex-1">
@@ -34,7 +70,7 @@ export default function SignIn() {
                 alt=""
                 src="..sign-updivsignupicon@2x.png"
               />
-              <form id="signInForm">
+              <form id="signInForm" onSubmit={handleSubmit}>
                 <div className="w-[390px] h-[220px] flex flex-col items-center justify-start gap-[22px_0px] sm:self-stretch sm:w-auto">
                   <div className="self-stretch flex flex-col items-center justify-start gap-[22px_0px]">
                     <div className="w-[390px] rounded-lg bg-gray-200 box-border overflow-hidden hidden flex-col items-start justify-start py-1 px-3 border-[2px] border-solid border-mediumslateblue">
@@ -42,22 +78,26 @@ export default function SignIn() {
                         <img
                           className="w-5 relative h-5 object-cover"
                           alt=""
-                          src="/group-27@2x.png"
+                          src="/sign-updivsignupicon@2x.png"
                         />
                         <div className="relative font-light">Username</div>
                       </div>
                     </div>
                     <input
                       id="emailInputSignIn"
-                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-gray-600 border-[2px] border-solid border-mediumslateblue"
+                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-white border-[2px] border-solid border-mediumslateblue"
                       placeholder="Email address"
                       type="text"
+                      value={email}
+                      onChange={(e)=>{setEmail(e.target.value)}}
                     />
                     <input
                       id="passwordInputSignIn"
-                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-gray-600 border-[2px] border-solid border-mediumslateblue"
+                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-white border-[2px] border-solid border-mediumslateblue"
                       placeholder="Password"
                       type="password"
+                      value={password}
+                      onChange={(e)=>{setPassword(e.target.value)}}
                     />
                   </div>
                   <Link to="/home" className=" no-underline text-inherit">

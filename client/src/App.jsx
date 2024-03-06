@@ -7,7 +7,7 @@ import Annoucement from "./pages/Announcement";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import LandingPage from "./pages/LandingPage";
-import Postopen from "./pages/PostOpen";
+import ClubOpen from "./pages/ClubOpen";
 import CreatePost from "./pages/CreatePost";
 const App = () => {
   return (
@@ -22,7 +22,7 @@ const App = () => {
         <Route path="/clubs" element={<Clubs />} />
         <Route path="/announcements" element={<Annoucement />} />
         <Route path="/add-post" element={<CreatePost />} />
-        <Route path="/postopen" element={<Postopen />} />
+        <Route path="/club-open" element={<ClubOpen />} />
       </Routes>
     </Router>
   );

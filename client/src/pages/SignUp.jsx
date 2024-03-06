@@ -1,5 +1,24 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 export default function SignUp() {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = {
+      username,
+      email,
+      password
+    };
+    try {
+      const response = await axios.post("/signup", formData);
+      console.log("Response from server:", response.data);
+    } catch (error) {
+      console.error("Error sending data to server:", error);
+    }
+  };
   return (
     <div className="w-full relative h-[1201px] flex flex-col items-start justify-start sm:w-auto sm:[align-self:unset] sm:h-auto">
       <main className="self-stretch flex-1 bg-gray-400 overflow-hidden flex flex-col items-center justify-start py-[115px] px-0 sm:self-stretch sm:w-auto sm:flex-1">
@@ -34,26 +53,32 @@ export default function SignUp() {
                 alt=""
                 src="/sign-updivsignupicon@2x.png"
               />
-              <form id="signupForm">
+              <form id="signupForm" onSubmit={handleSubmit}>
                 <div className="w-[390px] h-[220px] flex flex-col items-center justify-start gap-[22px_0px] sm:self-stretch sm:w-auto">
                   <div className="self-stretch flex flex-col items-center justify-start gap-[22px_0px]">
                     <input
                       id="usernameInput"
-                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-1 px-3 text-gray-600 border-[2px] border-solid border-mediumslateblue"
+                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-1 px-3 text-white border-[2px] border-solid border-mediumslateblue"
                       placeholder="Username"
                       type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
                     />
                     <input
                       id="emailInput"
-                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-gray-600 border-[2px] border-solid border-mediumslateblue"
+                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-white border-[2px] border-solid border-mediumslateblue"
                       placeholder="Email address"
                       type="text"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                     <input
                       id="passwordInput"
-                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-gray-600 border-[2px] border-solid border-mediumslateblue"
+                      className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-white border-[2px] border-solid border-mediumslateblue"
                       placeholder="Password"
                       type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                   <Link to="/home" className=" no-underline text-inherit">
