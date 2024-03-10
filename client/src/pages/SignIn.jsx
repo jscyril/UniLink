@@ -68,7 +68,7 @@ export default function SignIn() {
               <img
                 className="w-[142px] relative h-[142px] object-cover sm:self-stretch sm:w-auto"
                 alt=""
-                src="..sign-updivsignupicon@2x.png"
+                src="/sign-updivsignupicon@2x.png"
               />
               <form id="signInForm" onSubmit={handleSubmit}>
                 <div className="w-[390px] h-[220px] flex flex-col items-center justify-start gap-[22px_0px] sm:self-stretch sm:w-auto">
