@@ -1,0 +1,79 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model clubRules {
+  ruleid Int    @id @default(autoincrement())
+  clubid Int
+  rule   String
+  clubs  clubs  @relation(fields: [clubid], references: [clubid])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model clubmembers {
+  userclubid Int    @id @default(autoincrement())
+  userid     Int?
+  clubid     Int?
+  clubs      clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  users      users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([userid, clubid], map: "unique_user_club")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model clubs {
+  clubid       Int           @id @default(autoincrement())
+  clubname     String        @db.VarChar(255)
+  creationdate DateTime?     @db.Timestamp(6)
+  clubdesc     String?
+  clublogo     String?
+  postcount    Int?
+  clubRules    clubRules[]
+  clubmembers  clubmembers[]
+  moderators   moderators[]
+  posts        posts[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model moderators {
+  moderatorid Int    @id @default(autoincrement())
+  userid      Int?
+  clubid      Int?
+  clubs       clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  users       users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model posts {
+  postid      Int       @id @default(autoincrement())
+  userid      Int?
+  clubid      Int?
+  title       String    @db.VarChar(255)
+  description String
+  timestamp   DateTime? @default(now()) @db.Timestamp(6)
+  likes       Int?
+  imagepath   String?   @db.VarChar(255)
+  clubs       clubs?    @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  users       users?    @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model users {
+  userid           Int           @id @default(autoincrement())
+  username         String        @db.VarChar(255)
+  password         String        @db.VarChar(255)
+  email            String        @db.VarChar(255)
+  role             String        @db.VarChar(50)
+  lastlogindate    DateTime?     @db.Timestamp(6)
+  registrationdate DateTime?     @default(now()) @db.Timestamp(6)
+  clubmembers      clubmembers[]
+  moderators       moderators[]
+  posts            posts[]
+}
