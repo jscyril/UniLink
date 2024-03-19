@@ -1,35 +1,42 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 export default function SignIn() {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Prepare the data to be sent to the server
+    // Prepare the data to be sent t  o the server
     const formData = {
-      email,
-      password
+      username,
+      password,
     };
 
     try {
       // Send the form data to the server
-      const response = await fetch("/login", {
+      const response = await fetch("http://localhost:3000/signin", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
-
       // Handle successful response
       if (response.ok) {
         // Redirect or handle success as needed
         console.log("Login successful");
+        navigate("/home");
       } else {
         // Handle error response
         console.error("Login failed");
+        const errorData = await response.json();
+        console.log(errorData);
+        setError(errorData.error);
       }
     } catch (error) {
       // Handle network errors
@@ -37,14 +44,14 @@ export default function SignIn() {
     }
   };
   return (
-    <div className="w-full relative h-[1201px] flex flex-col items-start justify-start p-2.5 box-border sm:w-auto sm:[align-self:unset] sm:h-auto">
-      <main className="self-stretch flex-1 bg-gray-400 overflow-hidden flex flex-col items-center justify-start py-[115px] px-0 sm:self-stretch sm:w-auto sm:flex-1">
+    <div className="w-full relative h-screen flex flex-col items-start justify-start p-2.5 box-border sm:w-auto sm:[align-self:unset] sm:h-auto">
+      <main className="self-stretch flex-1 bg-gray-400 overflow-hidden flex flex-col items-center justify-start px-0 sm:self-stretch sm:w-auto sm:flex-1">
         <section className="self-stretch flex-1 flex flex-col items-center justify-start gap-[30px_0px] text-left text-21xl text-mediumslateblue font-inter sm:self-stretch sm:w-auto">
-          <div className="self-stretch flex flex-col items-center justify-start gap-[26px_0px]">
+          <div className="self-stretch flex flex-col items-center justify-start gap-[26px_0px] relative top-3">
             <Link to="/" className=" no-underline text-inherit">
               <div className="w-[199px] h-[55px] flex flex-row items-center justify-center py-1.5 px-[23px] box-border gap-[0px_13px]">
                 <img
-                  className="w-[66px] relative h-[71px] object-cover"
+                  className="w-[56px] relative h-[61px] object-cover"
                   alt=""
                   src="/authenticatedivlogologo@2x.png"
                 />
@@ -60,10 +67,10 @@ export default function SignIn() {
                   <div className="relative text-white">Sign Up</div>
                 </Link>
               </div>
-              <div className="w-[262px] relative box-border h-0.5 border-t-[2px] border-solid border-white sm:bg-white" />
+              <div className="w-[262px] relative box-border h-0.5 border-t-[2px] border-solid border-indigo-300 sm:bg-white" />
             </div>
           </div>
-          <div className="rounded-11xl bg-gray-400 shadow-[0px_7px_70px_-22px_rgba(112,_125,_255,_0.25)] flex flex-col items-center justify-start pt-[55px] px-14 pb-[85px] text-justify text-5xl text-gray-600 border-[1px] border-solid border-darkslateblue sm:self-stretch sm:w-auto sm:py-4 sm:px-3 sm:box-border">
+          <div className="rounded bg-gray-400 shadow-[0px_7px_70px_-22px_rgba(112,_125,_255,_0.25)] flex flex-col items-center justify-start pt-[15px] px-8 pb-[15px] text-justify text-5xl text-gray-600 border-[2px] border-mediumslateblue border-solid sm:self-stretch sm:w-auto sm:py-4 sm:px-3 sm:box-border">
             <div className="flex flex-col items-center justify-start gap-[36px_0px] sm:self-stretch sm:w-auto">
               <img
                 className="w-[142px] relative h-[142px] object-cover sm:self-stretch sm:w-auto"
@@ -86,10 +93,12 @@ export default function SignIn() {
                     <input
                       id="emailInputSignIn"
                       className="[outline:none] font-light font-inter text-5xl bg-gray-800 self-stretch rounded-lg overflow-hidden flex flex-col items-start justify-start py-[5px] px-[13px] text-white border-[2px] border-solid border-mediumslateblue"
-                      placeholder="Email address"
+                      placeholder="username"
                       type="text"
-                      value={email}
-                      onChange={(e)=>{setEmail(e.target.value)}}
+                      value={username}
+                      onChange={(e) => {
+                        setUsername(e.target.value);
+                      }}
                     />
                     <input
                       id="passwordInputSignIn"
@@ -97,19 +106,20 @@ export default function SignIn() {
                       placeholder="Password"
                       type="password"
                       value={password}
-                      onChange={(e)=>{setPassword(e.target.value)}}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                      }}
                     />
                   </div>
-                  <Link to="/home" className=" no-underline text-inherit">
-                    <button
-                      type="submit"
-                      className="cursor-pointer py-4 px-[52px] bg-mediumslateblue rounded-full shadow-[0px_4px_33px_9px_#13152c] overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue sm:py-3 sm:px-8 sm:box-border sm:border-[2px] sm:border-solid sm:border-mediumslateblue"
-                    >
-                      <div className="relative text-5xl font-inter text-black text-justify sm:text-base">
-                        Sign In
-                      </div>
-                    </button>
-                  </Link>
+                  {error && <div className="text-red-500">{error}</div>}
+                  <button
+                    type="submit"
+                    className="cursor-pointer py-4 px-[52px] bg-mediumslateblue rounded-full shadow-[0px_4px_33px_9px_#13152c] overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue sm:py-3 sm:px-8 sm:box-border sm:border-[2px] sm:border-solid sm:border-mediumslateblue"
+                  >
+                    <div className="relative text-5xl font-inter text-black text-justify sm:text-base">
+                      Sign In
+                    </div>
+                  </button>
                 </div>
               </form>
             </div>

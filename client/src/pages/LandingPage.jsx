@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 
 export default function LandingPage() {
   return (
-    <div className="w-full relative h-[974px] overflow-hidden flex flex-col items-center justify-center bg-[url('/landing-page-unilink@3x.png')] bg-cover bg-no-repeat bg-[top]">
+    <div className="w-full relative h-screen overflow-hidden flex flex-col items-center justify-center bg-[url('/landing-page-unilink@3x.png')] bg-cover bg-no-repeat bg-[top]">
       <section className="self-stretch flex-1 flex flex-col items-center justify-center gap-[120px_0px] text-center text-[56px] text-white font-kanit">
         <div className="self-stretch flex flex-row items-start justify-between">
-          <header className="w-[386px] h-20 flex flex-row items-center justify-center">
+          <header className="w-[386px] h-20 flex flex-row items-center justify-center relative top-[12px]">
             <button className="cursor-pointer [border:none] p-0 bg-[transparent] w-[68px] relative shadow-[5px_9px_13.2px_rgba(14,_18,_110,_0.33)] h-[73.6px]">
               <img
                 className="absolute h-full w-full top-[0%] right-[0%] bottom-[0%] left-[0%] max-w-full overflow-hidden max-h-full object-cover"

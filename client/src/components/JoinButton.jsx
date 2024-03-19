@@ -12,7 +12,7 @@ const Button = () => {
       className={`${
         isClicked
           ? "cursor-pointer border-[3px] border-indigo-600 rounded-12xl flex flex-row items-center justify-center bg-transparent py-0 px-4 "
-          : "[border:none] py-1 px-7 bg-mediumslateblue rounded-12xl flex flex-row items-center justify-center"
+          : " cursor-pointer [border:none] py-1 px-7 bg-mediumslateblue rounded-12xl flex flex-row items-center justify-center"
       }`}
       onClick={handleClick}
     >

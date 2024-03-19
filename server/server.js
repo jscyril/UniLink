@@ -1,119 +1,112 @@
 import express from "express";
+import bcrypt from "bcrypt";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import cors from "cors";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { PrismaClient } from "@prisma/client";
 import { homePageJSON } from "./dbSim.js";
 import { profileInfo } from "./dbSim.js";
 import { clubsList } from "./dbSim.js";
-import cors from "cors";
-import passport from "passport";
-import { Strategy as LocalStrategy } from 'passport-local';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
-import bodyParser from 'body-parser';
-import jwt from 'jsonwebtoken';
 
-
+const prisma = new PrismaClient();
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cookieParser());
-app.use(session({ secret: 'secret', resave: false, saveUninitialized: false }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(express.static('public'));
-app.use(express.json());
-
-const users = [
-  { id: 1, username: 'user1', email:"a@gmail.com", password: 'password1' },
-  { id: 2, username: 'user2', email:"a@gmail.com", password: 'password2' }
-];
-
-
-app.use(cors());
-
+const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
 const imagesFolderPath = join(__dirname, "../unilink/public");
+dotenv.config();
 
 app.use("/public", express.static(imagesFolderPath));
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-const port = 3000;
+app.post("/token", (req, res) => {
+  const refreshToken = req.body.token;
+});
 
-// console.log(homePageJSON);
+function generateAccessToken(user) {
+  return jwt.sign({ user: user }, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: "5m",
+  });
+}
 
 app.get("/", (req, res) => {
   res.json(homePageJSON);
-  // res.send("This is home page json");
-});
-
-app.get("/post",(req, res) => {
-  res.send("This is post page");
 });
 
 app.get("/profile", (req, res) => {
   res.json(profileInfo);
 });
 
-app.get("/clubs",(req,res)=>{
+app.get("/clubs", (req, res) => {
   res.json(clubsList);
 });
 
-app.post('/signup', (req, res) => {
-  const { username,email, password } = req.body;
-  console.log(req.body.username);
-  const newUser = { id: users.length + 1, username: username , email: email, password:password };
-  users.push(newUser);
-  console.log(users);
-  res.json(users);
-});
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  const user = users.find((user) => user.id === id);
-  done(null, user);
-});
-
-passport.use(
-  new LocalStrategy((username, password, done) => {
-    const user = users.find((user) => user.username === username && user.password === password);
-    if (!user) {
-      return done(null, false, { message: 'Incorrect username or password' });
-    }
-    return done(null, user);
-  })
-);
-
-
-
-const JWT_SECRET = 'jwt_secret_key';
-
-const generateToken = (user) => {
-  return jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: '1h' });
-};
-
-app.post('/signin', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) { return next(err); }
-    if (!user) { return res.redirect('/'); }
-
-    // Manually establish the session...
-    req.login(user, (err) => {
-      if (err) { return next(err); }
-
-      // Generate a JWT token and set it in the cookies
-      const token = generateToken(user);
-      console.log(token);
-      res.cookie('jwt', token);
-
-      return res.render('profile', { user: req.user });
+app.post("/signup", async (req, res) => {
+  console.log(req.body);
+  try {
+    const { username, email, password } = req.body;
+    const existingUser = await prisma.users.findFirst({
+      where: {
+        OR: [{ username: username }, { email: email }],
+      },
     });
 
-  })(req, res, next);
+    if (existingUser) {
+      if (existingUser.username === username) {
+        return res.status(400).json({ message: "User already exists" });
+      } else if (existingUser.email === email) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await prisma.users.create({
+      data: {
+        username: username,
+        email: email,
+        password: hashedPassword,
+        role: "user",
+      },
+    });
+
+    res.status(201).send("Registration Successful");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error occurred during registration" });
+  }
 });
 
+app.post("/signin", async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const user = await prisma.users.findFirst({
+      where: {
+        username: username,
+      },
+    });
+    if (!user) {
+      return res.status(400).json({ error: "User not found!" });
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (passwordMatch) {
+      const accessToken = generateAccessToken(user);
+      const refreshToken = jwt.sign(
+        user.username,
+        process.env.REFRESH_TOKEN_SECRET
+      );
+      res.json({ accessToken: accessToken, refreshToken: refreshToken });
+    } else {
+      res.status(401).json({ error: "Incorrect Password!" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Error occurred during signin");
+  }
+});
 app.listen(port, () => {
-  console.log(`Server running on ${port}`);
+  console.log(`Server is listening on Port ${port}`);
 });

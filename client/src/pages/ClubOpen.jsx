@@ -3,7 +3,7 @@ import NavBar from "../components/NavBar";
 import SideNav from "../components/SideNav";
 import Card from "../components/Card";
 import ClubInfoBar from "../components/ClubInfoBar";
-export default function Postopen() {
+export default function Clubopen() {
   const [postValue, setPostValue] = useState({
     clubs: [],
     eventBar: {},

@@ -13,15 +13,20 @@ export default function NavBar(props) {
   };
   return (
     <header className=" self-stretch box-border h-14 flex flex-row items-center justify-between py-0 px-9 text-left text-sm text-white font-inter border-b-[1px] border-solid border-dimgray md:self-stretch md:w-auto md:h-12 sm:flex sm:self-stretch sm:w-auto sm:pl-3 sm:pr-3 sm:box-border sm:max-w-[420px]">
-      <button className="cursor-pointer [border:none] p-0 bg-[transparent] h-[55px] flex flex-row items-center justify-start gap-[12px] sm:flex sm:items-end sm:justify-start">
-        <img
-          className="w-10 relative h-[43px] object-cover sm:flex"
-          alt=""
-          src="/NavBarLogo.png"
-        />
-        <div className="w-[147px] relative text-10xl font-inter text-mediumslateblue text-left inline-block shrink-0 sm:hidden">
-          UniLink
-        </div>
+      <button className=" bg-transparent">
+        <Link
+          to="/home"
+          className="cursor-pointer [border:none] p-0 bg-[transparent] h-[55px] flex flex-row items-center justify-start gap-[12px] sm:flex sm:items-end sm:justify-start no-underline"
+        >
+          <img
+            className="w-10 relative h-[43px] object-cover sm:flex"
+            alt=""
+            src="/NavBarLogo.png"
+          />
+          <div className="w-[147px] relative text-10xl font-inter text-mediumslateblue text-left inline-block shrink-0 sm:hidden">
+            UniLink
+          </div>
+        </Link>
       </button>
       <form>
         <input
