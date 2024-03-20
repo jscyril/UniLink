@@ -33,11 +33,36 @@ function generateAccessToken(user) {
   });
 }
 
-app.get("/", (req, res) => {
-  res.json(homePageJSON);
+app.get("/", async (req, res) => {
+  // Assuming the username is sent in the request body upon signing in
+  const username = req.body.username;
+
+  // If you need to fetch additional user details, you can use the username to query the database
+  try {
+    const userData = await prisma.users.findUnique({
+      where: {
+        username: username,
+      },
+      // You can select specific fields you need from the user table
+      select: {
+        userid: false,
+        username: true,
+        email: false,
+        role: true,
+        lastlogindate: false,
+        registrationdate: true,
+      },
+    });
+    // Send user data as response
+    res.json(userData);
+    res.json(homePageJSON);
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ error: "Failed to fetch user data" });
+  }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/profile", async (req, res) => {
   res.json(profileInfo);
 });
 
@@ -80,6 +105,40 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+const userData = null;
+
+// app.post("/signin", async (req, res) => {
+//   const { username, password } = req.body;
+//   try {
+//     const user = await prisma.users.findFirst({
+//       where: {
+//         username: username,
+//       },
+//     });
+//     if (!user) {
+//       return res.status(400).json({ error: "User not found!" });
+//     }
+//     const passwordMatch = await bcrypt.compare(password, user.password);
+//     if (passwordMatch) {
+//       const accessToken = generateAccessToken(user);
+//       const refreshToken = jwt.sign(
+//         user.username,
+//         process.env.REFRESH_TOKEN_SECRET
+//       );
+//       res.json({
+//         accessToken: accessToken,
+//         refreshToken: refreshToken,
+//         username: user.username,
+//       });
+//     } else {
+//       res.status(401).json({ error: "Incorrect Password!" });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).send("Error occurred during signin");
+//   }
+// });
+
 app.post("/signin", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -98,7 +157,30 @@ app.post("/signin", async (req, res) => {
         user.username,
         process.env.REFRESH_TOKEN_SECRET
       );
-      res.json({ accessToken: accessToken, refreshToken: refreshToken });
+      // Here, you can send the username along with the access and refresh tokens
+      res.json({
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        username: user.username,
+      });
+
+      // Now, let's create a Prisma query to retrieve user details and handle it in the "/" route
+      const userData = await prisma.users.findUnique({
+        where: {
+          username: user.username,
+        },
+        // You can select specific fields you need from the user table
+        select: {
+          userid: true,
+          username: true,
+          email: true,
+          role: true,
+          lastlogindate: true,
+          registrationdate: true,
+        },
+      });
+      // Now you can use userData in your "/" route to display user details
+      // You can also send userData as part of the response to the "/" route if needed
     } else {
       res.status(401).json({ error: "Incorrect Password!" });
     }
@@ -107,6 +189,7 @@ app.post("/signin", async (req, res) => {
     res.status(500).send("Error occurred during signin");
   }
 });
+
 app.listen(port, () => {
   console.log(`Server is listening on Port ${port}`);
 });
