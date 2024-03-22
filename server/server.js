@@ -16,6 +16,7 @@ const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const imagesFolderPath = join(__dirname, "../unilink/public");
+let usr = { usrName: null, userId: 1, role: null };
 dotenv.config();
 
 app.use("/public", express.static(imagesFolderPath));
@@ -33,8 +34,78 @@ function generateAccessToken(user) {
   });
 }
 
-app.get("/", (req, res) => {
-  res.json(homePageJSON);
+app.get("/", async (req, res) => {
+  try {
+    const posts = await prisma.posts.findMany({
+      include: {
+        users: {
+          select: { username: true }, // Select only username from users table
+        },
+        clubs: {
+          select: { clubname: true, clublogo: true }, // Select only clubname from clubs table
+        },
+      },
+      orderBy: { postid: "asc" },
+    });
+    // Transform the data to remove unwanted fields
+    const transformedPosts = posts.map((post) => ({
+      postid: post.postid,
+      title: post.title,
+      description: post.description,
+      timestamp: post.timestamp,
+      likes: post.likes,
+      imagepath: post.imagepath ? post.imagepath : null,
+      user: post.users ? post.users.username : null, // Retrieve username from related user
+      club: post.clubs
+        ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
+        : null,
+    }));
+
+    const userClubs = await prisma.clubmembers.findMany({
+      where: {
+        userid: usr.userId,
+      },
+      include: {
+        clubs: {
+          select: {
+            clubid: true,
+            clubname: true,
+          },
+        },
+      },
+      orderBy: {
+        clubs: {
+          clubname: "asc",
+        },
+      },
+    });
+
+    const events = await prisma.posts.findMany({
+      select: {
+        title: true,
+        likes: true,
+        postid: true,
+      },
+      orderBy: {
+        likes: "desc",
+      },
+    });
+
+    const clubs = userClubs.map((clubs) => ({
+      clubid: clubs.clubid,
+      clubname: clubs.clubs ? clubs.clubs.clubname : null,
+    }));
+
+    res.json({
+      username: usr.usrName,
+      clubs: clubs,
+      post: transformedPosts,
+      events: events,
+    });
+  } catch (error) {
+    console.error("Error retrieving posts:", error);
+    throw error;
+  }
 });
 
 app.get("/profile", (req, res) => {
@@ -98,6 +169,8 @@ app.post("/signin", async (req, res) => {
         user.username,
         process.env.REFRESH_TOKEN_SECRET
       );
+      usr.usrName = user.username;
+      usr.userId = user.userid;
       res.json({ accessToken: accessToken, refreshToken: refreshToken });
     } else {
       res.status(401).json({ error: "Incorrect Password!" });

@@ -29,7 +29,7 @@ export default function Card(props) {
   };
   return (
     <div
-      key={props.cardInfo.id}
+      key={props.cardInfo.postid}
       className=" flex flex-row items-start justify-start lg:flex-1"
     >
       <div className=" flex flex-col items-center justify-start gap-[12px_0px] border-[1px] mb-2 rounded-md border-solid border-darkslategray-100 lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col">
@@ -40,13 +40,13 @@ export default function Card(props) {
                 <img
                   className="w-10 relative rounded-[50%] h-10 object-cover mt-[5px]"
                   alt=""
-                  src={props.cardInfo.avatar}
+                  src={props.cardInfo.club.clublogo}
                 />
-                <div className="relative">{props.cardInfo.club}</div>
+                <div className="relative">{props.cardInfo.club.clubname}</div>
               </div>
               <button className="cursor-pointer py-0 px-2.5 bg-[transparent] rounded-7xl overflow-hidden flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue">
                 <div className="relative text-xs font-inter text-white text-left">
-                  {props.cardInfo.username}
+                  {props.cardInfo.user}
                 </div>
               </button>
             </div>
@@ -59,21 +59,21 @@ export default function Card(props) {
           </div>
           <Link to="/post" className=" text-inherit no-underline">
             <h2 className="m-0 relative text-5xl font-normal font-inherit">
-              {props.cardInfo.heading}
+              {props.cardInfo.title}
             </h2>
           </Link>
           <div className="self-stretch flex flex-row items-end justify-between text-xs">
-            <div className="relative">{props.cardInfo.text}</div>
+            <div className="relative">{props.cardInfo.description}</div>
           </div>
           <div className="relative flex text-xs">
             {getTimeAgo(props.cardInfo.timestamp)}
           </div>
 
-          {props.cardInfo.img && (
+          {props.cardInfo.imagepath && (
             <img
-              className="self-stretch relative max-w-full overflow-hidden"
+              className="self-stretch relative max-w-full max-h-dvh overflow-hidden flex justify-center align-middle"
               alt=""
-              src={props.cardInfo.img}
+              src={props.cardInfo.imagepath}
             />
           )}
           <div className="self-stretch flex flex-row items-center justify-between pt-0 px-0 pb-2">

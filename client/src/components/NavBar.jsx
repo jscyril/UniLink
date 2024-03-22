@@ -1,8 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 export default function NavBar(props) {
   const [showLogout, setShowLogout] = useState(false);
+  const [userValue, setUserValue] = useState({
+    username: "",
+  });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setUserValue(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const handleDropdownClick = () => {
     setShowLogout(!showLogout);
   };
@@ -52,7 +71,7 @@ export default function NavBar(props) {
             alt=""
             src="/headernavbarprofile-dropdown-menuprofiledivprofileicon@2x.png"
           />
-          <div className="flex-1 relative sm:hidden">{props.username}</div>
+          <div className="flex-1 relative sm:hidden">{userValue.username}</div>
         </div>
         {/* Dropdown menu */}
         {showLogout && (
