@@ -108,7 +108,7 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/profile", (req, res) => {
+app.get("/profile", async (req, res) => {
   res.json(profileInfo);
 });
 
@@ -151,6 +151,40 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+const userData = null;
+
+// app.post("/signin", async (req, res) => {
+//   const { username, password } = req.body;
+//   try {
+//     const user = await prisma.users.findFirst({
+//       where: {
+//         username: username,
+//       },
+//     });
+//     if (!user) {
+//       return res.status(400).json({ error: "User not found!" });
+//     }
+//     const passwordMatch = await bcrypt.compare(password, user.password);
+//     if (passwordMatch) {
+//       const accessToken = generateAccessToken(user);
+//       const refreshToken = jwt.sign(
+//         user.username,
+//         process.env.REFRESH_TOKEN_SECRET
+//       );
+//       res.json({
+//         accessToken: accessToken,
+//         refreshToken: refreshToken,
+//         username: user.username,
+//       });
+//     } else {
+//       res.status(401).json({ error: "Incorrect Password!" });
+//     }
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).send("Error occurred during signin");
+//   }
+// });
+
 app.post("/signin", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -180,6 +214,7 @@ app.post("/signin", async (req, res) => {
     res.status(500).send("Error occurred during signin");
   }
 });
+
 app.listen(port, () => {
   console.log(`Server is listening on Port ${port}`);
 });
