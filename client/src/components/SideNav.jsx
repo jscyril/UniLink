@@ -1,5 +1,25 @@
 import { Link } from "react-router-dom";
-export default function SideNav(props) {
+import { useState, useEffect } from "react";
+export default function SideNav() {
+  const [clubValue, setClubValue] = useState({
+    clubs: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setClubValue(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className=" sticky w-[235px] flex flex-col items-center justify-start gap-[24px] lg:hidden sm:hidden">
       <div className="self-stretch flex flex-col items-start justify-start gap-[22px]">
@@ -88,13 +108,13 @@ export default function SideNav(props) {
             </button>
             <div className="w-20 relative box-border h-0.5 border-t-[2px] border-solid border-gray-300" />
           </div>
-          {props.clubs.map((club) => (
+          {clubValue.clubs.slice(0, 5).map((club) => (
             <a
-              key={club.id}
-              href={club.refLink}
+              key={club.clubid}
+              href="#"
               className="self-stretch relative no-underline text-inherit"
             >
-              {club.clubName}
+              {club.clubname}
             </a>
           ))}
         </div>

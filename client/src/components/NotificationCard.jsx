@@ -3,8 +3,6 @@ import { useEffect, useState } from "react";
 
 export default function NotificationCard() {
   const [postValue, setPostValue] = useState({
-    clubs: [],
-    eventBar: {},
     post: [],
   });
 
@@ -39,7 +37,7 @@ export default function NotificationCard() {
           </h3>
         </div>
         {postValue?.post.map((post) => (
-          <Notifications key={post.id} cardInfo={post} />
+          <Notifications key={post.postid} cardInfo={post} />
         ))}
       </div>
     </div>
