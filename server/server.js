@@ -6,7 +6,6 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { homePageJSON } from "./dbSim.js";
 import { profileInfo } from "./dbSim.js";
 import { clubsList } from "./dbSim.js";
 
@@ -16,7 +15,7 @@ const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const imagesFolderPath = join(__dirname, "../unilink/public");
-let usr = { usrName: null, userId: 1, role: null };
+let userData = { username: null, userId: 1, role: null };
 dotenv.config();
 
 app.use("/public", express.static(imagesFolderPath));
@@ -63,7 +62,7 @@ app.get("/", async (req, res) => {
 
     const userClubs = await prisma.clubmembers.findMany({
       where: {
-        userid: usr.userId,
+        userid: userData.userId,
       },
       include: {
         clubs: {
@@ -97,7 +96,7 @@ app.get("/", async (req, res) => {
     }));
 
     res.json({
-      username: usr.usrName,
+      username: userData.username,
       clubs: clubs,
       post: transformedPosts,
       events: events,
@@ -109,15 +108,49 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/profile", async (req, res) => {
-  res.json(profileInfo);
+  const result = await prisma.users.findUnique({
+    where: {
+      userid: userData.userId,
+    },
+    select: {
+      username: true,
+      registrationdate: true,
+      role: true,
+      clubmembers: {
+        select: {
+          clubs: {
+            select: {
+              clubname: true,
+              clubid: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const user = {
+    user: {
+      username: result.username,
+      registrationdate: result.registrationdate,
+      role: result.role,
+      clubs: result.clubmembers.map((clubs) => ({
+        clubname: clubs.clubs.clubname,
+        clubid: clubs.clubs.clubid,
+      })),
+    },
+  };
+  // res.send(result);
+  res.json(user);
 });
 
 app.get("/clubs", (req, res) => {
   res.json(clubsList);
 });
 
+app.get("/follow", async (req, res) => {});
+
 app.post("/signup", async (req, res) => {
-  console.log(req.body);
   try {
     const { username, email, password } = req.body;
     const existingUser = await prisma.users.findFirst({
@@ -143,47 +176,14 @@ app.post("/signup", async (req, res) => {
         role: "user",
       },
     });
-
+    userData.username = newUser.username;
+    userData.userId = newUser.userid;
     res.status(201).send("Registration Successful");
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error occurred during registration" });
   }
 });
-
-const userData = null;
-
-// app.post("/signin", async (req, res) => {
-//   const { username, password } = req.body;
-//   try {
-//     const user = await prisma.users.findFirst({
-//       where: {
-//         username: username,
-//       },
-//     });
-//     if (!user) {
-//       return res.status(400).json({ error: "User not found!" });
-//     }
-//     const passwordMatch = await bcrypt.compare(password, user.password);
-//     if (passwordMatch) {
-//       const accessToken = generateAccessToken(user);
-//       const refreshToken = jwt.sign(
-//         user.username,
-//         process.env.REFRESH_TOKEN_SECRET
-//       );
-//       res.json({
-//         accessToken: accessToken,
-//         refreshToken: refreshToken,
-//         username: user.username,
-//       });
-//     } else {
-//       res.status(401).json({ error: "Incorrect Password!" });
-//     }
-//   } catch (err) {
-//     console.log(err);
-//     res.status(500).send("Error occurred during signin");
-//   }
-// });
 
 app.post("/signin", async (req, res) => {
   const { username, password } = req.body;
@@ -203,8 +203,8 @@ app.post("/signin", async (req, res) => {
         user.username,
         process.env.REFRESH_TOKEN_SECRET
       );
-      usr.usrName = user.username;
-      usr.userId = user.userid;
+      userData.username = user.username;
+      userData.userId = user.userid;
       res.json({ accessToken: accessToken, refreshToken: refreshToken });
     } else {
       res.status(401).json({ error: "Incorrect Password!" });

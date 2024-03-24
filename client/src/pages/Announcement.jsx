@@ -5,8 +5,6 @@ import EventsBar from "../components/EventBar";
 import NotificationCard from "../components/NotificationCard";
 export default function Annoucement() {
   const [postValue, setPostValue] = useState({
-    clubs: [],
-    eventBar: {},
     post: [],
   });
 

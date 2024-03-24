@@ -35,16 +35,18 @@ export default function Card(props) {
       <div className=" flex flex-col items-center justify-start gap-[12px_0px] border-[1px] mb-2 rounded-md border-solid border-darkslategray-100 lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col">
         <div className=" sm:ml-auto sm:mt-1 w-[794px] box-border flex flex-col items-start justify-center py-0 px-7 gap-[20px] border-solid border-darkslategray-100 lg:self-stretch lg:w-auto md:self-stretch md:w-auto sm:self-stretch sm:w-auto ">
           <div className="self-stretch flex flex-row items-center justify-between">
-            <div className="w-[196px] flex flex-row items-center justify-between">
+            <div className="w-auto flex flex-row items-center justify-between">
               <div className="flex flex-row items-center justify-start gap-[14px]">
                 <img
                   className="w-10 relative rounded-[50%] h-10 object-cover mt-[5px]"
                   alt=""
                   src={props.cardInfo.club.clublogo}
                 />
-                <div className="relative">{props.cardInfo.club.clubname}</div>
+                <div className="relative text-nowrap">
+                  {props.cardInfo.club.clubname}
+                </div>
               </div>
-              <button className="cursor-pointer py-0 px-2.5 bg-[transparent] rounded-7xl overflow-hidden flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue">
+              <button className="cursor-pointer py-0 px-2.5 bg-[transparent] rounded-7xl overflow-hidden flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue relative ml-2 min-w-1">
                 <div className="relative text-xs font-inter text-white text-left">
                   {props.cardInfo.user}
                 </div>
