@@ -1,9 +1,31 @@
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 export default function ClubInfoBar() {
+  let { id } = useParams();
+  const [clubValue, setClubValue] = useState({
+    clubs: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/club/${id}`);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setClubValue(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <div className="flex flex-col items-start justify-start gap-[15px_0px] text-13xl lg:hidden">
       <div className="w-[260px] flex flex-col items-start justify-start py-0 px-[18px] box-border">
         <h2 className="m-0 w-[222px] relative text-inherit font-normal font-inherit inline-block">
-          Club Name
+          Club
         </h2>
         <div className="flex flex-row items-end justify-center gap-[0px_12px] text-sm text-mediumslateblue">
           <img

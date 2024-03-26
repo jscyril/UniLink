@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-export default function NavBar(props) {
+export default function NavBar() {
   const [showLogout, setShowLogout] = useState(false);
   const [userValue, setUserValue] = useState({
     username: "",

@@ -6,8 +6,6 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import { profileInfo } from "./dbSim.js";
-import { clubsList } from "./dbSim.js";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -15,7 +13,7 @@ const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const imagesFolderPath = join(__dirname, "../unilink/public");
-let userData = { username: null, userId: 1, role: null };
+let userData = { username: "", userId: "", role: "" };
 dotenv.config();
 
 app.use("/public", express.static(imagesFolderPath));
@@ -29,7 +27,7 @@ app.post("/token", (req, res) => {
 
 function generateAccessToken(user) {
   return jwt.sign({ user: user }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "5m",
+    expiresIn: "1h",
   });
 }
 
@@ -144,8 +142,54 @@ app.get("/profile", async (req, res) => {
   res.json(user);
 });
 
-app.get("/clubs", (req, res) => {
-  res.json(clubsList);
+app.get("/clubs", async (req, res) => {
+  const result = await prisma.clubs.findMany({
+    select: {
+      clubid: true,
+      clubname: true,
+      clublogo: true,
+      postcount: true,
+    },
+    orderBy: {
+      clubname: "asc",
+    },
+  });
+  res.json({ clubArr: result });
+});
+
+app.get("/club/:id", async (req, res) => {
+  const clubid = parseInt(req.params.id);
+  const result = await prisma.posts.findMany({
+    where: {
+      clubid: clubid,
+    },
+    include: {
+      users: {
+        select: { username: true }, // Select only username from users table
+      },
+      clubs: {
+        select: { clubname: true, clublogo: true }, // Select only clubname from clubs table
+      },
+    },
+    orderBy: {
+      postid: "asc",
+    },
+  });
+
+  const posts = result.map((post) => ({
+    postid: post.postid,
+    title: post.title,
+    description: post.description,
+    timestamp: post.timestamp,
+    likes: post.likes,
+    imagepath: post.imagepath ? post.imagepath : null,
+    user: post.users ? post.users.username : null,
+    club: post.clubs
+      ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
+      : null,
+  }));
+
+  res.json({ post: posts });
 });
 
 app.get("/follow", async (req, res) => {});
