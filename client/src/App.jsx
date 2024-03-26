@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
-import Post from "./pages/Post";
+import Post from "./pages/Postopen";
 import Profile from "./pages/Profile";
 import Clubs from "./pages/Clubs";
 import Annoucement from "./pages/Announcement";

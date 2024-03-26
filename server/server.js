@@ -214,7 +214,11 @@ app.post("/signin", async (req, res) => {
     res.status(500).send("Error occurred during signin");
   }
 });
+app.post("/addpost", async (req,res)=>{
+  const postData = req.body;
+  console.log(postData);
 
+})
 app.listen(port, () => {
   console.log(`Server is listening on Port ${port}`);
 });
