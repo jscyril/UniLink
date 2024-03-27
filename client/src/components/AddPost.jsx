@@ -6,8 +6,21 @@ export default function AddPost({ handleFile }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [allowComments, setAllowComments] = useState(false);
+  const [options, setOptions] = useState([]); // State to hold the fetched options
 
-  // const maxNumber = 69;
+  useEffect(() => {
+    // Fetching options from Prisma (you'll need to set up this endpoint in your server)
+    const fetchOptions = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/addpost", );
+        setOptions(response.data);
+      } catch (error) {
+        console.error("Error fetching options:", error);
+      }
+    };
+
+    fetchOptions();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,19 +68,29 @@ export default function AddPost({ handleFile }) {
       <div className=" rounded-md flex-1 flex flex-col items-center justify-start py-0 px-5 border-solid border-darkslategray-100 border-[1px] lg:flex-col lg:gap-[30px] md:w-auto md:[align-self:unset] md:flex-col sm:flex-1 sm:pl-0 sm:pr-0 sm:box-border">
         <form onSubmit={handleSubmit}>
           <div className="self-stretch rounded-lg h-[478.5px] flex flex-col items-center justify-between sm:items-center sm:justify-center">
-            <div className="flex flex-col items-start justify-start gap-[9px]">
-              <div className="relative font-light sm:text-base mt-2 text-3xl">
-                Title:
+            <div className="flex flex-col items-start justify-start gap-[15px]">
+              <select className="self-stretch rounded-lg bg-[transparent] flex flex-row items-center justify-between py-1.5 pr-2.5 pl-0.5 font-inter font-light text-5xl text-white border-[1px] border-solid border-mediumslateblue">
+                <option value="">Select Club</option>
+                {options.map((option, index) => (
+                  <option key={index} value={option.column_name}>
+                    {option.column_name}
+                  </option>
+                ))}
+              </select>
+              <div className="flex flex-col items-start justify-start gap-[9px]">
+                <div className="relative font-light sm:text-base mt-2 text-3xl">
+                  Title:
+                </div>
+                <input
+                  name="title"
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                  className="[outline:none] bg-gray-700 w-[600px] relative rounded-lg box-border h-10 border-[1px] border-solid border-mediumslateblue text-white"
+                  type="text"
+                />
               </div>
-              <input
-                name="title"
-                value={title}
-                onChange={(e) => {
-                  setTitle(e.target.value);
-                }}
-                className="[outline:none] bg-gray-700 w-[600px] relative rounded-lg box-border h-10 border-[1px] border-solid border-mediumslateblue text-white"
-                type="text"
-              />
             </div>
             <div className="flex flex-col items-start justify-start gap-[12px]">
               <div className="relative font-light sm:text-base text-3xl mt-2">
@@ -88,8 +111,7 @@ export default function AddPost({ handleFile }) {
                 </div>
                 <button
                   onClick={handleClick}
-                  className="cursor-pointer py-2 px-[283px] bg-gray-700 rounded-lg overflow-hidden flex flex-row items-start justify-start border-[1px] border-dashed border-mediumslateblue"
-                >
+                  className="cursor-pointer py-2 px-[283px] bg-gray-700 rounded-lg overflow-hidden flex flex-row items-start justify-start border-[1px] border-dashed border-mediumslateblue">
                   <img
                     className="w-[27px] relative h-[27.5px] object-cover"
                     alt=""
@@ -116,8 +138,7 @@ export default function AddPost({ handleFile }) {
             </div>
             <button
               type="submit"
-              className="mb-2 cursor-pointer [border:none] py-2.5 px-[119px] bg-mediumslateblue rounded-lg overflow-hidden flex flex-row items-center justify-center sm:items-center sm:justify-center sm:pl-[60px] sm:pr-[60px] sm:box-border"
-            >
+              className="mb-2 cursor-pointer [border:none] py-2.5 px-[119px] bg-mediumslateblue rounded-lg overflow-hidden flex flex-row items-center justify-center sm:items-center sm:justify-center sm:pl-[60px] sm:pr-[60px] sm:box-border">
               <div className="relative text-5xl font-medium font-inter text-black text-left sm:text-sm">
                 Post
               </div>

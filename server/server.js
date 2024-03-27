@@ -6,6 +6,9 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import Cookie from "universal-cookie";
+
+// import Authjwt from "./middleware/auth";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -21,6 +24,24 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+async function Authjwt(req,res,next){
+  const cookies = new Cookie(req.headers.cookie);
+  const token = cookies.get("authorization");
+  console.log(token);
+  console.log("yeyeyey");
+  if(token){
+      jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err, user) => {
+          if (err) {
+            return res.sendStatus(403);
+          }
+          req.user = user;
+          next();
+        });
+  } else{
+      res.sendStatus(401);
+  }
+}
+
 app.post("/token", (req, res) => {
   const refreshToken = req.body.token;
 });
@@ -31,7 +52,7 @@ function generateAccessToken(user) {
   });
 }
 
-app.get("/", async (req, res) => {
+app.get("/", Authjwt, async (req, res) => {
   try {
     const posts = await prisma.posts.findMany({
       include: {
@@ -105,7 +126,7 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", Authjwt, async (req, res) => {
   const result = await prisma.users.findUnique({
     where: {
       userid: userData.userId,
@@ -142,7 +163,7 @@ app.get("/profile", async (req, res) => {
   res.json(user);
 });
 
-app.get("/clubs", async (req, res) => {
+app.get("/clubs", Authjwt, async (req, res) => {
   const result = await prisma.clubs.findMany({
     select: {
       clubid: true,
@@ -192,9 +213,9 @@ app.get("/club/:id", async (req, res) => {
   res.json({ post: posts });
 });
 
-app.get("/follow", async (req, res) => {});
+app.get("/follow", Authjwt, async (req, res) => {});
 
-app.post("/signup", async (req, res) => {
+app.post("/signup", Authjwt, async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const existingUser = await prisma.users.findFirst({
@@ -244,11 +265,12 @@ app.post("/signin", async (req, res) => {
     if (passwordMatch) {
       const accessToken = generateAccessToken(user);
       const refreshToken = jwt.sign(
-        user.username,
+        user.userid,
         process.env.REFRESH_TOKEN_SECRET
       );
       userData.username = user.username;
       userData.userId = user.userid;
+      
       res.json({ accessToken: accessToken, refreshToken: refreshToken });
     } else {
       res.status(401).json({ error: "Incorrect Password!" });
@@ -258,7 +280,7 @@ app.post("/signin", async (req, res) => {
     res.status(500).send("Error occurred during signin");
   }
 });
-app.post("/addpost", async (req,res)=>{
+app.post("/addpost", Authjwt, async (req,res)=>{
   const postData = req.body;
   console.log(postData);
 

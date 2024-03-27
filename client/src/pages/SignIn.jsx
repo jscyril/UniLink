@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import Cookies from "universal-cookie";
+import axios from "axios";
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const cookies = new Cookies();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +30,10 @@ export default function SignIn() {
       });
       // Handle successful response
       if (response.ok) {
+        const responseData = await response.json();
+        cookies.set("authorization", responseData.accessToken, {
+          path: "/",
+        });
         // Redirect or handle success as needed
         console.log("Login successful");
         navigate("/home");
@@ -43,6 +49,7 @@ export default function SignIn() {
       console.error("Error sending data to server:", error);
     }
   };
+
   return (
     <div className="w-full relative h-screen flex flex-col items-start justify-start p-2.5 box-border sm:w-auto sm:[align-self:unset] sm:h-auto">
       <main className="self-stretch flex-1 bg-gray-400 overflow-hidden flex flex-col items-center justify-start px-0 sm:self-stretch sm:w-auto sm:flex-1">
@@ -114,8 +121,7 @@ export default function SignIn() {
                   {error && <div className="text-red-500">{error}</div>}
                   <button
                     type="submit"
-                    className="cursor-pointer py-4 px-[52px] bg-mediumslateblue rounded-full shadow-[0px_4px_33px_9px_#13152c] overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue sm:py-3 sm:px-8 sm:box-border sm:border-[2px] sm:border-solid sm:border-mediumslateblue"
-                  >
+                    className="cursor-pointer py-4 px-[52px] bg-mediumslateblue rounded-full shadow-[0px_4px_33px_9px_#13152c] overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue sm:py-3 sm:px-8 sm:box-border sm:border-[2px] sm:border-solid sm:border-mediumslateblue">
                     <div className="relative text-5xl font-inter text-black text-justify sm:text-base">
                       Sign In
                     </div>
