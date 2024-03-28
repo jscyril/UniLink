@@ -1,42 +1,40 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
-import axios from "axios";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+// import Cookies from "universal-cookie";
+import useAuth from "../hooks/useAuth";
+import axios from "../api/axios";
+const LOGIN_URL = "/signin/";
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { setAuth } = useAuth();
+
   const navigate = useNavigate();
-  const cookies = new Cookies();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/home";
+  // const cookies = new Cookies();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Prepare the data to be sent t  o the server
     const formData = {
       username,
       password,
     };
 
     try {
-      // Send the form data to the server
-      const response = await fetch("http://localhost:3000/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const response = await axios.post(LOGIN_URL, JSON.stringify(formData), {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
       });
       // Handle successful response
-      if (response.ok) {
-        const responseData = await response.json();
-        cookies.set("authorization", responseData.accessToken, {
-          path: "/",
-        });
-        // Redirect or handle success as needed
+      if (response.statusText) {
+        const accessToken = response?.data.accessToken;
+        const user = response?.data.user;
+        setAuth({ user, accessToken });
         console.log("Login successful");
-        navigate("/home");
+        navigate(from, { replace: true });
       } else {
         // Handle error response
         console.error("Login failed");
@@ -45,8 +43,15 @@ export default function SignIn() {
         setError(errorData.error);
       }
     } catch (error) {
-      // Handle network errors
-      console.error("Error sending data to server:", error);
+      if (!error?.response) {
+        setError("Server did not respond");
+      } else if (error.response?.status === 400) {
+        setError("Invalid Username");
+      } else if (error.response?.status === 401) {
+        setError("Incorrect Password");
+      } else {
+        setError("Login Failed");
+      }
     }
   };
 
@@ -106,6 +111,7 @@ export default function SignIn() {
                       onChange={(e) => {
                         setUsername(e.target.value);
                       }}
+                      required
                     />
                     <input
                       id="passwordInputSignIn"
@@ -116,12 +122,14 @@ export default function SignIn() {
                       onChange={(e) => {
                         setPassword(e.target.value);
                       }}
+                      required
                     />
                   </div>
                   {error && <div className="text-red-500">{error}</div>}
                   <button
                     type="submit"
-                    className="cursor-pointer py-4 px-[52px] bg-mediumslateblue rounded-full shadow-[0px_4px_33px_9px_#13152c] overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue sm:py-3 sm:px-8 sm:box-border sm:border-[2px] sm:border-solid sm:border-mediumslateblue">
+                    className="cursor-pointer py-4 px-[52px] bg-mediumslateblue rounded-full shadow-[0px_4px_33px_9px_#13152c] overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue sm:py-3 sm:px-8 sm:box-border sm:border-[2px] sm:border-solid sm:border-mediumslateblue"
+                  >
                     <div className="relative text-5xl font-inter text-black text-justify sm:text-base">
                       Sign In
                     </div>

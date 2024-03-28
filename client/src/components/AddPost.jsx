@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 export default function AddPost({ handleFile }) {
@@ -12,7 +12,7 @@ export default function AddPost({ handleFile }) {
     // Fetching options from Prisma (you'll need to set up this endpoint in your server)
     const fetchOptions = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/addpost", );
+        const response = await axios.get("http://localhost:3000/addpost");
         setOptions(response.data);
       } catch (error) {
         console.error("Error fetching options:", error);
@@ -111,7 +111,8 @@ export default function AddPost({ handleFile }) {
                 </div>
                 <button
                   onClick={handleClick}
-                  className="cursor-pointer py-2 px-[283px] bg-gray-700 rounded-lg overflow-hidden flex flex-row items-start justify-start border-[1px] border-dashed border-mediumslateblue">
+                  className="cursor-pointer py-2 px-[283px] bg-gray-700 rounded-lg overflow-hidden flex flex-row items-start justify-start border-[1px] border-dashed border-mediumslateblue"
+                >
                   <img
                     className="w-[27px] relative h-[27.5px] object-cover"
                     alt=""
@@ -138,7 +139,8 @@ export default function AddPost({ handleFile }) {
             </div>
             <button
               type="submit"
-              className="mb-2 cursor-pointer [border:none] py-2.5 px-[119px] bg-mediumslateblue rounded-lg overflow-hidden flex flex-row items-center justify-center sm:items-center sm:justify-center sm:pl-[60px] sm:pr-[60px] sm:box-border">
+              className="mb-2 cursor-pointer [border:none] py-2.5 px-[119px] bg-mediumslateblue rounded-lg overflow-hidden flex flex-row items-center justify-center sm:items-center sm:justify-center sm:pl-[60px] sm:pr-[60px] sm:box-border"
+            >
               <div className="relative text-5xl font-medium font-inter text-black text-left sm:text-sm">
                 Post
               </div>

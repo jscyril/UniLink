@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 export default function NavBar() {
   const [showLogout, setShowLogout] = useState(false);
   const [userValue, setUserValue] = useState({
     username: "",
   });
+
+  const { auth } = useAuth();
+  const isAdmin = auth.user.role === "admin";
+  console.log(isAdmin);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,15 +59,24 @@ export default function NavBar() {
           type="text"
         />
       </form>
-      <Link to="/add-post">
-        <button className=" bg-transparent cursor-pointer">
-          <img
-            className="w-[18px] relative h-5 object-cover sm:flex"
-            alt=""
-            src="/post@2x.png"
-          />
+      <Link to="/admin">
+        <button className="cursor-pointer py-0 px-2.5 bg-[transparent] rounded-7xl overflow-hidden flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue relative ml-2 min-w-1">
+          <div className="relative text-xs font-inter text-white text-left">
+            Admin Dashboard
+          </div>
         </button>
       </Link>
+      {isAdmin && (
+        <Link to="/addpost">
+          <button className=" bg-transparent cursor-pointer">
+            <img
+              className="w-[18px] relative h-5 object-cover sm:flex"
+              alt=""
+              src="/post@2x.png"
+            />
+          </button>
+        </Link>
+      )}
 
       <div className="self-stretch relative flex flex-row items-center justify-start gap-[20px] sm:flex sm:w-auto sm:[align-self:unset] sm:pl-3 sm:pr-3 sm:box-border">
         <div className="w-[101px] flex flex-row items-center justify-center gap-[8px] sm:flex sm:w-auto sm:[align-self:unset]">
