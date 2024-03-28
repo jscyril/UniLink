@@ -24,23 +24,22 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-async function Authjwt(req,res,next){
-  const cookies = new Cookie(req.headers.cookie);
-  const token = cookies.get("authorization");
-  console.log(token);
-  console.log("yeyeyey");
-  if(token){
-      jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err, user) => {
-          if (err) {
-            return res.sendStatus(403);
-          }
-          req.user = user;
-          next();
-        });
-  } else{
-      res.sendStatus(401);
-  }
-}
+// async function Authjwt(req, res, next) {
+//   const cookies = new Cookie(req.headers.cookie);
+//   const token = cookies.get("authorization");
+//   // console.log(token);
+//   if (token) {
+//     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+//       if (err) {
+//         return res.sendStatus(403);
+//       }
+//       req.user = user;
+//       next();
+//     });
+//   } else {
+//     res.sendStatus(401);
+//   }
+// }
 
 app.post("/token", (req, res) => {
   const refreshToken = req.body.token;
@@ -52,7 +51,7 @@ function generateAccessToken(user) {
   });
 }
 
-app.get("/", Authjwt, async (req, res) => {
+app.get("/", async (req, res) => {
   try {
     const posts = await prisma.posts.findMany({
       include: {
@@ -126,7 +125,7 @@ app.get("/", Authjwt, async (req, res) => {
   }
 });
 
-app.get("/profile", Authjwt, async (req, res) => {
+app.get("/profile", async (req, res) => {
   const result = await prisma.users.findUnique({
     where: {
       userid: userData.userId,
@@ -163,7 +162,7 @@ app.get("/profile", Authjwt, async (req, res) => {
   res.json(user);
 });
 
-app.get("/clubs", Authjwt, async (req, res) => {
+app.get("/clubs", async (req, res) => {
   const result = await prisma.clubs.findMany({
     select: {
       clubid: true,
@@ -213,9 +212,9 @@ app.get("/club/:id", async (req, res) => {
   res.json({ post: posts });
 });
 
-app.get("/follow", Authjwt, async (req, res) => {});
+app.get("/follow", async (req, res) => {});
 
-app.post("/signup", Authjwt, async (req, res) => {
+app.post("/signup", async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const existingUser = await prisma.users.findFirst({
@@ -264,27 +263,27 @@ app.post("/signin", async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (passwordMatch) {
       const accessToken = generateAccessToken(user);
-      const refreshToken = jwt.sign(
-        user.userid,
-        process.env.REFRESH_TOKEN_SECRET
-      );
       userData.username = user.username;
       userData.userId = user.userid;
-      
-      res.json({ accessToken: accessToken, refreshToken: refreshToken });
+      userData.role = user.role;
+      const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET);
+      res.json({
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        user: userData,
+      });
     } else {
       res.status(401).json({ error: "Incorrect Password!" });
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).send("Error occurred during signin");
   }
 });
-app.post("/addpost", Authjwt, async (req,res)=>{
+app.post("/addpost", async (req, res) => {
   const postData = req.body;
   console.log(postData);
-
-})
+});
 app.listen(port, () => {
   console.log(`Server is listening on Port ${port}`);
 });
