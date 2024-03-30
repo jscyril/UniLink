@@ -9,6 +9,8 @@ import SignUp from "./pages/SignUp";
 import LandingPage from "./pages/LandingPage";
 import ClubOpen from "./pages/ClubOpen";
 import CreatePost from "./pages/CreatePost";
+import ClubCreateupdate from "./pages/ClubCreateupdate";
+import ClubModeration from "./pages/ClubModeration";
 // import Layout from "./Layout";
 import RequireAuth from "./components/RequireAuth";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -17,6 +19,8 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/clubmoderation" element={<ClubModeration />} />
+      <Route path="/clubcreateupdate" element={<ClubCreateupdate />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />

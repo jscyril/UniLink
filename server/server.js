@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import Cookie from "universal-cookie";
+import { log } from "util";
 
 // import Authjwt from "./middleware/auth";
 
@@ -280,10 +281,38 @@ app.post("/signin", async (req, res) => {
     res.status(500).send("Error occurred during signin");
   }
 });
+
+app.get("/clubmoderation", async (req,res)=>{
+
+  try{
+    const clublist = await prisma.clubs.findMany();
+    // console.log(clublist);
+    res.json(clublist)
+  }catch(error){
+    console.log(error);
+  }
+});
+
+app.delete("/clubmoderation", async (req,res)=>{
+  const id = req.body;
+  console.log(id);
+  try{
+    const deleteClub = await prisma.clubs.delete({
+      where:{
+        clubid: id.clubid,
+      },
+    });
+    res.send("deleted successfully");
+  }catch(error){
+    console.log(error);
+  }
+})
+
 app.post("/addpost", async (req, res) => {
   const postData = req.body;
   console.log(postData);
 });
+
 app.listen(port, () => {
   console.log(`Server is listening on Port ${port}`);
 });

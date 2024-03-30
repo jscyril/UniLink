@@ -22,12 +22,13 @@ export default function SignIn() {
       username,
       password,
     };
-
+    
     try {
       const response = await axios.post(LOGIN_URL, JSON.stringify(formData), {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true,
+        withCredentials: false,
       });
+      console.log(response.data);
       // Handle successful response
       if (response.statusText) {
         const accessToken = response?.data.accessToken;
