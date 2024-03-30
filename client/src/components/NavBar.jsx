@@ -9,7 +9,6 @@ export default function NavBar() {
 
   const { auth } = useAuth();
   const isAdmin = auth.user.role === "admin";
-  console.log(isAdmin);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,7 +39,8 @@ export default function NavBar() {
       <button className=" bg-transparent">
         <Link
           to="/home"
-          className="cursor-pointer [border:none] p-0 bg-[transparent] h-[55px] flex flex-row items-center justify-start gap-[12px] sm:flex sm:items-end sm:justify-start no-underline">
+          className="cursor-pointer [border:none] p-0 bg-[transparent] h-[55px] flex flex-row items-center justify-start gap-[12px] sm:flex sm:items-end sm:justify-start no-underline"
+        >
           <img
             className="w-10 relative h-[43px] object-cover sm:flex"
             alt=""
@@ -90,30 +90,26 @@ export default function NavBar() {
         {showLogout && (
           <div className="absolute top-full left-0 mt-2 sm:hidden">
             <div
-              className="rounded bg-gray-300 border border-red-500 p-2 text-center shadow-md hover:shadow-lg transition duration-300"
+              className="rounded bg-gray-300 border p-2 text-center shadow-md hover:shadow-lg transition duration-300"
               style={{
                 width: "calc(101px + 20px)", // Adjust the calculation as needed
-              }}>
+              }}
+            >
               <Link to="/">
                 <button
                   className="text-white hover:bg-red-500 hover:text-black bg-transparent border border-red-500 rounded p-2 cursor-pointer transition duration-300"
-                  onClick={handleLogoutClick}>
+                  onClick={handleLogoutClick}
+                >
                   Log Out
                 </button>
               </Link>
             </div>
           </div>
         )}
-        <div
-          className="w-[11px] relative h-1.5 sm:flex"
-          onClick={handleDropdownClick}>
-          <img
-            className="absolute top-[-0.5px] left-[-1px] rounded-12xs w-[13px] h-[7px] object-cover cursor-pointer"
-            alt=""
-            src="/headernavbarprofile-dropdown-menuprofiledivprofiledropdownicon@2x.png"
-          />
-        </div>
-        <button className="cursor-pointer [border:none] p-0 bg-[transparent] flex flex-col items-end justify-start">
+        <button
+          className="cursor-pointer [border:none] p-0 bg-[transparent] flex flex-col items-end justify-start relative left-[-10px]"
+          onClick={handleDropdownClick}
+        >
           <div className="w-6 relative h-4">
             <div className="absolute top-[-0.7px] left-[-0.7px] box-border w-[25.5px] h-[1.5px] border-t-[1.5px] border-solid border-white" />
             <div className="absolute top-[7.3px] left-[-0.7px] box-border w-[25.5px] h-[1.5px] border-t-[1.5px] border-solid border-white" />

@@ -6,10 +6,6 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-import Cookie from "universal-cookie";
-import { log } from "util";
-
-// import Authjwt from "./middleware/auth";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -25,30 +21,13 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// async function Authjwt(req, res, next) {
-//   const cookies = new Cookie(req.headers.cookie);
-//   const token = cookies.get("authorization");
-//   // console.log(token);
-//   if (token) {
-//     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-//       if (err) {
-//         return res.sendStatus(403);
-//       }
-//       req.user = user;
-//       next();
-//     });
-//   } else {
-//     res.sendStatus(401);
-//   }
-// }
-
 app.post("/token", (req, res) => {
   const refreshToken = req.body.token;
 });
 
 function generateAccessToken(user) {
   return jwt.sign({ user: user }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "1h",
+    expiresIn: "2m",
   });
 }
 
@@ -180,6 +159,15 @@ app.get("/clubs", async (req, res) => {
 
 app.get("/club/:id", async (req, res) => {
   const clubid = parseInt(req.params.id);
+  const clubResult = await prisma.clubs.findFirst({
+    where: {
+      clubid: clubid,
+    },
+    select: {
+      clubname: true,
+      clubdesc: true,
+    },
+  });
   const result = await prisma.posts.findMany({
     where: {
       clubid: clubid,
@@ -210,7 +198,7 @@ app.get("/club/:id", async (req, res) => {
       : null,
   }));
 
-  res.json({ post: posts });
+  res.json({ post: posts, club: clubResult });
 });
 
 app.get("/follow", async (req, res) => {});
@@ -267,10 +255,17 @@ app.post("/signin", async (req, res) => {
       userData.username = user.username;
       userData.userId = user.userid;
       userData.role = user.role;
-      const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET);
+      const refreshToken = jwt.sign(
+        userData,
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: "1d" }
+      );
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
       res.json({
         accessToken: accessToken,
-        refreshToken: refreshToken,
         user: userData,
       });
     } else {
@@ -282,31 +277,30 @@ app.post("/signin", async (req, res) => {
   }
 });
 
-app.get("/clubmoderation", async (req,res)=>{
-
-  try{
+app.get("/clubmoderation", async (req, res) => {
+  try {
     const clublist = await prisma.clubs.findMany();
     // console.log(clublist);
-    res.json(clublist)
-  }catch(error){
+    res.json(clublist);
+  } catch (error) {
     console.log(error);
   }
 });
 
-app.delete("/clubmoderation", async (req,res)=>{
+app.delete("/clubmoderation", async (req, res) => {
   const id = req.body;
   console.log(id);
-  try{
+  try {
     const deleteClub = await prisma.clubs.delete({
-      where:{
+      where: {
         clubid: id.clubid,
       },
     });
     res.send("deleted successfully");
-  }catch(error){
+  } catch (error) {
     console.log(error);
   }
-})
+});
 
 app.post("/addpost", async (req, res) => {
   const postData = req.body;

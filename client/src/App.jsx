@@ -19,13 +19,13 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/clubmoderation" element={<ClubModeration />} />
-      <Route path="/clubcreateupdate" element={<ClubCreateupdate />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
       <Route element={<RequireAuth allowedRoles={["admin"]} />}>
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/clubmoderation" element={<ClubModeration />} />
+        <Route path="/clubcreateupdate/:id" element={<ClubCreateupdate />} />
       </Route>
       <Route element={<RequireAuth allowedRoles={["admin", "user"]} />}>
         <Route path="/home" element={<Home />} />

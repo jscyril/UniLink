@@ -3,26 +3,36 @@ import NavBar from "../components/NavBar";
 import SideNav from "../components/SideNav";
 import Card from "../components/Card";
 import EventsBar from "../components/EventBar";
+import axios from "../api/axios";
 export default function Home() {
   const [postValue, setPostValue] = useState({
     post: [],
   });
 
   useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000");
-        if (!response.ok) {
+        const response = await axios.get("/", {
+          signal: controller.signal,
+        });
+        console.log(response);
+        if (!response.statusText) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
-        setPostValue(data);
+        isMounted && setPostValue(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, []);
 
   return (

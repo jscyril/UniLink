@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-// import Cookies from "universal-cookie";
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 const LOGIN_URL = "/signin/";
@@ -13,7 +12,6 @@ export default function SignIn() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/home";
-  // const cookies = new Cookies();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
