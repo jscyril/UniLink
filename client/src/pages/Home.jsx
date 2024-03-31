@@ -4,10 +4,12 @@ import SideNav from "../components/SideNav";
 import Card from "../components/Card";
 import EventsBar from "../components/EventBar";
 import axios from "../api/axios";
+import useRefreshToken from "../hooks/useRefreshToken";
 export default function Home() {
   const [postValue, setPostValue] = useState({
     post: [],
   });
+  const refresh = useRefreshToken();
 
   useEffect(() => {
     let isMounted = true;
@@ -17,7 +19,6 @@ export default function Home() {
         const response = await axios.get("/", {
           signal: controller.signal,
         });
-        console.log(response);
         if (!response.statusText) {
           throw new Error("Network response was not ok");
         }
@@ -44,7 +45,8 @@ export default function Home() {
             <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
               <SideNav />
             </div>
-
+            <button onClick={() => refresh()}>Refresh</button>
+            <br />
             <div className="lg:flex-row">
               {postValue?.post.map((post) => (
                 <Card key={post.postid} cardInfo={post} />

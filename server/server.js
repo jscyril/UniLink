@@ -1,4 +1,5 @@
 import express from "express";
+import session from "express-session";
 import bcrypt from "bcrypt";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -6,6 +7,9 @@ import cors from "cors";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import cookieParser from "cookie-parser";
+// import { refreshHandler } from "./routes/refresh";
+// import { homeHandler } from "./routes/home";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -13,7 +17,8 @@ const port = 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const imagesFolderPath = join(__dirname, "../unilink/public");
-let userData = { username: "", userId: "", role: "" };
+let userData = {};
+app.use(cookieParser());
 dotenv.config();
 
 app.use("/public", express.static(imagesFolderPath));
@@ -21,9 +26,49 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.post("/token", (req, res) => {
-  const refreshToken = req.body.token;
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "secret",
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Adjust this according to your needs
+  })
+);
+
+app.get("/refresh", async (req, res) => {
+  const cookie = req.cookies;
+  console.log(cookie);
+  if (!cookie?.authorization) return res.sendStatus(401);
+  const refreshToken = cookie.authorization;
+  console.log(refreshToken);
+
+  const foundUser = await prisma.users.findUnique({
+    where: {
+      userid: userData.userId,
+    },
+    select: {
+      username: true,
+    },
+  });
+  console.log(foundUser);
+  if (!foundUser) return res.sendStatus(403); //Forbidden
+  // evaluate jwt
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+    console.log(decoded);
+    if (err || foundUser.username !== decoded.username) {
+      console.error(err);
+      return res.sendStatus(403).send("error occured");
+    }
+    const accessToken = jwt.sign(
+      { user: decoded },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "2m" }
+    );
+    res.json({ accessToken });
+  });
 });
+
+// app.get("/refresh", refreshHandler);
 
 function generateAccessToken(user) {
   return jwt.sign({ user: user }, process.env.ACCESS_TOKEN_SECRET, {
@@ -31,8 +76,12 @@ function generateAccessToken(user) {
   });
 }
 
+// app.get("/", homeHandler);
+
 app.get("/", async (req, res) => {
   try {
+    userData = req.session.user;
+    // console.log(userData);
     const posts = await prisma.posts.findMany({
       include: {
         users: {
@@ -251,19 +300,31 @@ app.post("/signin", async (req, res) => {
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (passwordMatch) {
-      const accessToken = generateAccessToken(user);
-      userData.username = user.username;
-      userData.userId = user.userid;
-      userData.role = user.role;
+      // userData.username = user.username;
+      // userData.userId = user.userid;
+      // userData.role = user.role;
+      req.session.user = {
+        username: user.username,
+        userId: user.userid,
+        role: user.role,
+      };
+      userData = req.session.user;
+      const accessToken = generateAccessToken(userData);
+      console.log("SIGN IN FUNCTION");
+      console.log(userData);
+      console.log(accessToken);
+      console.log("SIGN IN FUNCTION ENDS HERE");
       const refreshToken = jwt.sign(
         userData,
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "1d" }
       );
+      // console.log(req.session.user);
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
         maxAge: 24 * 60 * 60 * 1000,
       });
+      // console.log(refreshToken);
       res.json({
         accessToken: accessToken,
         user: userData,
@@ -285,6 +346,12 @@ app.get("/clubmoderation", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+app.post("/logout", (req, res) => {
+  // Destroy session to log user out
+  req.session.destroy();
+  res.json({ message: "Logged out successfully" });
 });
 
 app.delete("/clubmoderation", async (req, res) => {
