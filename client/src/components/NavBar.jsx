@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import axios from "../api/axios";
 export default function NavBar() {
   const [showLogout, setShowLogout] = useState(false);
   const [userValue, setUserValue] = useState({
     username: "",
   });
-
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth(); // Use the useAuth hook to access authentication context
   const isAdmin = auth.user.role === "admin";
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,9 +31,19 @@ export default function NavBar() {
     setShowLogout(!showLogout);
   };
 
-  const handleLogoutClick = () => {
-    // Handle logout logic here
+  const handleLogoutClick = async () => {
+    try {
+      const response = await axios.post("http://localhost:3000/logout");
+      if (!response.status) {
+        throw new Error("Network response was not ok");
+      }
+      setUserValue(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
     console.log("Logout clicked");
+    setAuth(null);
+    navigate("/");
   };
   return (
     <header className=" self-stretch box-border h-14 flex flex-row items-center justify-between py-0 px-9 text-left text-sm text-white font-inter border-b-[1px] border-solid border-gray-300 md:self-stretch md:w-auto md:h-12 sm:flex sm:self-stretch sm:w-auto sm:pl-3 sm:pr-3 sm:box-border sm:max-w-[420px]">
@@ -95,14 +106,12 @@ export default function NavBar() {
                 width: "calc(101px + 20px)", // Adjust the calculation as needed
               }}
             >
-              <Link to="/">
-                <button
-                  className="text-white hover:bg-red-500 hover:text-black bg-transparent border border-red-500 rounded p-2 cursor-pointer transition duration-300"
-                  onClick={handleLogoutClick}
-                >
-                  Log Out
-                </button>
-              </Link>
+              <button
+                className="text-white hover:bg-red-500 hover:text-black bg-transparent border border-red-500 rounded p-2 cursor-pointer transition duration-300"
+                onClick={handleLogoutClick}
+              >
+                Log Out
+              </button>
             </div>
           </div>
         )}

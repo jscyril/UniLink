@@ -22,7 +22,6 @@ app.use(cookieParser());
 dotenv.config();
 
 app.use("/public", express.static(imagesFolderPath));
-app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -35,11 +34,30 @@ app.use(
   })
 );
 
+// Cross Origin Resource Sharing
+// const whitelist = [
+//   "https://www.yoursite.com",
+//   "http://127.0.0.1:3000",
+//   "http://localhost:5173/",
+//   "http://127.0.0.1:5173",
+// ];
+// const corsOptions = {
+//   origin: (origin, callback) => {
+//     if (whitelist.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+//   optionsSuccessStatus: 200,
+// };
+// app.use(cors(corsOptions));
+
 app.get("/refresh", async (req, res) => {
   const cookie = req.cookies;
   console.log(cookie);
-  if (!cookie?.authorization) return res.sendStatus(401);
-  const refreshToken = cookie.authorization;
+  if (!cookie?.jwt) return res.sendStatus(401);
+  const refreshToken = cookie.jwt;
   console.log(refreshToken);
 
   const foundUser = await prisma.users.findUnique({
@@ -50,7 +68,6 @@ app.get("/refresh", async (req, res) => {
       username: true,
     },
   });
-  console.log(foundUser);
   if (!foundUser) return res.sendStatus(403); //Forbidden
   // evaluate jwt
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
@@ -62,7 +79,7 @@ app.get("/refresh", async (req, res) => {
     const accessToken = jwt.sign(
       { user: decoded },
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "2m" }
+      { expiresIn: "20s" }
     );
     res.json({ accessToken });
   });
@@ -72,7 +89,7 @@ app.get("/refresh", async (req, res) => {
 
 function generateAccessToken(user) {
   return jwt.sign({ user: user }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "2m",
+    expiresIn: "20s",
   });
 }
 
@@ -80,8 +97,6 @@ function generateAccessToken(user) {
 
 app.get("/", async (req, res) => {
   try {
-    userData = req.session.user;
-    // console.log(userData);
     const posts = await prisma.posts.findMany({
       include: {
         users: {
@@ -310,10 +325,6 @@ app.post("/signin", async (req, res) => {
       };
       userData = req.session.user;
       const accessToken = generateAccessToken(userData);
-      console.log("SIGN IN FUNCTION");
-      console.log(userData);
-      console.log(accessToken);
-      console.log("SIGN IN FUNCTION ENDS HERE");
       const refreshToken = jwt.sign(
         userData,
         process.env.REFRESH_TOKEN_SECRET,
@@ -350,7 +361,13 @@ app.get("/clubmoderation", async (req, res) => {
 
 app.post("/logout", (req, res) => {
   // Destroy session to log user out
-  req.session.destroy();
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Session deleted successfully.");
+    }
+  });
   res.json({ message: "Logged out successfully" });
 });
 
@@ -374,23 +391,24 @@ app.post("/addpost", async (req, res) => {
   console.log(postData);
 });
 
-app.get("/editprofile/:id", async (req, res)=>{
+app.get("/editprofile/:id", async (req, res) => {
   const id = parseInt(req.params.id);
   const userdata = await prisma.users.findFirst({
-    where:{
+    where: {
       userid: id,
-    },select:{
+    },
+    select: {
       username: true,
       email: true,
     },
   });
   console.log(userdata);
   res.json(userdata);
-})
+});
 
-app.patch("/editprofile", async (req,res)=>{
+app.patch("/editprofile", async (req, res) => {
   const userdata = req.body;
-  if(!userdata.newpassword && !userdata.oldpassword){
+  if (!userdata.newpassword && !userdata.oldpassword) {
     const updateUser = await prisma.users.update({
       where: {
         userid: userdata.userid,
@@ -399,17 +417,19 @@ app.patch("/editprofile", async (req,res)=>{
         username: userdata.username,
         email: userdata.email,
       },
-    })
-  }
-  else{
+    });
+  } else {
     const user = await prisma.users.findFirst({
       where: {
         userid: userdata.userid,
       },
     });
-    if(user){
-      const passwordMatch = await bcrypt.compare(userdata.oldpassword, user.password);
-      if(passwordMatch){
+    if (user) {
+      const passwordMatch = await bcrypt.compare(
+        userdata.oldpassword,
+        user.password
+      );
+      if (passwordMatch) {
         const hashedPassword = await bcrypt.hash(userdata.newpassword, 10);
         const updateUser = await prisma.users.update({
           where: {
@@ -423,9 +443,9 @@ app.patch("/editprofile", async (req,res)=>{
         });
       }
     }
-    
   }
-})
+});
+
 app.listen(port, () => {
   console.log(`Server is listening on Port ${port}`);
 });

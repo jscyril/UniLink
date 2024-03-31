@@ -3,20 +3,19 @@ import NavBar from "../components/NavBar";
 import SideNav from "../components/SideNav";
 import Card from "../components/Card";
 import EventsBar from "../components/EventBar";
-import axios from "../api/axios";
-import useRefreshToken from "../hooks/useRefreshToken";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 export default function Home() {
   const [postValue, setPostValue] = useState({
     post: [],
   });
-  const refresh = useRefreshToken();
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
     const fetchData = async () => {
       try {
-        const response = await axios.get("/", {
+        const response = await axiosPrivate.get("/", {
           signal: controller.signal,
         });
         if (!response.statusText) {
@@ -45,7 +44,6 @@ export default function Home() {
             <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
               <SideNav />
             </div>
-            <button onClick={() => refresh()}>Refresh</button>
             <br />
             <div className="lg:flex-row">
               {postValue?.post.map((post) => (

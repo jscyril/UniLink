@@ -24,13 +24,14 @@ export default function SignIn() {
     try {
       const response = await axios.post(LOGIN_URL, JSON.stringify(formData), {
         headers: { "Content-Type": "application/json" },
-        withCredentials: false,
+        withCredentials: true,
       });
       console.log(response);
       // Handle successful response
       if (response.statusText) {
         const accessToken = response?.data.accessToken;
         const user = response?.data.user;
+        console.log(user);
         setAuth({ user, accessToken });
         console.log("Login successful");
         navigate(from, { replace: true });

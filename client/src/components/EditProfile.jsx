@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export default function EditProfile() {
   const [userdata, setUserdata] = useState({});
@@ -9,6 +10,7 @@ export default function EditProfile() {
   const [email, setEmail] = useState("");
   const [oldpassword, SetOldpassword] = useState("");
   const [newpassword, SetNewpassword] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,7 +18,7 @@ export default function EditProfile() {
         const response = await axios.get(
           `http://localhost:3000/editprofile/${auth.user.userId}`
         );
-        if (response.status === 200) {
+        if (response.status) {
           setUserdata(response.data);
           setUsername(response.data.username);
           setEmail(response.data.email);
@@ -38,8 +40,14 @@ export default function EditProfile() {
       };
       console.log(user);
       try {
-        const response = await axios.patch("http://localhost:3000/editprofile", user);
+        const response = await axios.patch(
+          "http://localhost:3000/editprofile",
+          user
+        );
         console.log("Data sent to server:", response.data);
+        if (response.statusText) {
+          navigate("/profile");
+        }
       } catch (error) {
         console.log(error);
       }
@@ -52,8 +60,14 @@ export default function EditProfile() {
         userid: auth.user.userId,
       };
       try {
-        const response = await axios.patch("http://localhost:3000/editprofile", user);
+        const response = await axios.patch(
+          "http://localhost:3000/editprofile",
+          user
+        );
         console.log("Data sent to server:", response.data);
+        if (response.statusText) {
+          navigate("/profile");
+        }
       } catch (error) {
         console.log(error);
       }

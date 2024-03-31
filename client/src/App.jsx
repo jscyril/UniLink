@@ -11,7 +11,6 @@ import ClubOpen from "./pages/ClubOpen";
 import CreatePost from "./pages/CreatePost";
 import ClubCreateupdate from "./pages/ClubCreateupdate";
 import ClubModeration from "./pages/ClubModeration";
-// import Layout from "./Layout";
 import RequireAuth from "./components/RequireAuth";
 import AdminDashboard from "./pages/AdminDashboard";
 import UnauthorizedPage from "./components/Unauthorized";
