@@ -12,20 +12,20 @@ export default function ClubCreateupdate() {
   const [mod, setMod] = useState("");
   const [modlist, setModlist] = useState([]);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(`http://localhost:3000/club/${id}`);
-      if (response.status) {
-        setClubname(response.data.club.clubname);
-        setDescription(response.data.club.clubdesc);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-  fetchData();
-
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/club/${id}`);
+        if (response.status === 200) {
+          setClubname(response.data.club.clubname);
+          setDescription(response.data.club.clubdesc);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+
     // Fetching options from Prisma (you'll need to set up this endpoint in your server)
     const fetchOptions = async () => {
       try {
@@ -39,11 +39,10 @@ export default function ClubCreateupdate() {
     };
 
     fetchOptions();
-  }, []);
+  }, [id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
     const clubData = {
       clubname,
       description,
@@ -58,51 +57,27 @@ export default function ClubCreateupdate() {
       console.log("Data sent to server:", response.data);
     } catch (error) {
       console.error("Error sending data to server:", error);
-      // Handle error response
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error("Error status:", error.response.status);
-        console.error("Error data:", error.response.data);
-        // setError(error.response.data.message);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received:", error.message);
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.error("Request setup error:", error.message);
-      }
     }
-    console.log("Form submitted");
   };
 
   const handleAddMod = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/addmod", mod);
+      const response = await axios.post("http://localhost:3000/addmod", { mod });
       console.log("Data sent to server:", response.data);
     } catch (error) {
       console.error("Error sending data to server:", error);
-      // Handle error response
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error("Error status:", error.response.status);
-        console.error("Error data:", error.response.data);
-        // setError(error.response.data.message);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received:", error.message);
-      } else {
-        // Something happened in setting up the request that triggered an error
-        console.error("Request setup error:", error.message);
-      }
     }
   };
+
   const hiddenFileInput = useRef(null);
-  const handleClick = (event) => {
+  const handleClick = () => {
     hiddenFileInput.current.click();
   };
+
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
   };
+
   return (
     <div className="w-full relative bg-gray-400 overflow-hidden flex flex-col items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
       <main className="self-stretch h-screen flex flex-col items-center justify-start gap-[10px] text-left text-5xl text-white font-inter lg:self-stretch lg:w-auto lg:flex-1 md:self-stretch md:w-auto sm:self-stretch sm:w-auto">

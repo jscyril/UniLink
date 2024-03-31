@@ -106,7 +106,7 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/profile", async (req, res) => {
-  const result = await prisma.users.findUnique({
+  const result = await prisma.users.findFirst({
     where: {
       userid: userData.userId,
     },
@@ -307,6 +307,58 @@ app.post("/addpost", async (req, res) => {
   console.log(postData);
 });
 
+app.get("/editprofile/:id", async (req, res)=>{
+  const id = parseInt(req.params.id);
+  const userdata = await prisma.users.findFirst({
+    where:{
+      userid: id,
+    },select:{
+      username: true,
+      email: true,
+    },
+  });
+  console.log(userdata);
+  res.json(userdata);
+})
+
+app.patch("/editprofile", async (req,res)=>{
+  const userdata = req.body;
+  if(!userdata.newpassword && !userdata.oldpassword){
+    const updateUser = await prisma.users.update({
+      where: {
+        userid: userdata.userid,
+      },
+      data: {
+        username: userdata.username,
+        email: userdata.email,
+      },
+    })
+  }
+  else{
+    const user = await prisma.users.findFirst({
+      where: {
+        userid: userdata.userid,
+      },
+    });
+    if(user){
+      const passwordMatch = await bcrypt.compare(userdata.oldpassword, user.password);
+      if(passwordMatch){
+        const hashedPassword = await bcrypt.hash(userdata.newpassword, 10);
+        const updateUser = await prisma.users.update({
+          where: {
+            userid: userdata.userid,
+          },
+          data: {
+            username: userdata.username,
+            email: userdata.email,
+            password: hashedPassword,
+          },
+        });
+      }
+    }
+    
+  }
+})
 app.listen(port, () => {
   console.log(`Server is listening on Port ${port}`);
 });
