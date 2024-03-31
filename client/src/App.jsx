@@ -15,6 +15,7 @@ import ClubModeration from "./pages/ClubModeration";
 import RequireAuth from "./components/RequireAuth";
 import AdminDashboard from "./pages/AdminDashboard";
 import UnauthorizedPage from "./components/Unauthorized";
+import EditProfilePage from "./pages/EditProfilePage";
 const App = () => {
   return (
     <Routes>
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/announcements" element={<Annoucement />} />
         <Route path="/addpost" element={<CreatePost />} />
         <Route path="/club/:id" element={<ClubOpen />} />
+        <Route path="/editprofile" element={<EditProfilePage />} />
       </Route>
     </Routes>
   );

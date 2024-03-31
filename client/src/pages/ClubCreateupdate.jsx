@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Clubcreate from "../components/clubcrreate";
 import axios from "axios";
 
 export default function ClubCreateupdate() {
   let { id } = useParams();
-  const navigate = useNavigate();
   const [clubname, setClubname] = useState("");
   const [description, setDescription] = useState("");
   const [rules, setRules] = useState("");
@@ -73,7 +72,7 @@ export default function ClubCreateupdate() {
         console.error("Request setup error:", error.message);
       }
     }
-    console.log("Form submitted!", clubname, description, rules);
+    console.log("Form submitted");
   };
 
   const handleAddMod = async () => {

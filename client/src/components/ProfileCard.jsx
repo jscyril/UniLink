@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 export default function CardProfile() {
   const [userValue, setUserValue] = useState({
     user: [],
@@ -109,13 +110,13 @@ export default function CardProfile() {
                       {userValue.user.username}
                     </h2>
                   </div>
-                  <button className="cursor-pointer [border:none] p-0 bg-[transparent] w-[27.6px] relative h-[27.2px]">
+                  <Link to="/editprofile" className="cursor-pointer [border:none] p-0 bg-[transparent] w-[27.6px] relative h-[27.2px]">
                     <img
                       className="absolute top-[0px] w-[27.6px] h-[27.2px] object-cover"
                       alt=""
                       src="/group-26@2x.png"
                     />
-                  </button>
+                  </Link>
                   <div className="self-stretch relative text-xs font-light top-2 flex justify-center">
                     {fJoinDate}
                   </div>
