@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
+import { log } from "console";
 // import { refreshHandler } from "./routes/refresh";
 // import { homeHandler } from "./routes/home";
 
@@ -34,6 +35,12 @@ app.use(
   })
 );
 
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow requests from this origin
+    credentials: true, // Allow credentials
+  })
+);
 // Cross Origin Resource Sharing
 // const whitelist = [
 //   "https://www.yoursite.com",
@@ -140,7 +147,6 @@ app.get("/", async (req, res) => {
         },
       },
     });
-
     const events = await prisma.posts.findMany({
       select: {
         title: true,
@@ -156,7 +162,6 @@ app.get("/", async (req, res) => {
       clubid: clubs.clubid,
       clubname: clubs.clubs ? clubs.clubs.clubname : null,
     }));
-
     res.json({
       username: userData.username,
       clubs: clubs,
@@ -265,8 +270,54 @@ app.get("/club/:id", async (req, res) => {
   res.json({ post: posts, club: clubResult });
 });
 
-app.get("/follow", async (req, res) => {});
+app.post("/follow", async (req, res) => {
+  const data = req.body;
 
+  const userclub = await prisma.clubmembers.findFirst({
+    where:{
+      userid: data.userid,
+      clubid: data.clubid,
+    },
+  });
+  if(userclub){
+    res.json({value: true});
+  }
+  else{
+    res.json({value: false});
+  }
+});
+
+app.post("/clubmember", async (req,res) =>{
+  const data = req.body;
+
+  const adduser = await prisma.clubmembers.create({
+    data: {
+      userid: data.userid,
+      clubid: data.clubid,
+    },
+  });
+  if(adduser){
+    res.status(200);
+  } else{
+    res.status(400);
+  }
+});
+
+app.delete("/clubmember", async (req,res)=>{
+  const data = req.body;
+  const deleteUserClub = await prisma.clubmembers.delete({
+    where:{
+      userid: data.userid,
+      clubid: data.clubid,
+    },
+  });
+  if(deleteUserClub){
+    res.send("deleted");
+  }
+  else{
+    res.send("error not deleted line 318 server.js");
+  }
+})
 app.post("/signup", async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -405,6 +456,61 @@ app.get("/editprofile/:id", async (req, res) => {
   console.log(userdata);
   res.json(userdata);
 });
+
+app.get("/clubcreateupdate/:id", async (req,res)=>{
+  const id = parseInt(req.params.id);
+  const modList = await prisma.moderators.findMany({
+    where: {
+      clubid: id,
+    },
+    select:{
+      moderatorid: true,
+      userid: true,
+    },
+  });
+
+  if(modList){
+    res.json(modList);
+  }else{
+    res.send("mod list can not be sent");
+  }
+})
+
+app.post("/clubcreateupdate", async(req,res)=>{
+  const data = req.body;
+
+  const createClub = await prisma.clubs.create({
+    data:{
+      clubname: data.clubname,
+      clubdesc: data.description,
+      clublogo: data.clublogo,
+    }
+  });
+  if(createClub){
+    console.log(createClub);
+    res.send("club created");
+  }
+})
+
+app.get("/clubmoderator/:id", async (req, res)=>{
+  const id = parseInt(req.params.id);
+  const user = await prisma.users.findFirst({
+    where:{
+      userid: id,
+    },
+    select:{
+      username: true,
+      userid: true,
+      email: true,
+    },
+  });
+  if(user){
+    res.json(user);
+  }
+  else{
+    res.status(400);
+  }
+})
 
 app.patch("/editprofile", async (req, res) => {
   const userdata = req.body;
