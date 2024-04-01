@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Clubcreate from "../components/clubcrreate";
-import axios from "axios";
+import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function ClubCreateupdate() {
   let { id } = useParams();
@@ -11,17 +12,21 @@ export default function ClubCreateupdate() {
   const [rules, setRules] = useState("");
   const [mod, setMod] = useState("");
   const [modlist, setModlist] = useState([]);
-
+  const [btn, setBtn] = useState("Create");
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/club/${id}`);
-        if (response.status === 200) {
-          setClubname(response.data.club.clubname);
-          setDescription(response.data.club.clubdesc);
+      if(id!==undefined){
+        try {
+          const response = await axios.get(`/club/${id}`);
+          if (response.status === 200) {
+            setClubname(response.data.club.clubname);
+            setDescription(response.data.club.clubdesc);
+            setBtn("Update");
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
     };
     fetchData();
@@ -30,7 +35,7 @@ export default function ClubCreateupdate() {
     const fetchOptions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/clubcreateupdate"
+          `/clubcreateupdate/${id}`
         );
         setModlist(response.data);
       } catch (error) {
@@ -51,10 +56,14 @@ export default function ClubCreateupdate() {
     };
     try {
       const response = await axios.post(
-        "http://localhost:3000/clubcreateupdate",
+        "/clubcreateupdate",
         clubData
       );
       console.log("Data sent to server:", response.data);
+      navigate("/clubmoderation")
+      if(response.statusText){
+        navigate("/clubmoderation")
+      }
     } catch (error) {
       console.error("Error sending data to server:", error);
     }
@@ -62,7 +71,7 @@ export default function ClubCreateupdate() {
 
   const handleAddMod = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/addmod", { mod });
+      const response = await axios.post("/addmod", mod);
       console.log("Data sent to server:", response.data);
     } catch (error) {
       console.error("Error sending data to server:", error);
@@ -152,16 +161,17 @@ export default function ClubCreateupdate() {
               <div className="self-stretch flex flex-col items-start justify-center py-0 pr-0 pl-[147px] text-lg">
                 <div className="flex flex-col items-start justify-start">
                   {modlist?.map((mods) => (
-                    <Clubcreate key={mods.userid} />
+                    <Clubcreate key={mods.userid} modInfo={mods}/>
                   ))}
                 </div>
               </div>
+
               <button
                 type="submit"
                 className=" rounded-md cursor-pointer py-1 px-2.5 bg-[transparent] rounded-8xs flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue relative left-[255px]"
               >
                 <div className="relative text-5xl font-inter text-white text-left">
-                  Create
+                  {btn}
                 </div>
               </button>
             </form>

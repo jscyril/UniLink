@@ -26,6 +26,7 @@ const App = () => {
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/clubmoderation" element={<ClubModeration />} />
         <Route path="/clubcreateupdate/:id" element={<ClubCreateupdate />} />
+        <Route path="/clubcreateupdate" element={<ClubCreateupdate />} />
       </Route>
       <Route element={<RequireAuth allowedRoles={["admin", "user"]} />}>
         <Route path="/home" element={<Home />} />

@@ -57,7 +57,7 @@ export default function Card(props) {
                 Join
               </div>
             </button> */}
-            <Button />
+            {/* <Button /> */}
           </div>
           <Link to="/post" className=" text-inherit no-underline">
             <h2 className="m-0 relative text-5xl font-normal font-inherit">
