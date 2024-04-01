@@ -12,9 +12,10 @@ const Button = (props) => {
           userid: auth.user.userId,
           clubid: props.clubInfo.clubid,
         };
-        console.log(auth);
+        console.log(auth.user.userId);
         const response = await axios.post("/follow", data);
         if (response.data.value) {
+          console.log(response.data);
           setIsClicked(response.data.value);
         }
       } catch (error) {
@@ -23,13 +24,14 @@ const Button = (props) => {
     }
     usedata()
   },[]);
+
   const handleClick = async () => {
     setIsClicked((prevIsClicked) => !prevIsClicked);
     const data = {
       clubid: props.clubInfo.clubid,
       userid: auth.user.userId,
     };
-    if(isClicked){
+    if(!isClicked){
       try {
         const response = await axios.post("/clubmember", data);
         console.log(response.data);

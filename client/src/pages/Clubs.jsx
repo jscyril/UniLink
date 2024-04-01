@@ -3,22 +3,16 @@ import SideNav from "../components/SideNav";
 import ClubList from "../components/ClubList";
 import EventsBar from "../components/EventBar";
 import { useState, useEffect } from "react";
+import axios from "../api/axios";
 export default function Clubs() {
-  const [postValue, setPostValue] = useState({
-    clubs: [],
-    eventBar: {},
-    post: [],
-  });
+  const [postValue, setPostValue] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setPostValue(data);
+        const response = await axios.get("/clubs");
+        setPostValue(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -37,7 +31,11 @@ export default function Clubs() {
             </div>
 
             <div className="flex flex-row items-start justify-start lg:flex-1 sm:w-auto sm:[align-self:unset]">
-              <ClubList />
+            <div className="w-[720px] box-border flex  rounded-md flex-col items-center justify-start py-3 px-5 gap-[30px_0px] border-solid border-darkslategray-100 border-[1px] lg:flex-col lg:gap-[30px_0px] md:w-auto md:[align-self:unset] md:flex-col sm:flex-1 sm:pl-0 sm:pr-0 sm:box-border">
+            {postValue.map((club) => (
+                  <ClubList key={club.clubid} clubInfo={club} />
+                ))}
+              </div>
             </div>
 
             <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">

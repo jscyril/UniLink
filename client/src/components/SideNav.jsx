@@ -4,16 +4,14 @@ import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
 
 export default function SideNav() {
-  const [clubValue, setClubValue] = useState({
-    clubs: [],
-  });
+  const [clubValue, setClubValue] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get("/");
-        setClubValue(response.data);
-        console.log(response.data);
+        setClubValue(response.data.clubs);
+        console.log(response.data.clubs);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -105,7 +103,7 @@ export default function SideNav() {
             </button>
             <div className="w-20 relative box-border h-0.5 border-t-[2px] border-solid border-gray-300" />
           </div>
-          {clubValue.clubs.slice(0, 5).map((club) => (
+          {clubValue.slice(0, 5).map((club) => (
             <button
               onClick={() => handleClick(club.clubid)}
               key={club.clubid}

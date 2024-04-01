@@ -157,7 +157,6 @@ app.get("/", async (req, res) => {
         likes: "desc",
       },
     });
-
     const clubs = userClubs.map((clubs) => ({
       clubid: clubs.clubid,
       clubname: clubs.clubs ? clubs.clubs.clubname : null,
@@ -173,6 +172,18 @@ app.get("/", async (req, res) => {
     throw error;
   }
 });
+
+app.get("/clubs", async (req,res)=>{
+  const clubs = await prisma.clubs.findMany({
+    select:{
+      clubid: true,
+      clubname: true,
+      clubdesc: true,
+      clublogo: true,
+    },
+  });
+  res.json(clubs);
+})
 
 app.get("/profile", async (req, res) => {
   const result = await prisma.users.findFirst({
@@ -272,12 +283,15 @@ app.get("/club/:id", async (req, res) => {
 
 app.post("/follow", async (req, res) => {
   const data = req.body;
-
   const userclub = await prisma.clubmembers.findFirst({
     where:{
       userid: data.userid,
       clubid: data.clubid,
-    },
+    }, select:{
+      userclubid: true,
+      userid: true,
+      clubid:true,
+    }
   });
   if(userclub){
     res.json({value: true});
@@ -298,6 +312,7 @@ app.post("/clubmember", async (req,res) =>{
   });
   if(adduser){
     res.status(200);
+
   } else{
     res.status(400);
   }
