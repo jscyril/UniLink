@@ -320,10 +320,19 @@ app.post("/clubmember", async (req,res) =>{
 
 app.delete("/clubmember", async (req,res)=>{
   const data = req.body;
+  const user = await prisma.clubmembers.findFirst({
+    where: {
+      userid: data.userid,
+      clubid: data.id,
+    },
+    select:{
+      userclubid: true,
+    },
+  });
+
   const deleteUserClub = await prisma.clubmembers.delete({
     where:{
-      userid: data.userid,
-      clubid: data.clubid,
+      userclubid: user.userclubid,
     },
   });
   if(deleteUserClub){
