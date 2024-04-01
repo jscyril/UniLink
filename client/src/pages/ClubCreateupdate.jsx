@@ -62,7 +62,8 @@ export default function ClubCreateupdate() {
       console.log("Data sent to server:", response.data);
       navigate("/clubmoderation")
       if(response.statusText){
-        navigate("/clubmoderation")
+        navigate("/clubmoderation");
+        window.location.reload();
       }
     } catch (error) {
       console.error("Error sending data to server:", error);
