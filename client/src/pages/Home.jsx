@@ -5,24 +5,27 @@ import Card from "../components/Card";
 import EventsBar from "../components/EventBar";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
 export default function Home() {
   const [postValue, setPostValue] = useState({
     post: [],
   });
-  // const axiosPrivate = useAxiosPrivate();
+  const axiosPrivate = useAxiosPrivate();
+  const { auth } = useAuth();
 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
     const fetchData = async () => {
       try {
-        const response = await axios.get("/", {
+        const response = await axiosPrivate.get("/", {
           signal: controller.signal,
         });
         if (!response.statusText) {
           throw new Error("Network response was not ok");
         }
         isMounted && setPostValue(response.data);
+        console.log(auth);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

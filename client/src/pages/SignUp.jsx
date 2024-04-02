@@ -1,14 +1,16 @@
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+const SIGNUP_URL = "/signup/";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -25,11 +27,11 @@ export default function SignUp() {
       password,
     };
     try {
-      const response = await axios.post("/signup", JSON.stringify(formData), {
+      const response = await axios.post(SIGNUP_URL, JSON.stringify(formData), {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-      console.log(response);  
+      console.log(response);
       if (response.statusText) {
         const accessToken = response?.data.accessToken;
         const user = response?.data.user;
@@ -38,18 +40,18 @@ export default function SignUp() {
         console.log("New User created");
         navigate("/home");
       }
-    }catch (error) {
-    if (!error?.response) {
-      setError("Server did not respond");
-    } else if (error.response?.status === 400) {
-      setError("Invalid Username");
-    } else if (error.response?.status === 401) {
-      setError("Incorrect Password");
-    } else {
-      setError("Sign Up Failed");
+    } catch (error) {
+      if (!error?.response) {
+        setError("Server did not respond");
+      } else if (error.response?.status === 400) {
+        setError("Invalid Username");
+      } else if (error.response?.status === 401) {
+        setError("Incorrect Password");
+      } else {
+        setError("Sign Up Failed");
+      }
     }
-  }
-}
+  };
   return (
     <div className="w-full relative h-screen flex flex-col items-start justify-start sm:w-auto sm:[align-self:unset] sm:h-auto">
       <main className="self-stretch flex-1 bg-gray-400 overflow-hidden flex flex-col items-center justify-start px-0 sm:self-stretch sm:w-auto sm:flex-1">
@@ -93,7 +95,9 @@ export default function SignUp() {
                       placeholder="Username"
                       type="text"
                       value={username}
-                      onChange={(e) => {setUsername(e.target.value)}}
+                      onChange={(e) => {
+                        setUsername(e.target.value);
+                      }}
                       required
                     />
                     <input
@@ -102,7 +106,9 @@ export default function SignUp() {
                       placeholder="Email address"
                       type="text"
                       value={email}
-                      onChange={(e) => {setEmail(e.target.value);}}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                      }}
                       required
                     />
                     <input
@@ -111,14 +117,17 @@ export default function SignUp() {
                       placeholder="Password"
                       type="password"
                       value={password}
-                      onChange={(e) => {setPassword(e.target.value);}}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                      }}
                       required
                     />
                   </div>
                   {error && <div className="text-red-500 text-sm">{error}</div>}
                   <button
                     type="submit"
-                    className="cursor-pointer rounded-full py-4 px-[52px] bg-mediumslateblue rounded-9xl shadow-[0px_4px_33px_9px_#13152c] overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue sm:py-3 sm:px-8 sm:box-border sm:border-[2px] sm:border-solid sm:border-mediumslateblue">
+                    className="cursor-pointer rounded-full py-4 px-[52px] bg-mediumslateblue rounded-9xl shadow-[0px_4px_33px_9px_#13152c] overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue sm:py-3 sm:px-8 sm:box-border sm:border-[2px] sm:border-solid sm:border-mediumslateblue"
+                  >
                     <div className="relative text-5xl font-inter text-black text-justify sm:text-base">
                       Sign Up
                     </div>
@@ -132,4 +141,3 @@ export default function SignUp() {
     </div>
   );
 }
-

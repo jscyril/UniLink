@@ -262,7 +262,7 @@ app.get("/post/:id", async (req, res) => {
       likes: post.likes,
       imagepath: post.imagepath ? post.imagepath : null,
       username: post.users.username,
-      club:{ clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
+      club: { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo },
     };
     console.log(data);
     res.json(data);
@@ -273,7 +273,7 @@ app.get("/post/:id", async (req, res) => {
 
 app.get("/club/:id", async (req, res) => {
   const clubid = parseInt(req.params.id);
-  const clubResult = await prisma.clubs.findFirst({
+  const clubResult = await prisma.clubs.findUnique({
     where: {
       clubid: clubid,
     },
@@ -317,7 +317,7 @@ app.get("/club/:id", async (req, res) => {
 
 app.post("/follow", async (req, res) => {
   const data = req.body;
-  const userclub = await prisma.clubmembers.findFirst({
+  const userclub = await prisma.clubmembers.findUnique({
     where: {
       userid: data.userid,
       clubid: data.clubid,
@@ -353,7 +353,7 @@ app.post("/clubmember", async (req, res) => {
 
 app.delete("/clubmember", async (req, res) => {
   const data = req.body;
-  const user = await prisma.clubmembers.findFirst({
+  const user = await prisma.clubmembers.findUnique({
     where: {
       userid: data.userid,
       clubid: data.id,
@@ -405,22 +405,23 @@ app.post("/signup", async (req, res) => {
       userId: newUser.userid,
       role: newUser.role,
     };
-    userData.username = req.session.user
+
+    userData = req.session.user;
     const accessToken = generateAccessToken(userData);
-    const refreshToken = jwt.sign(
-      userData,
-      process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
-    );
+    const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET, {
+      expiresIn: "1d",
+    });
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
+      // maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 10000,
+      sameSite: false,
     });
     res.json({
       accessToken: accessToken,
       user: userData,
     });
-    } catch (err) {
+  } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error occurred during registration" });
   }
@@ -439,9 +440,6 @@ app.post("/signin", async (req, res) => {
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (passwordMatch) {
-      // userData.username = user.username;
-      // userData.userId = user.userid;
-      // userData.role = user.role;
       req.session.user = {
         username: user.username,
         userId: user.userid,
@@ -454,12 +452,12 @@ app.post("/signin", async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "1d" }
       );
-      // console.log(req.session.user);
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
+        // maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 10000,
+        sameSite: false,
       });
-      // console.log(refreshToken);
       res.json({
         accessToken: accessToken,
         user: userData,
@@ -517,7 +515,7 @@ app.post("/addpost", async (req, res) => {
 
 app.get("/editprofile/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const userdata = await prisma.users.findFirst({
+  const userdata = await prisma.users.findUnique({
     where: {
       userid: id,
     },
@@ -567,7 +565,7 @@ app.post("/clubcreateupdate", async (req, res) => {
 
 app.get("/clubmoderator/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const user = await prisma.users.findFirst({
+  const user = await prisma.users.findUnique({
     where: {
       userid: id,
     },
@@ -597,7 +595,7 @@ app.patch("/editprofile", async (req, res) => {
       },
     });
   } else {
-    const user = await prisma.users.findFirst({
+    const user = await prisma.users.findUnique({
       where: {
         userid: userdata.userid,
       },
