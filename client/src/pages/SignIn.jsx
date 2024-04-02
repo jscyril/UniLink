@@ -12,6 +12,7 @@ export default function SignIn() {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/home";
+  console.log(from);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,13 +36,7 @@ export default function SignIn() {
         setAuth({ user, accessToken });
         console.log("Login successful");
         navigate(from, { replace: true });
-      } else {
-        // Handle error response
-        console.error("Login failed");
-        const errorData = await response.json();
-        console.log(errorData);
-        setError(errorData.error);
-      }
+      } 
     } catch (error) {
       if (!error?.response) {
         setError("Server did not respond");

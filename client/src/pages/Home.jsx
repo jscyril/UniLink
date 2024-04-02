@@ -4,18 +4,19 @@ import SideNav from "../components/SideNav";
 import Card from "../components/Card";
 import EventsBar from "../components/EventBar";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import axios from "../api/axios";
 export default function Home() {
   const [postValue, setPostValue] = useState({
     post: [],
   });
-  const axiosPrivate = useAxiosPrivate();
+  // const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
     const fetchData = async () => {
       try {
-        const response = await axiosPrivate.get("/", {
+        const response = await axios.get("/", {
           signal: controller.signal,
         });
         if (!response.statusText) {
@@ -33,7 +34,7 @@ export default function Home() {
       isMounted = false;
       controller.abort();
     };
-  }, []);
+  }, [axiosPrivate]);
 
   return (
     <div className="w-full relative bg-gray-400 overflow-hidden flex flex-row items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">

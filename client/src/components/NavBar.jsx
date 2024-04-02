@@ -10,16 +10,12 @@ export default function NavBar() {
   const { auth, setAuth } = useAuth(); // Use the useAuth hook to access authentication context
   const isAdmin = auth.user.role === "admin";
   const navigate = useNavigate();
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setUserValue(data);
+        const response = await axios.get("/");
+        setUserValue(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
