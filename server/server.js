@@ -2,7 +2,7 @@ import express from "express";
 import session from "express-session";
 import bcrypt from "bcrypt";
 import { fileURLToPath } from "url";
-import { dirname, join, resolve } from "path";
+import { dirname, join } from "path";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -306,7 +306,7 @@ app.get("/club/:id", async (req, res) => {
     timestamp: post.timestamp,
     likes: post.likes,
     imagepath: post.imagepath ? post.imagepath : null,
-    user: post.users ? post.users.username : null,
+    username: post.users ? post.users.username : null,
     club: post.clubs
       ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
       : null,
@@ -317,7 +317,7 @@ app.get("/club/:id", async (req, res) => {
 
 app.post("/follow", async (req, res) => {
   const data = req.body;
-  const userclub = await prisma.clubmembers.findUnique({
+  const userclub = await prisma.clubmembers.findFirst({
     where: {
       userid: data.userid,
       clubid: data.clubid,
@@ -415,7 +415,6 @@ app.post("/signup", async (req, res) => {
       httpOnly: true,
       // maxAge: 24 * 60 * 60 * 1000,
       maxAge: 10000,
-      sameSite: false,
     });
     res.json({
       accessToken: accessToken,
@@ -456,7 +455,6 @@ app.post("/signin", async (req, res) => {
         httpOnly: true,
         // maxAge: 24 * 60 * 60 * 1000,
         maxAge: 10000,
-        sameSite: false,
       });
       res.json({
         accessToken: accessToken,

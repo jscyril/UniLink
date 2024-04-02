@@ -18,7 +18,7 @@ model clubRules {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model clubmembers {
-  userclubid Int    @id @default(autoincrement())
+  userclubid Int    @id @unique @default(autoincrement())
   userid     Int?
   clubid     Int?
   clubs      clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
@@ -29,12 +29,12 @@ model clubmembers {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model clubs {
-  clubid       Int           @id @default(autoincrement())
-  clubname     String        @db.VarChar(255)
-  creationdate DateTime?     @db.Timestamp(6)
+  clubid       Int           @id @unique @default(autoincrement())
+  clubname     String        @unique
+  creationdate DateTime?     @default(now()) @db.Timestamp(6)
   clubdesc     String?
   clublogo     String?
-  postcount    Int?
+  postcount    Int?          @default(0)
   clubRules    clubRules[]
   clubmembers  clubmembers[]
   moderators   moderators[]
@@ -43,7 +43,7 @@ model clubs {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model moderators {
-  moderatorid Int    @id @default(autoincrement())
+  moderatorid Int    @id @unique @default(autoincrement())
   userid      Int?
   clubid      Int?
   clubs       clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
@@ -52,7 +52,7 @@ model moderators {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model posts {
-  postid      Int       @id @default(autoincrement())
+  postid      Int       @id @unique @default(autoincrement())
   userid      Int?
   clubid      Int?
   title       String    @db.VarChar(255)
@@ -64,24 +64,25 @@ model posts {
   users       users?    @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model refreshToken {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  token       String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model users {
-  userid           Int           @id @default(autoincrement())
-  username         String        @db.VarChar(255)
+  userid           Int           @id @unique @default(autoincrement())
+  username         String        @unique
   password         String        @db.VarChar(255)
-  email            String        @db.VarChar(255)
+  email            String        @unique
   role             String        @db.VarChar(50)
   lastlogindate    DateTime?     @db.Timestamp(6)
   registrationdate DateTime?     @default(now()) @db.Timestamp(6)
   clubmembers      clubmembers[]
   moderators       moderators[]
   posts            posts[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model refreshtoken {
+  id        Int      @id(map: "RefreshToken_pkey") @default(autoincrement())
+  userId    Int
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
 }

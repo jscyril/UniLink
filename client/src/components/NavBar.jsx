@@ -10,11 +10,11 @@ export default function NavBar() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(auth.accessToken);
     const fetchData = async () => {
       try {
         const response = await axios.get("/");
         if (response.statusText) {
-          console.log(response.data);
           setUserValue(response.data.username);
         }
       } catch (error) {

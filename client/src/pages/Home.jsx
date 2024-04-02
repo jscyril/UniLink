@@ -4,15 +4,11 @@ import SideNav from "../components/SideNav";
 import Card from "../components/Card";
 import EventsBar from "../components/EventBar";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import axios from "../api/axios";
-import useAuth from "../hooks/useAuth";
 export default function Home() {
   const [postValue, setPostValue] = useState({
     post: [],
   });
   const axiosPrivate = useAxiosPrivate();
-  const { auth } = useAuth();
-
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
@@ -25,7 +21,6 @@ export default function Home() {
           throw new Error("Network response was not ok");
         }
         isMounted && setPostValue(response.data);
-        console.log(auth);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
