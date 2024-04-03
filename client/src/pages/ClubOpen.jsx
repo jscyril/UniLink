@@ -4,26 +4,24 @@ import NavBar from "../components/NavBar";
 import SideNav from "../components/SideNav";
 import Card from "../components/Card";
 import ClubInfoBar from "../components/ClubInfoBar";
+import axios from "../api/axios";
 export default function Clubopen() {
   let { id } = useParams();
   const [postValue, setPostValue] = useState({ post: [] });
-
+  const [clubValue, setClubValue] = useState({})
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/club/${id}`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setPostValue(data);
+        const response = await axios.get(`/club/${id}`);
+        setPostValue(response.data);
+        setClubValue(response.data.club);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, []);
+}, []);
 
   return (
     <div className="w-full relative bg-gray-400 overflow-hidden flex flex-row items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
@@ -42,7 +40,7 @@ export default function Clubopen() {
             </div>
           )}
           <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
-            <ClubInfoBar />
+          {clubValue && <ClubInfoBar clubInfo={clubValue} />}
           </div>
         </div>
       </main>

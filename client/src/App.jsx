@@ -15,6 +15,7 @@ import RequireAuth from "./components/RequireAuth";
 import AdminDashboard from "./pages/AdminDashboard";
 import UnauthorizedPage from "./components/Unauthorized";
 import EditProfilePage from "./pages/EditProfilePage";
+import Postopen from "./pages/Postopen";
 const App = () => {
   return (
     <Routes>
@@ -23,14 +24,16 @@ const App = () => {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/unauthorized" element={<UnauthorizedPage />} />
       <Route element={<RequireAuth allowedRoles={["admin"]} />}>
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />  
         <Route path="/clubmoderation" element={<ClubModeration />} />
         <Route path="/clubcreateupdate/:id" element={<ClubCreateupdate />} />
+        <Route path="/clubcreateupdate" element={<ClubCreateupdate />} />
       </Route>
       <Route element={<RequireAuth allowedRoles={["admin", "user"]} />}>
         <Route path="/home" element={<Home />} />
         <Route path="/post" element={<Post />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/post/:id" element={<Postopen />} />
         <Route path="/clubs" element={<Clubs />} />
         <Route path="/announcements" element={<Annoucement />} />
         <Route path="/addpost" element={<CreatePost />} />

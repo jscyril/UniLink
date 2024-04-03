@@ -1,40 +1,36 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-export default function SideNav() {
-  const [clubValue, setClubValue] = useState({
-    clubs: [],
-  });
+import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
+export default function SideNav() {
+  const [clubValue, setClubValue] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        setClubValue(data);
+        const response = await axios.get("/");
+        setClubValue(response.data.clubs);
+        console.log(response.data.clubs);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
     fetchData();
   }, []);
+
+  const handleClick = async (clubid) => {
+    console.log(clubid);
+    if (location.pathname !== `/club/${clubid}`) {
+      navigate(`/club/${clubid}`);
+      window.location.reload();
+    }
+  };
+
   return (
     <div className=" sticky w-[235px] flex flex-col items-center justify-start gap-[24px] lg:hidden sm:hidden">
       <div className="self-stretch flex flex-col items-start justify-start gap-[22px]">
-        {/* <button className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]">
-          <img
-            className="w-[29px] relative h-[23px] object-cover"
-            alt=""
-            src="/side-nav-bardivoptionsbuttonhomeicon@2x.png"
-          />
-          <h3 className="m-0 flex-1 relative text-base font-normal font-inter text-white text-left">
-            <Link to="/" className=" text-inherit no-underline">
-              Home
-            </Link>
-          </h3>
-        </button> */}
         <Link
           to="/home"
           className=" text-inherit no-underline cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]"
@@ -57,7 +53,6 @@ export default function SideNav() {
             alt=""
             src="/side-nav-bardivoptionsbuttonprofileicon@2x.png"
           />
-
           <h3 className="m-0 flex-1 relative text-base font-normal font-inter text-white text-left">
             Profile
           </h3>
@@ -108,14 +103,14 @@ export default function SideNav() {
             </button>
             <div className="w-20 relative box-border h-0.5 border-t-[2px] border-solid border-gray-300" />
           </div>
-          {clubValue.clubs.slice(0, 5).map((club) => (
-            <a
+          {clubValue.slice(0, 5).map((club) => (
+            <button
+              onClick={() => handleClick(club.clubid)}
               key={club.clubid}
-              href="#"
-              className="self-stretch relative no-underline text-inherit"
+              className="cursor-pointer [border:none] py-0 px-1 bg-[transparent] self-stretch flex flex-row items-start justify-start no-underline text-inherit"
             >
               {club.clubname}
-            </a>
+            </button>
           ))}
         </div>
       </div>

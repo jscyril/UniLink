@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
+const SIGNUP_URL = "/signup/";
 
 export default function SignUp() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { auth, setAuth } = useAuth();
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -24,27 +27,28 @@ export default function SignUp() {
       password,
     };
     try {
-      const response = await axios.post(
-        "http://localhost:3000/signup",
-        formData
-      );
-      console.log("Response from server:", response.data);
-      // Redirect to home page or handle success as needed
-      navigate("/home");
+      const response = await axios.post(SIGNUP_URL, JSON.stringify(formData), {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+      console.log(response);
+      if (response.statusText) {
+        const accessToken = response?.data.accessToken;
+        const user = response?.data.user;
+        console.log(user);
+        setAuth({ user, accessToken });
+        console.log("New User created");
+        navigate("/home");
+      }
     } catch (error) {
-      console.error("Error sending data to server:", error);
-      // Handle error response
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        console.error("Error status:", error.response.status);
-        console.error("Error data:", error.response.data);
-        setError(error.response.data.message);
-      } else if (error.request) {
-        // The request was made but no response was received
-        console.error("No response received:", error.message);
+      if (!error?.response) {
+        setError("Server did not respond");
+      } else if (error.response?.status === 400) {
+        setError("Invalid Username");
+      } else if (error.response?.status === 401) {
+        setError("Incorrect Password");
       } else {
-        // Something happened in setting up the request that triggered an error
-        console.error("Request setup error:", error.message);
+        setError("Sign Up Failed");
       }
     }
   };
@@ -91,7 +95,10 @@ export default function SignUp() {
                       placeholder="Username"
                       type="text"
                       value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      onChange={(e) => {
+                        setUsername(e.target.value);
+                      }}
+                      required
                     />
                     <input
                       id="emailInput"
@@ -99,7 +106,10 @@ export default function SignUp() {
                       placeholder="Email address"
                       type="text"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                      }}
+                      required
                     />
                     <input
                       id="passwordInput"
@@ -107,7 +117,10 @@ export default function SignUp() {
                       placeholder="Password"
                       type="password"
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                      }}
+                      required
                     />
                   </div>
                   {error && <div className="text-red-500 text-sm">{error}</div>}

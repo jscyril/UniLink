@@ -2,7 +2,7 @@ import express from "express";
 import session from "express-session";
 import bcrypt from "bcrypt";
 import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { dirname, join, resolve } from "path";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -34,6 +34,12 @@ app.use(
   })
 );
 
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow requests from this origin
+    credentials: true, // Allow credentials
+  })
+);
 // Cross Origin Resource Sharing
 // const whitelist = [
 //   "https://www.yoursite.com",
@@ -55,10 +61,8 @@ app.use(
 
 app.get("/refresh", async (req, res) => {
   const cookie = req.cookies;
-  console.log(cookie);
   if (!cookie?.jwt) return res.sendStatus(401);
   const refreshToken = cookie.jwt;
-  console.log(refreshToken);
 
   const foundUser = await prisma.users.findUnique({
     where: {
@@ -116,7 +120,7 @@ app.get("/", async (req, res) => {
       timestamp: post.timestamp,
       likes: post.likes,
       imagepath: post.imagepath ? post.imagepath : null,
-      user: post.users ? post.users.username : null, // Retrieve username from related user
+      username: post.users ? post.users.username : null, // Retrieve username from related user
       club: post.clubs
         ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
         : null,
@@ -140,7 +144,6 @@ app.get("/", async (req, res) => {
         },
       },
     });
-
     const events = await prisma.posts.findMany({
       select: {
         title: true,
@@ -151,12 +154,10 @@ app.get("/", async (req, res) => {
         likes: "desc",
       },
     });
-
     const clubs = userClubs.map((clubs) => ({
       clubid: clubs.clubid,
       clubname: clubs.clubs ? clubs.clubs.clubname : null,
     }));
-
     res.json({
       username: userData.username,
       clubs: clubs,
@@ -169,8 +170,20 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/clubs", async (req, res) => {
+  const clubs = await prisma.clubs.findMany({
+    select: {
+      clubid: true,
+      clubname: true,
+      clubdesc: true,
+      clublogo: true,
+    },
+  });
+  res.json(clubs);
+});
+
 app.get("/profile", async (req, res) => {
-  const result = await prisma.users.findFirst({
+  const result = await prisma.users.findUnique({
     where: {
       userid: userData.userId,
     },
@@ -221,15 +234,56 @@ app.get("/clubs", async (req, res) => {
   res.json({ clubArr: result });
 });
 
+app.get("/post/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  try {
+    const post = await prisma.posts.findUnique({
+      where: {
+        postid: id,
+      },
+      include: {
+        users: {
+          select: { username: true }, // Select only username from users table
+        },
+        clubs: {
+          select: { clubname: true, clublogo: true, clubid: true, clubdesc: true }, // Select only clubname from clubs table
+        },
+      },
+    });
+
+    const members = await prisma.clubmembers.findMany({
+      where:{
+        clubid: id,
+      },
+    });
+
+    const data = {
+      postid: post.postid,
+      title: post.title,
+      description: post.description,
+      timestamp: post.timestamp,
+      likes: post.likes,
+      imagepath: post.imagepath ? post.imagepath : null,
+      username: post.users.username,
+      club:{ clubname: post.clubs.clubname, clublogo: post.clubs.clublogo, clubid: post.clubs.clubid, members: members.length, clubdesc: post.clubs.clubdesc}
+    };
+    res.json(data);
+    console.log(data);
+  } catch (err) {
+    console.error("Error fetching data: try is not woeking", err);
+  }
+});
+
 app.get("/club/:id", async (req, res) => {
   const clubid = parseInt(req.params.id);
-  const clubResult = await prisma.clubs.findFirst({
+  const clubResult = await prisma.clubs.findUnique({
     where: {
       clubid: clubid,
     },
-    select: {
-      clubname: true,
-      clubdesc: true,
+  });
+  const members = await prisma.clubmembers.findMany({
+    where:{
+      clubid: clubid,
     },
   });
   const result = await prisma.posts.findMany({
@@ -241,7 +295,7 @@ app.get("/club/:id", async (req, res) => {
         select: { username: true }, // Select only username from users table
       },
       clubs: {
-        select: { clubname: true, clublogo: true }, // Select only clubname from clubs table
+        select: { clubname: true, clublogo: true, clubid: true }, // Select only clubname from clubs table
       },
     },
     orderBy: {
@@ -258,15 +312,75 @@ app.get("/club/:id", async (req, res) => {
     imagepath: post.imagepath ? post.imagepath : null,
     user: post.users ? post.users.username : null,
     club: post.clubs
-      ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
+      ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo, clubid: post.clubs.clubid}
       : null,
   }));
 
-  res.json({ post: posts, club: clubResult });
+  const data = {
+    ...clubResult,
+    members: members.length
+  }
+  console.log({post: posts, club: data});
+  res.json({ post: posts, club: data });
 });
 
-app.get("/follow", async (req, res) => {});
+app.post("/follow", async (req, res) => {
+  const data = req.body;
+  console.log(data);
+  const userid = data.userid;
+  const clubid = data.clubid;
+  const userclub = await prisma.clubmembers.findUnique({
+    where: {
+      userid_clubid : {userid, clubid}
+    },
+    select: {
+      userclubid: true,
+      userid: true,
+      clubid: true,
+    },
+  });
+  console.log(userclub);
+  if (userclub) {
+    res.json({ value: true , userclub:userclub});
+  } else {
+    res.json({ value: false });
+  }
+});
 
+app.post("/clubmember", async (req, res) => {
+  const data = req.body;
+
+  const adduser = await prisma.clubmembers.create({
+    data: {
+      userid: data.userid,
+      clubid: data.clubid,
+    },
+  });
+  if (adduser) {
+    res.status(200);
+  } else {
+    res.status(400);
+  }
+});
+
+app.post("/clubmemberdelete", async (req, res) => {
+  const data = req.body;
+  console.log(data);
+  const userid= data.userid;
+  const clubid = data.clubid;
+  const userclubid = data.userclubid;
+  console.log(userclubid,userid,clubid);
+  const deleteUserClub = await prisma.clubmembers.delete({
+    where: {
+      userclubid: userclubid
+    },
+  });
+  if (deleteUserClub) {
+    res.send("deleted");
+  } else {
+    res.send("error not deleted line 318 server.js");
+  }
+});
 app.post("/signup", async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -293,9 +407,27 @@ app.post("/signup", async (req, res) => {
         role: "user",
       },
     });
-    userData.username = newUser.username;
-    userData.userId = newUser.userid;
-    res.status(201).send("Registration Successful");
+    req.session.user = {
+      username: newUser.username,
+      userId: newUser.userid,
+      role: newUser.role,
+    };
+
+    userData = req.session.user;
+    const accessToken = generateAccessToken(userData);
+    const refreshToken = jwt.sign(userData, process.env.REFRESH_TOKEN_SECRET, {
+      expiresIn: "1d",
+    });
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      // maxAge: 24 * 60 * 60 * 1000,
+      maxAge: 10000,
+      sameSite: false,
+    });
+    res.json({
+      accessToken: accessToken,
+      user: userData,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error occurred during registration" });
@@ -315,9 +447,6 @@ app.post("/signin", async (req, res) => {
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (passwordMatch) {
-      // userData.username = user.username;
-      // userData.userId = user.userid;
-      // userData.role = user.role;
       req.session.user = {
         username: user.username,
         userId: user.userid,
@@ -330,12 +459,12 @@ app.post("/signin", async (req, res) => {
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "1d" }
       );
-      // console.log(req.session.user);
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
+        // maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 10000,
+        sameSite: false,
       });
-      // console.log(refreshToken);
       res.json({
         accessToken: accessToken,
         user: userData,
@@ -373,7 +502,6 @@ app.post("/logout", (req, res) => {
 
 app.delete("/clubmoderation", async (req, res) => {
   const id = req.body;
-  console.log(id);
   try {
     const deleteClub = await prisma.clubs.delete({
       where: {
@@ -388,12 +516,11 @@ app.delete("/clubmoderation", async (req, res) => {
 
 app.post("/addpost", async (req, res) => {
   const postData = req.body;
-  console.log(postData);
 });
 
 app.get("/editprofile/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const userdata = await prisma.users.findFirst({
+  const userdata = await prisma.users.findUnique({
     where: {
       userid: id,
     },
@@ -402,9 +529,64 @@ app.get("/editprofile/:id", async (req, res) => {
       email: true,
     },
   });
-  console.log(userdata);
+
   res.json(userdata);
 });
+
+app.get("/clubcreateupdate/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const modList = await prisma.moderators.findMany({
+    where: {
+      clubid: id,
+    },
+    select: {
+      moderatorid: true,
+      userid: true,
+    },
+  });
+
+  if (modList) {
+    res.json(modList);
+  } else {
+    res.send("mod list can not be sent");
+  }
+});
+
+app.post("/clubcreateupdate", async (req, res) => {
+  const data = req.body;
+
+  const createClub = await prisma.clubs.create({
+    data: {
+      clubname: data.clubname,
+      clubdesc: data.description,
+      clublogo: data.clublogo,
+    },
+  });
+  if (createClub) {
+    res.send("club created");
+  }
+});
+
+app.get("/clubmoderator/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const user = await prisma.users.findUnique({
+    where: {
+      userid: id,
+    },
+    select: {
+      username: true,
+      userid: true,
+      email: true,
+    },
+  });
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(400);
+  }
+});
+
+
 
 app.patch("/editprofile", async (req, res) => {
   const userdata = req.body;
@@ -419,7 +601,7 @@ app.patch("/editprofile", async (req, res) => {
       },
     });
   } else {
-    const user = await prisma.users.findFirst({
+    const user = await prisma.users.findUnique({
       where: {
         userid: userdata.userid,
       },

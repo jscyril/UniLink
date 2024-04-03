@@ -9,7 +9,6 @@ export default function Home() {
     post: [],
   });
   const axiosPrivate = useAxiosPrivate();
-
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
@@ -23,7 +22,7 @@ export default function Home() {
         }
         isMounted && setPostValue(response.data);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        // console.error("Error fetching data:", error);
       }
     };
 

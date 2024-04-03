@@ -3,7 +3,7 @@ export default function Reply() {
     <div className="self-stretch rounded-lg bg-gray-800 box-border p-[8px] overflow-hidden shrink-0 flex flex-col items-start justify-start border-[1px] border-solid border-mediumslateblue">
       <div className="self-stretch flex flex-row items-end justify-between">
         <input
-          className="[border:none] [outline:none] font-inter text-lg bg-[transparent] flex-1 flex flex-row items-center justify-start text-gray-800"
+          className="[border:none] [outline:none] font-inter text-lg bg-[transparent] flex-1 flex flex-row items-center justify-start text-white"
           placeholder="Write comment..."
           type="text"
         />

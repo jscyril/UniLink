@@ -4,22 +4,20 @@ import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 export default function NavBar() {
   const [showLogout, setShowLogout] = useState(false);
-  const [userValue, setUserValue] = useState({
-    username: "",
-  });
+  const [userValue, setUserValue] = useState("");
   const { auth, setAuth } = useAuth(); // Use the useAuth hook to access authentication context
-  const isAdmin = auth.user.role === "admin";
+  const isAdmin = auth?.user?.role === "admin";
+
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(auth.accessToken);
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+        const response = await axios.get("/");
+        if (response.statusText) {
+          setUserValue(response.data.username);
         }
-        const data = await response.json();
-        setUserValue(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -37,7 +35,7 @@ export default function NavBar() {
       if (!response.status) {
         throw new Error("Network response was not ok");
       }
-      setUserValue(response.data);
+      setShowLogout(true);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -95,7 +93,7 @@ export default function NavBar() {
             alt=""
             src="/headernavbarprofile-dropdown-menuprofiledivprofileicon@2x.png"
           />
-          <div className="flex-1 relative sm:hidden">{userValue.username}</div>
+          <div className="flex-1 relative sm:hidden">{`${userValue}`}</div>
         </div>
         {/* Dropdown menu */}
         {showLogout && (

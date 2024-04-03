@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import axios from "../api/axios";
-
+import { useNavigate } from "react-router-dom";
 export default function Clubmoderation(props) {
+  const navigate = useNavigate();
   const handleDelete = async (event) => {
     try {
       const response = await axios.delete(
         "http://localhost:3000/clubmoderation",
         { data: { clubid: props.clubInfo.clubid } }
       );
-
+      navigate("/clubmoderation");
       if (import.meta.env.MODE !== "production") {
         console.log(response.data);
       }

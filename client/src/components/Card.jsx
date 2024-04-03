@@ -1,8 +1,9 @@
 import moment from "moment";
 import { Link } from "react-router-dom";
 import Button from "./JoinButton";
-
+import { useNavigate } from "react-router-dom";
 export default function Card(props) {
+  const navigate = useNavigate();
   const getTimeAgo = (timestamp) => {
     const postTime = moment(timestamp);
     const now = moment();
@@ -27,28 +28,33 @@ export default function Card(props) {
       }
     }
   };
+
+  const handleClick = async () => {
+    navigate("/post/3");
+  };
   return (
     <div
       key={props.cardInfo.postid}
-      className=" flex flex-row items-start justify-start lg:flex-1"
-    >
+      className=" flex flex-row items-start justify-start lg:flex-1">
       <div className=" flex flex-col items-center justify-start gap-[12px_0px] border-[1px] mb-2 rounded-md border-solid border-darkslategray-100 lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col">
         <div className=" sm:ml-auto sm:mt-1 w-[794px] box-border flex flex-col items-start justify-center py-0 px-7 gap-[20px] border-solid border-darkslategray-100 lg:self-stretch lg:w-auto md:self-stretch md:w-auto sm:self-stretch sm:w-auto ">
           <div className="self-stretch flex flex-row items-center justify-between">
             <div className="w-auto flex flex-row items-center justify-between">
-              <div className="flex flex-row items-center justify-start gap-[14px]">
-                <img
-                  className="w-10 relative rounded-[50%] h-10 object-cover mt-[5px]"
-                  alt=""
-                  src={props.cardInfo.club.clublogo}
-                />
-                <div className="relative text-nowrap">
-                  {props.cardInfo.club.clubname}
+              {props.cardInfo.club && (
+                <div className="flex flex-row items-center justify-start gap-[14px]">
+                  <img
+                    className="w-10 relative rounded-[50%] h-10 object-cover mt-[5px]"
+                    alt=""
+                    src={props.cardInfo.club.clublogo}
+                  />
+                  <div className="relative text-nowrap">
+                    {props.cardInfo.club.clubname}
+                  </div>
                 </div>
-              </div>
+              )}
               <button className="cursor-pointer py-0 px-2.5 bg-[transparent] rounded-7xl overflow-hidden flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue relative ml-2 min-w-1">
                 <div className="relative text-xs font-inter text-white text-left">
-                  {props.cardInfo.user}
+                  {props.cardInfo.username}
                 </div>
               </button>
             </div>
@@ -57,33 +63,38 @@ export default function Card(props) {
                 Join
               </div>
             </button> */}
-            <Button />
+            {/* <Button /> */}
           </div>
-          <Link to="/post" className=" text-inherit no-underline">
+          <Link
+            to={`/post/${props.cardInfo.postid}`}
+            className="self-stretch flex flex-col items-start justify-start gap-[20px] text-5xl no-underline text-white cursor-default">
             <h2 className="m-0 relative text-5xl font-normal font-inherit">
               {props.cardInfo.title}
             </h2>
-          </Link>
-          <div className="self-stretch flex flex-row items-end justify-between text-xs">
-            <div className="relative">{props.cardInfo.description}</div>
-          </div>
-          <div className="relative flex text-xs">
-            {getTimeAgo(props.cardInfo.timestamp)}
-          </div>
+            <div className="self-stretch flex flex-row items-end justify-between text-xs">
+              <div className="relative">{props.cardInfo.description}</div>
+            </div>
+            <div className="relative flex text-xs">
+              {getTimeAgo(props.cardInfo.timestamp)}
+            </div>
 
-          {props.cardInfo.imagepath && (
-            <img
-              className="self-stretch relative max-w-full max-h-dvh overflow-hidden flex justify-center align-middle"
-              alt=""
-              src={props.cardInfo.imagepath}
-            />
-          )}
+            {props.cardInfo.imagepath && (
+              <img
+                className="self-stretch relative max-w-full max-h-dvh overflow-hidden flex justify-center align-middle"
+                alt=""
+                src={props.cardInfo.imagepath}
+              />
+            )}
+          </Link>
           <div className="self-stretch flex flex-row items-center justify-between pt-0 px-0 pb-2">
-            <img
-              className="w-[30.1px] relative h-[27.6px] object-cover"
-              alt=""
-              src="/frame-450@2x.png"
-            />
+            <button className="cursor-pointer border-none p-0 bg-transparent flex items-center text-white">
+              <img
+                className="w-[30.1px] h-[27.6px] object-cover"
+                alt=""
+                src="/frame-450@2x.png"
+              />
+              <span className="ml-2">{props.cardInfo.likes}</span>
+            </button>
             <button className="cursor-pointer [border:none] p-0 bg-[transparent] w-[35px] relative h-[33.2px]">
               <img
                 className="absolute top-[0px] left-[0px] w-[30px] h-[28.4px] object-cover"

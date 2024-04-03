@@ -7,7 +7,7 @@ export default function SignIn() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,21 +26,15 @@ export default function SignIn() {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-      console.log(response);
+      // console.log(response);
       // Handle successful response
       if (response.statusText) {
         const accessToken = response?.data.accessToken;
         const user = response?.data.user;
-        console.log(user);
+        // console.log(user);
         setAuth({ user, accessToken });
         console.log("Login successful");
         navigate(from, { replace: true });
-      } else {
-        // Handle error response
-        console.error("Login failed");
-        const errorData = await response.json();
-        console.log(errorData);
-        setError(errorData.error);
       }
     } catch (error) {
       if (!error?.response) {
