@@ -29,9 +29,9 @@ export default function Card(props) {
     }
   };
 
-  const handleClick = async ()=>{
+  const handleClick = async () => {
     navigate("/post/3");
-  }
+  };
   return (
     <div
       key={props.cardInfo.postid}
@@ -41,17 +41,16 @@ export default function Card(props) {
           <div className="self-stretch flex flex-row items-center justify-between">
             <div className="w-auto flex flex-row items-center justify-between">
               {props.cardInfo.club && (
-              <div className="flex flex-row items-center justify-start gap-[14px]">
-                <img
-                  className="w-10 relative rounded-[50%] h-10 object-cover mt-[5px]"
-                  alt=""
-                  src={props.cardInfo.club.clublogo}
-                />
-                <div className="relative text-nowrap">
-                  {props.cardInfo.club.clubname}
+                <div className="flex flex-row items-center justify-start gap-[14px]">
+                  <img
+                    className="w-10 relative rounded-[50%] h-10 object-cover mt-[5px]"
+                    alt=""
+                    src={props.cardInfo.club.clublogo}
+                  />
+                  <div className="relative text-nowrap">
+                    {props.cardInfo.club.clubname}
+                  </div>
                 </div>
-                
-              </div>
               )}
               <button className="cursor-pointer py-0 px-2.5 bg-[transparent] rounded-7xl overflow-hidden flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue relative ml-2 min-w-1">
                 <div className="relative text-xs font-inter text-white text-left">
@@ -66,31 +65,36 @@ export default function Card(props) {
             </button> */}
             {/* <Button /> */}
           </div>
-          <Link to={`/post/${props.cardInfo.postid}`} className="self-stretch flex flex-col items-start justify-start gap-[20px] text-5xl no-underline text-white cursor-default" >
+          <Link
+            to={`/post/${props.cardInfo.postid}`}
+            className="self-stretch flex flex-col items-start justify-start gap-[20px] text-5xl no-underline text-white cursor-default">
             <h2 className="m-0 relative text-5xl font-normal font-inherit">
               {props.cardInfo.title}
             </h2>
-          <div className="self-stretch flex flex-row items-end justify-between text-xs">
-            <div className="relative">{props.cardInfo.description}</div>
-          </div>
-          <div className="relative flex text-xs">
-            {getTimeAgo(props.cardInfo.timestamp)}
-          </div>
+            <div className="self-stretch flex flex-row items-end justify-between text-xs">
+              <div className="relative">{props.cardInfo.description}</div>
+            </div>
+            <div className="relative flex text-xs">
+              {getTimeAgo(props.cardInfo.timestamp)}
+            </div>
 
-          {props.cardInfo.imagepath && (
-            <img
-            className="self-stretch relative max-w-full max-h-dvh overflow-hidden flex justify-center align-middle"
-            alt=""
-            src={props.cardInfo.imagepath}
-            />
+            {props.cardInfo.imagepath && (
+              <img
+                className="self-stretch relative max-w-full max-h-dvh overflow-hidden flex justify-center align-middle"
+                alt=""
+                src={props.cardInfo.imagepath}
+              />
             )}
-            </Link>
+          </Link>
           <div className="self-stretch flex flex-row items-center justify-between pt-0 px-0 pb-2">
-            <img
-              className="w-[30.1px] relative h-[27.6px] object-cover"
-              alt=""
-              src="/frame-450@2x.png"
-            />
+            <button className="cursor-pointer border-none p-0 bg-transparent flex items-center text-white">
+              <img
+                className="w-[30.1px] h-[27.6px] object-cover"
+                alt=""
+                src="/frame-450@2x.png"
+              />
+              <span className="ml-2">{props.cardInfo.likes}</span>
+            </button>
             <button className="cursor-pointer [border:none] p-0 bg-[transparent] w-[35px] relative h-[33.2px]">
               <img
                 className="absolute top-[0px] left-[0px] w-[30px] h-[28.4px] object-cover"

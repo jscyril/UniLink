@@ -24,7 +24,7 @@ model clubmembers {
   clubs      clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
   users      users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
 
-  @@unique([userid, clubid], map: "unique_user_club")
+  @@unique([userid, clubid])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

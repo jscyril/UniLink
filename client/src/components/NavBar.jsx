@@ -7,6 +7,7 @@ export default function NavBar() {
   const [userValue, setUserValue] = useState("");
   const { auth, setAuth } = useAuth(); // Use the useAuth hook to access authentication context
   const isAdmin = auth?.user?.role === "admin";
+
   const navigate = useNavigate();
 
   useEffect(() => {

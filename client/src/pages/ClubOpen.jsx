@@ -8,12 +8,13 @@ import axios from "../api/axios";
 export default function Clubopen() {
   let { id } = useParams();
   const [postValue, setPostValue] = useState({ post: [] });
-
+  const [clubValue, setClubValue] = useState({})
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`/club/${id}`);
         setPostValue(response.data);
+        setClubValue(response.data.club);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -39,7 +40,7 @@ export default function Clubopen() {
             </div>
           )}
           <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
-            <ClubInfoBar />
+          {clubValue && <ClubInfoBar clubInfo={clubValue} />}
           </div>
         </div>
       </main>

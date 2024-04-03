@@ -2,18 +2,17 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 
-const Joinbutton = (props) => {
+export default function ClubJoinButton(props) {
   const [isClicked, setIsClicked] = useState(false);
-  const {auth} = useAuth();
-
+  const { auth } = useAuth();
   useEffect(() => {
-    const usedata = async()=>{
+    const usedata = async () => {
       try {
         const data = {
           userid: auth.user.userId,
-          clubid: props.clubInfo.clubid,
+          clubid: clubInfo.clubid,
         };
-        console.log(auth.user.userId);
+        console.log(clubInfo.clubid);
         const response = await axios.post("/follow", data);
         if (response.data.value) {
           console.log(response.data);
@@ -22,24 +21,24 @@ const Joinbutton = (props) => {
       } catch (error) {
         console.log(error);
       }
-    }
-    usedata()
-  },[]);
+    };
+    usedata();
+  }, []);
 
   const handleClick = async () => {
     setIsClicked((prevIsClicked) => !prevIsClicked);
     const data = {
-      clubid: props.clubInfo.clubid,
+      clubid: clubInfo.clubid,
       userid: auth.user.userId,
     };
-    if(!isClicked){
+    if (!isClicked) {
       try {
         const response = await axios.post("/clubmember", data);
         console.log(response.data);
       } catch (error) {
         console.log(error);
       }
-    } else{
+    } else {
       try {
         const response = await axios.delete("/clubmember", data);
         console.log(response.data);
@@ -53,18 +52,14 @@ const Joinbutton = (props) => {
     <button
       className={`${
         isClicked
-          ? "cursor-pointer border-[3px] border-mediumslateblue rounded-12xl flex flex-row items-center justify-center bg-transparent py-0 px-4 "
-          : " cursor-pointer [border:none] py-1 px-7 bg-mediumslateblue rounded-12xl flex flex-row items-center justify-center"
+          ? "cursor-pointer py-[9px] px-14 bg-[transparent] rounded-full overflow-hidden flex flex-row items-center justify-center border-[1.7px] border-solid border-red-600"
+          : "cursor-pointer py-[9px] px-14 bg-[transparent] rounded-full overflow-hidden flex flex-row items-center justify-center border-[1.7px] border-solid border-mediumslateblue"
       }`}
       onClick={handleClick}>
-      <div
-        className={`relative text-base font-inter text-left ${
-          isClicked ? "text-white" : "text-black"
-        }`}>
-        {isClicked ? "Joined" : "Join"}
+      <div 
+      className="relative text-sm font-inter text-left text-slate-200">
+        {isClicked ? "Leave CLub" : "Join Club"}
       </div>
     </button>
   );
-};
-
-export default Joinbutton;
+}
