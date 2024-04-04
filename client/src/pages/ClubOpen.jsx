@@ -8,7 +8,7 @@ import axios from "../api/axios";
 export default function Clubopen() {
   let { id } = useParams();
   const [postValue, setPostValue] = useState({ post: [] });
-  const [clubValue, setClubValue] = useState({})
+  const [clubValue, setClubValue] = useState();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,7 +40,7 @@ export default function Clubopen() {
             </div>
           )}
           <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
-          {clubValue && <ClubInfoBar clubInfo={clubValue} />}
+          {clubValue && <ClubInfoBar clubInfos={clubValue} />}
           </div>
         </div>
       </main>

@@ -12,7 +12,7 @@ datasource db {
 model clubRules {
   ruleid Int    @id @default(autoincrement())
   clubid Int
-  rule   String
+  rule   String? @default("")
   clubs  clubs  @relation(fields: [clubid], references: [clubid])
 }
 
@@ -24,7 +24,7 @@ model clubmembers {
   clubs      clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
   users      users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
 
-  @@unique([userid, clubid])
+  @@unique([userid, clubid], map: "unique_user_club")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -32,8 +32,8 @@ model clubs {
   clubid       Int           @id @unique @default(autoincrement())
   clubname     String        @unique
   creationdate DateTime?     @default(now()) @db.Timestamp(6)
-  clubdesc     String?
-  clublogo     String?
+  clubdesc     String? @default("")
+  clublogo     String? @default("")
   postcount    Int?          @default(0)
   clubRules    clubRules[]
   clubmembers  clubmembers[]
@@ -48,6 +48,8 @@ model moderators {
   clubid      Int?
   clubs       clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
   users       users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([userid, clubid])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -56,9 +58,9 @@ model posts {
   userid      Int?
   clubid      Int?
   title       String    @db.VarChar(255)
-  description String
+  description String @default("")
   timestamp   DateTime? @default(now()) @db.Timestamp(6)
-  likes       Int?
+  likes       Int? @default(0)
   imagepath   String?   @db.VarChar(255)
   clubs       clubs?    @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
   users       users?    @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
@@ -71,7 +73,7 @@ model users {
   password         String        @db.VarChar(255)
   email            String        @unique
   role             String        @db.VarChar(50)
-  lastlogindate    DateTime?     @db.Timestamp(6)
+  lastlogindate    DateTime?     @db.Timestamp(6) @updatedAt
   registrationdate DateTime?     @default(now()) @db.Timestamp(6)
   clubmembers      clubmembers[]
   moderators       moderators[]

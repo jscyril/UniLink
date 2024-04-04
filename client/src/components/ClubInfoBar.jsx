@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 
-import ClubJoinButton from "./ClubJoinButton";
 export default function ClubInfoBar({ clubInfos }) {
   const [isClicked, setIsClicked] = useState(false);
   const { auth } = useAuth();
@@ -31,10 +30,13 @@ export default function ClubInfoBar({ clubInfos }) {
 
   const handleClick = async () => {
     setIsClicked((prevIsClicked) => !prevIsClicked);
-    console.log(userclub);
+    const data = {
+      userid: auth.user.userId,
+      clubid: clubInfos.clubid
+    };
     if (!isClicked) {
       try {
-        const response = await axios.post("/clubmember", userclub);
+        const response = await axios.post("/clubmember", data);
         console.log(response.data);
       } catch (error) {
         console.log(error);

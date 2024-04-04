@@ -1,42 +1,33 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
-
+import useAuth from "../hooks/useAuth";
+import { useNavigate, useParams } from "react-router-dom";
 export default function AddPost({ handleFile }) {
   // const [images, setImages] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [allowComments, setAllowComments] = useState(false);
   const [options, setOptions] = useState([]); // State to hold the fetched options
-
-  useEffect(() => {
-    // Fetching options from Prisma (you'll need to set up this endpoint in your server)
-    const fetchOptions = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/addpost");
-        setOptions(response.data);
-      } catch (error) {
-        console.error("Error fetching options:", error);
-      }
-    };
-
-    fetchOptions();
-  }, []);
-
+  const { auth } = useAuth();
+  const { id }= useParams();
+  const Navigate =useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const postData = {
       title,
       description,
-      allowComments,
       imagepath: "",
+      clubid: parseInt(id),
+      userid: auth.user.userId,
     };
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/addpost",
+        `http://localhost:3000/addpost`,
         postData
       );
       console.log("Data sent to server:", response.data);
+      Navigate(`/club/${id}`);
     } catch (error) {
       console.error("Error sending data to server:", error);
       // Handle error response
@@ -69,14 +60,6 @@ export default function AddPost({ handleFile }) {
         <form onSubmit={handleSubmit}>
           <div className="self-stretch rounded-lg h-[478.5px] flex flex-col items-center justify-between sm:items-center sm:justify-center">
             <div className="flex flex-col items-start justify-start gap-[15px]">
-              <select className="self-stretch rounded-lg bg-[transparent] flex flex-row items-center justify-between py-1.5 pr-2.5 pl-0.5 font-inter font-light text-5xl text-white border-[1px] border-solid border-mediumslateblue">
-                <option value="">Select Club</option>
-                {options.map((option, index) => (
-                  <option key={index} value={option.column_name}>
-                    {option.column_name}
-                  </option>
-                ))}
-              </select>
               <div className="flex flex-col items-start justify-start gap-[9px]">
                 <div className="relative font-light sm:text-base mt-2 text-3xl">
                   Title:
@@ -96,13 +79,11 @@ export default function AddPost({ handleFile }) {
               <div className="relative font-light sm:text-base text-3xl mt-2">
                 Description:
               </div>
-              <input
-                name="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="[outline:none] bg-gray-700 w-[600px] relative rounded-lg box-border h-[130px] border-[1px] border-solid border-mediumslateblue  text-white"
-                type="text"
-              />
+              <textarea
+                  className="[outline:none] bg-gray-700 w-[600px] relative rounded-lg box-border h-[130px] border-[1px] border-solid border-mediumslateblue text-white"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                />
             </div>
             <div className="flex flex-col items-start justify-start gap-[22px]">
               <div className="flex flex-col items-start justify-start gap-[21px]">
@@ -126,7 +107,7 @@ export default function AddPost({ handleFile }) {
                   style={{ display: "none" }}
                 />
               </div>
-              <div className="flex flex-row items-end justify-center gap-[8px] text-base">
+              {/* <div className="flex flex-row items-end justify-center gap-[8px] text-base">
                 <input
                   name="allowComments"
                   checked={allowComments}
@@ -135,7 +116,7 @@ export default function AddPost({ handleFile }) {
                   type="checkbox"
                 />
                 <div className="relative sm:text-xs">Allow Comments</div>
-              </div>
+              </div> */}
             </div>
             <button
               type="submit"

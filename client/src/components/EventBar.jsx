@@ -26,7 +26,7 @@ export default function EventsBar() {
         Trending Events
       </h2>
       <div className="self-stretch flex flex-col items-start justify-center py-0 pr-0 pl-2 gap-[12px] text-left text-base text-gray-100">
-        {eventValue?.events.map((trending) => (
+        {eventValue?.events.slice(0,4).map((trending) => (
           <div
             key={trending.postid}
             className="flex flex-row items-start justify-start"

@@ -54,7 +54,7 @@ export default function Card(props) {
               )}
               <button className="cursor-pointer py-0 px-2.5 bg-[transparent] rounded-7xl overflow-hidden flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue relative ml-2 min-w-1">
                 <div className="relative text-xs font-inter text-white text-left">
-                  {props.cardInfo.username}
+                  {props.cardInfo.user}
                 </div>
               </button>
             </div>

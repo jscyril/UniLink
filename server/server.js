@@ -120,7 +120,7 @@ app.get("/", async (req, res) => {
       timestamp: post.timestamp,
       likes: post.likes,
       imagepath: post.imagepath ? post.imagepath : null,
-      username: post.users ? post.users.username : null, // Retrieve username from related user
+      user: post.users ? post.users.username : null, // Retrieve username from related user
       club: post.clubs
         ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
         : null,
@@ -253,7 +253,7 @@ app.get("/post/:id", async (req, res) => {
 
     const members = await prisma.clubmembers.findMany({
       where:{
-        clubid: id,
+        clubid: post.clubs.id,
       },
     });
 
@@ -263,8 +263,9 @@ app.get("/post/:id", async (req, res) => {
       description: post.description,
       timestamp: post.timestamp,
       likes: post.likes,
+      members: members.length,
       imagepath: post.imagepath ? post.imagepath : null,
-      username: post.users.username,
+      user: post.users ? post.users.username : null,
       club:{ clubname: post.clubs.clubname, clublogo: post.clubs.clublogo, clubid: post.clubs.clubid, members: members.length, clubdesc: post.clubs.clubdesc}
     };
     res.json(data);
@@ -292,7 +293,7 @@ app.get("/club/:id", async (req, res) => {
     },
     include: {
       users: {
-        select: { username: true }, // Select only username from users table
+        select: { username: true, userid :true }, // Select only username from users table
       },
       clubs: {
         select: { clubname: true, clublogo: true, clubid: true }, // Select only clubname from clubs table
@@ -311,16 +312,17 @@ app.get("/club/:id", async (req, res) => {
     likes: post.likes,
     imagepath: post.imagepath ? post.imagepath : null,
     user: post.users ? post.users.username : null,
+    userid: post.users.userid,
     club: post.clubs
       ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo, clubid: post.clubs.clubid}
       : null,
   }));
-
+  console.log(posts);
   const data = {
     ...clubResult,
     members: members.length
   }
-  console.log({post: posts, club: data});
+  // console.log({post: posts, club: data});
   res.json({ post: posts, club: data });
 });
 
@@ -349,7 +351,7 @@ app.post("/follow", async (req, res) => {
 
 app.post("/clubmember", async (req, res) => {
   const data = req.body;
-
+  console.log(data);
   const adduser = await prisma.clubmembers.create({
     data: {
       userid: data.userid,
@@ -381,6 +383,25 @@ app.post("/clubmemberdelete", async (req, res) => {
     res.send("error not deleted line 318 server.js");
   }
 });
+
+app.post("/isMod/:id", async (req,res)=>{
+  const clubid = parseInt(req.params.id);
+  console.log(req.body);
+  const userid = req.body.userid;
+  const ismod = await prisma.moderators.findUnique({
+    where:{
+      userid_clubid: {userid , clubid}
+    }
+  });
+  console.log(ismod);
+  if(ismod){
+    res.json({value: true});
+  }
+  else{
+    res.json({value: false});
+  }
+})
+
 app.post("/signup", async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -516,6 +537,22 @@ app.delete("/clubmoderation", async (req, res) => {
 
 app.post("/addpost", async (req, res) => {
   const postData = req.body;
+  const post = await prisma.posts.create({
+    data:{
+      clubid: postData.clubid,
+      userid: postData.userid,
+      title: postData.title,
+      description: postData.description,
+      imagepath: "",
+    }
+  });
+  if(post){
+    res.send("post added");
+  }
+  else{
+    res.send("could not add post");
+  }
+
 });
 
 app.get("/editprofile/:id", async (req, res) => {

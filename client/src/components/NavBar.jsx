@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 export default function NavBar() {
@@ -7,11 +7,11 @@ export default function NavBar() {
   const [userValue, setUserValue] = useState("");
   const { auth, setAuth } = useAuth(); // Use the useAuth hook to access authentication context
   const isAdmin = auth?.user?.role === "admin";
-
+  const isClubPage = location.pathname.includes("/club/");
+  const [isMod, SetIsMod] =useState(false);
   const navigate = useNavigate();
-
+  const { id } = useParams();
   useEffect(() => {
-    console.log(auth.accessToken);
     const fetchData = async () => {
       try {
         const response = await axios.get("/");
@@ -24,6 +24,22 @@ export default function NavBar() {
     };
 
     fetchData();
+
+    const fetchClubData = async () => {
+      if(isClubPage){
+        const userid = {userid: auth.user.userId}
+        try {
+          const response = await axios.post(`/isMod/${id}`,userid);
+          console.log(response.data);
+          SetIsMod(response.data.value);
+        }catch(error){
+          console.error(error);
+        }
+      }
+    };
+
+    fetchClubData();
+
   }, []);
   const handleDropdownClick = () => {
     setShowLogout(!showLogout);
@@ -31,7 +47,7 @@ export default function NavBar() {
 
   const handleLogoutClick = async () => {
     try {
-      const response = await axios.post("http://localhost:3000/logout");
+      const response = await axios.post("/logout");
       if (!response.status) {
         throw new Error("Network response was not ok");
       }
@@ -74,8 +90,8 @@ export default function NavBar() {
           </div>
         </button>
       </Link>
-      {isAdmin && (
-        <Link to="/addpost">
+      {isClubPage && (isMod||isAdmin) &&(
+        <Link to={`/addpost/${id}`}>
           <button className=" bg-transparent cursor-pointer">
             <img
               className="w-[18px] relative h-5 object-cover sm:flex"
