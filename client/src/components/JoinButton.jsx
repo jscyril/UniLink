@@ -2,46 +2,48 @@ import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
 
-const Joinbutton = (props) => {
+const Joinbutton = ({ clubInfos }) => {
   const [isClicked, setIsClicked] = useState(false);
   const {auth} = useAuth();
-
+  const [userclub, setUserclub] = useState();
   useEffect(() => {
-    const usedata = async()=>{
+    const usedata = async () => {
       try {
+        console.log("in clubinfo");
         const data = {
           userid: auth.user.userId,
-          clubid: props.clubInfo.clubid,
+          clubid: clubInfos.clubid
         };
-        console.log(auth.user.userId);
+        console.log(data);
         const response = await axios.post("/follow", data);
         if (response.data.value) {
-          console.log(response.data);
+          console.log("in clubinfo",response.data);
           setIsClicked(response.data.value);
+          setUserclub(response.data.userclub);
         }
       } catch (error) {
         console.log(error);
       }
-    }
-    usedata()
+    };
+    usedata();
   },[]);
 
   const handleClick = async () => {
     setIsClicked((prevIsClicked) => !prevIsClicked);
     const data = {
-      clubid: props.clubInfo.clubid,
       userid: auth.user.userId,
+      clubid: clubInfos.clubid
     };
-    if(!isClicked){
+    if (!isClicked) {
       try {
         const response = await axios.post("/clubmember", data);
         console.log(response.data);
       } catch (error) {
         console.log(error);
       }
-    } else{
+    } else {
       try {
-        const response = await axios.delete("/clubmember", data);
+        const response = await axios.post("/clubmemberdelete", userclub);
         console.log(response.data);
       } catch (error) {
         console.log(error);

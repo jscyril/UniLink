@@ -9,7 +9,6 @@ export default function ClubCreateupdate() {
   let { id } = useParams();
   const [clubname, setClubname] = useState("");
   const [description, setDescription] = useState("");
-  const [rules, setRules] = useState("");
   const [mod, setMod] = useState("");
   const [modlist, setModlist] = useState([]);
   const [btn, setBtn] = useState("Create");
@@ -51,15 +50,20 @@ export default function ClubCreateupdate() {
     const clubData = {
       clubname,
       description,
-      rules,
       clublogo: "",
     };
     try {
-      const response = await axios.post(
-        "/clubcreateupdate",
-        clubData
-      );
-      console.log("Data sent to server:", response.data);
+      if(id){
+        const response = await axios.post(
+          `/clubcreateupdate/${id}`,
+          clubData
+        );
+      } else{
+        const response = await axios.post(
+          "/clubcreateupdate",
+          clubData
+        );
+      }
       navigate("/clubmoderation")
       if(response.statusText){
         navigate("/clubmoderation");
@@ -115,14 +119,14 @@ export default function ClubCreateupdate() {
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-              <div className="self-stretch flex flex-row items-center justify-start gap-[76px]">
+              {/* <div className="self-stretch flex flex-row items-center justify-start gap-[76px]">
                 <div className="relative">Rules:</div>
                 <textarea
                   className="bg-[transparent] [outline:none] flex-1 relative rounded-md box-border h-[79px] border-[1px] border-solid border-mediumslateblue text-white"
                   value={rules}
                   onChange={(e) => setRules(e.target.value)}
                 />
-              </div>
+              </div> */}
               <div className="self-stretch flex flex-row items-center justify-start gap-[24px]">
                 <div className="relative">Club Logo:</div>
                 <button

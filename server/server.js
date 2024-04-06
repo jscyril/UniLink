@@ -8,8 +8,6 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import cookieParser from "cookie-parser";
-// import { refreshHandler } from "./routes/refresh";
-// import { homeHandler } from "./routes/home";
 
 const prisma = new PrismaClient();
 const app = express();
@@ -40,24 +38,6 @@ app.use(
     credentials: true, // Allow credentials
   })
 );
-// Cross Origin Resource Sharing
-// const whitelist = [
-//   "https://www.yoursite.com",
-//   "http://127.0.0.1:3000",
-//   "http://localhost:5173/",
-//   "http://127.0.0.1:5173",
-// ];
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     if (whitelist.indexOf(origin) !== -1 || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   optionsSuccessStatus: 200,
-// };
-// app.use(cors(corsOptions));
 
 app.get("/refresh", async (req, res) => {
   const cookie = req.cookies;
@@ -110,7 +90,7 @@ app.get("/", async (req, res) => {
           select: { clubname: true, clublogo: true }, // Select only clubname from clubs table
         },
       },
-      orderBy: { postid: "asc" },
+      orderBy: { postid: "desc" },
     });
     // Transform the data to remove unwanted fields
     const transformedPosts = posts.map((post) => ({
@@ -253,7 +233,7 @@ app.get("/post/:id", async (req, res) => {
 
     const members = await prisma.clubmembers.findMany({
       where:{
-        clubid: post.clubs.id,
+        clubid: post.clubs.clubid,
       },
     });
 
@@ -269,7 +249,6 @@ app.get("/post/:id", async (req, res) => {
       club:{ clubname: post.clubs.clubname, clublogo: post.clubs.clublogo, clubid: post.clubs.clubid, members: members.length, clubdesc: post.clubs.clubdesc}
     };
     res.json(data);
-    console.log(data);
   } catch (err) {
     console.error("Error fetching data: try is not woeking", err);
   }
@@ -300,7 +279,7 @@ app.get("/club/:id", async (req, res) => {
       },
     },
     orderBy: {
-      postid: "asc",
+      postid: "desc",
     },
   });
 
@@ -317,7 +296,6 @@ app.get("/club/:id", async (req, res) => {
       ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo, clubid: post.clubs.clubid}
       : null,
   }));
-  console.log(posts);
   const data = {
     ...clubResult,
     members: members.length
@@ -328,7 +306,6 @@ app.get("/club/:id", async (req, res) => {
 
 app.post("/follow", async (req, res) => {
   const data = req.body;
-  console.log(data);
   const userid = data.userid;
   const clubid = data.clubid;
   const userclub = await prisma.clubmembers.findUnique({
@@ -341,7 +318,6 @@ app.post("/follow", async (req, res) => {
       clubid: true,
     },
   });
-  console.log(userclub);
   if (userclub) {
     res.json({ value: true , userclub:userclub});
   } else {
@@ -351,7 +327,6 @@ app.post("/follow", async (req, res) => {
 
 app.post("/clubmember", async (req, res) => {
   const data = req.body;
-  console.log(data);
   const adduser = await prisma.clubmembers.create({
     data: {
       userid: data.userid,
@@ -365,13 +340,24 @@ app.post("/clubmember", async (req, res) => {
   }
 });
 
+app.post("/postdelete/:id", async (req, res)=>{
+  const id = parseInt(req.params.id);
+  const deletePost = await prisma.posts.delete({
+    where:{
+      postid: id,
+    },
+  });
+  if(deletePost){
+    res.send("post deleted");
+  }
+  else{
+    res.send("couldnot delete post");
+  }
+});
+
 app.post("/clubmemberdelete", async (req, res) => {
   const data = req.body;
-  console.log(data);
-  const userid= data.userid;
-  const clubid = data.clubid;
   const userclubid = data.userclubid;
-  console.log(userclubid,userid,clubid);
   const deleteUserClub = await prisma.clubmembers.delete({
     where: {
       userclubid: userclubid
@@ -386,14 +372,12 @@ app.post("/clubmemberdelete", async (req, res) => {
 
 app.post("/isMod/:id", async (req,res)=>{
   const clubid = parseInt(req.params.id);
-  console.log(req.body);
   const userid = req.body.userid;
   const ismod = await prisma.moderators.findUnique({
     where:{
       userid_clubid: {userid , clubid}
     }
   });
-  console.log(ismod);
   if(ismod){
     res.json({value: true});
   }
@@ -601,6 +585,23 @@ app.post("/clubcreateupdate", async (req, res) => {
   });
   if (createClub) {
     res.send("club created");
+  }
+});
+
+app.post("/clubcreateupdate/:id", async (req, res) => {
+  const data = req.body;
+  const id = parseInt(req.params.id);
+  const updateClub = await prisma.clubs.update({
+    where:{
+      clubid: id,
+    },
+    data: {
+      clubname: data.clubname,
+      clubdesc: data.description,
+    },
+  });
+  if (updateClub) {
+    res.send("club updated");
   }
 });
 

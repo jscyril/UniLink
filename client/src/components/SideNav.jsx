@@ -2,23 +2,16 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
+// import { useEffect } from 'react';
+import useClubStore from "../store/dataStore";
 
 export default function SideNav() {
-  const [clubValue, setClubValue] = useState([]);
+  const { clubs, fetchClubs } = useClubStore();
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("/");
-        setClubValue(response.data.clubs);
-        console.log(response.data.clubs);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    fetchClubs();
+  }, [fetchClubs]);
 
   const handleClick = async (clubid) => {
     console.log(clubid);
@@ -33,8 +26,7 @@ export default function SideNav() {
       <div className="self-stretch flex flex-col items-start justify-start gap-[22px]">
         <Link
           to="/home"
-          className=" text-inherit no-underline cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]"
-        >
+          className=" text-inherit no-underline cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[12px]">
           <img
             className="w-[29px] relative h-[23px] object-cover"
             alt=""
@@ -46,8 +38,7 @@ export default function SideNav() {
         </Link>
         <Link
           to="/profile"
-          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline"
-        >
+          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline">
           <img
             className="w-[22.4px] relative h-[21.3px] object-cover"
             alt=""
@@ -59,8 +50,7 @@ export default function SideNav() {
         </Link>
         <Link
           to="/announcements"
-          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline"
-        >
+          className="cursor-pointer [border:none] p-0 bg-[transparent] self-stretch flex flex-row items-center justify-center gap-[16px] text-inherit no-underline">
           <img
             className="w-[22px] relative h-[19px] overflow-hidden shrink-0 object-cover"
             alt=""
@@ -103,12 +93,11 @@ export default function SideNav() {
             </button>
             <div className="w-20 relative box-border h-0.5 border-t-[2px] border-solid border-gray-300" />
           </div>
-          {clubValue.slice(0, 5).map((club) => (
+          {clubs?.slice(0, 5).map((club) => (
             <button
               onClick={() => handleClick(club.clubid)}
               key={club.clubid}
-              className="cursor-pointer [border:none] py-0 px-1 bg-[transparent] self-stretch flex flex-row items-start justify-start no-underline text-inherit"
-            >
+              className="cursor-pointer [border:none] py-0 px-1 bg-[transparent] self-stretch flex flex-row items-start justify-start no-underline text-inherit">
               {club.clubname}
             </button>
           ))}

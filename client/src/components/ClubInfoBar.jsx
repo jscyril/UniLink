@@ -1,52 +1,58 @@
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
+import useClubStore from "../store/dataStore";
 import axios from "../api/axios";
 
 export default function ClubInfoBar({ clubInfos }) {
   const [isClicked, setIsClicked] = useState(false);
   const { auth } = useAuth();
-  const [userclub, setUserclub] = useState()
-;  useEffect(() => {
+  const [userclub, setUserclub] = useState();
+  const { updateClubMembership } = useClubStore();
+  const { clubs } = useClubStore();
+  const { fetchClubs } = useClubStore();
+  useEffect(() => {
     const usedata = async () => {
       try {
-        console.log("in clubinfo");
         const data = {
           userid: auth.user.userId,
-          clubid: clubInfos.clubid
+          clubid: clubInfos.clubid,
         };
-        console.log(data);
         const response = await axios.post("/follow", data);
         if (response.data.value) {
-          console.log("in clubinfo",response.data);
           setIsClicked(response.data.value);
           setUserclub(response.data.userclub);
+          updateClubMembership(auth.user.userId, clubInfos.clubid); // Update club membership in Zustand store
+
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
     usedata();
-  }, []);
+  }, [isClicked,clubs]);
 
   const handleClick = async () => {
-    setIsClicked((prevIsClicked) => !prevIsClicked);
     const data = {
       userid: auth.user.userId,
-      clubid: clubInfos.clubid
+      clubid: clubInfos.clubid,
     };
     if (!isClicked) {
       try {
-        const response = await axios.post("/clubmember", data);
-        console.log(response.data);
+        await axios.post("/clubmember", data);
+        updateClubMembership(auth.user.userId, clubInfos.clubid);
+        setIsClicked((prevIsClicked)=> !prevIsClicked);
+        fetchClubs();
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     } else {
       try {
-        const response = await axios.post("/clubmemberdelete", userclub);
-        console.log(response.data);
+        await axios.post("/clubmemberdelete", userclub);
+        updateClubMembership(auth.user.userId, clubInfos.clubid);
+        setIsClicked((prevIsClicked)=> !prevIsClicked);
+        fetchClubs(); // Update club membership in Zustand store
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     }
   };

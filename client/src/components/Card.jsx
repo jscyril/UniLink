@@ -1,9 +1,31 @@
 import moment from "moment";
 import { Link } from "react-router-dom";
-import Button from "./JoinButton";
+import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import axios from "../api/axios";
+import { useEffect,useState } from "react";
 export default function Card(props) {
+  const isPostPage = location.pathname.includes("/post/");
+  const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
+  const isAdmin = auth?.user?.role === "admin";
+  const [isMod, SetIsMod] = useState(false);
+  useEffect(() => {
+    const fetchClubData = async () => {
+      if (isPostPage) {
+        const userid = { userid: auth.user.userId };
+        try {
+          const response = await axios.post(`/isMod/${props.cardInfo.club.clubid}`, userid);
+          console.log(response.data);
+          SetIsMod(response.data.value);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    fetchClubData();
+  }, []);
   const getTimeAgo = (timestamp) => {
     const postTime = moment(timestamp);
     const now = moment();
@@ -32,6 +54,16 @@ export default function Card(props) {
   const handleClick = async () => {
     navigate("/post/3");
   };
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.post(`/postdelete/${props.cardInfo.postid}`);
+      console.log(response.data);
+      navigate(`/club/${props.cardInfo.club.clubid}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div
       key={props.cardInfo.postid}
@@ -39,7 +71,7 @@ export default function Card(props) {
       <div className=" flex flex-col items-center justify-start gap-[12px_0px] border-[1px] mb-2 rounded-md border-solid border-darkslategray-100 lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col">
         <div className=" sm:ml-auto sm:mt-1 w-[794px] box-border flex flex-col items-start justify-center py-0 px-7 gap-[20px] border-solid border-darkslategray-100 lg:self-stretch lg:w-auto md:self-stretch md:w-auto sm:self-stretch sm:w-auto ">
           <div className="self-stretch flex flex-row items-center justify-between">
-            <div className="w-auto flex flex-row items-center justify-between">
+            <div className="w-auto flex flex-row items-center justify-between self-stretch md:self-stretch md:w-auto">
               {props.cardInfo.club && (
                 <div className="flex flex-row items-center justify-start gap-[14px]">
                   <img
@@ -58,12 +90,26 @@ export default function Card(props) {
                 </div>
               </button>
             </div>
-            {/* <button className="cursor-pointer [border:none] py-0 px-10 bg-mediumslateblue rounded-12xl flex flex-row items-center justify-center">
-              <div className="relative text-base font-inter text-black text-left">
-                Join
+            {isPostPage && (
+              <div className="flex flex-row items-center justify-start gap-[20px]">
+                <Link
+                  to={`/editpost/${props.cardInfo.postid}`}
+                  className="cursor-pointer">
+                  <img
+                    className="w-[27.6px] relative h-[27.2px] object-cover"
+                    alt=""
+                    src="/group-26@2x.png"
+                  />
+                </Link>
+                <div className=" cursor-pointer" onClick={handleDelete}>
+                  <img
+                    className="w-[31.6px] relative h-[31.6px] object-cover"
+                    alt=""
+                    src="/mask-group@2x11.png"
+                  />
+                </div>
               </div>
-            </button> */}
-            {/* <Button /> */}
+            )}
           </div>
           <Link
             to={`/post/${props.cardInfo.postid}`}

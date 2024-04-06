@@ -38,7 +38,7 @@ export default function ClubList(props) {
           </div>
           <div className="relative ">{props.clubInfo.postcount} Posts</div>
         </div>
-        <Button key={props.clubInfo.clubid} clubInfo={props.clubInfo} />
+        <Button key={props.clubInfo.clubid} clubInfos={props.clubInfo} />
       </div>
     </div>
   );
