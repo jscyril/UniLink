@@ -10,10 +10,10 @@ datasource db {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model clubRules {
-  ruleid Int    @id @default(autoincrement())
+  ruleid Int     @id @default(autoincrement())
   clubid Int
   rule   String? @default("")
-  clubs  clubs  @relation(fields: [clubid], references: [clubid])
+  clubs  clubs   @relation(fields: [clubid], references: [clubid])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -32,8 +32,8 @@ model clubs {
   clubid       Int           @id @unique @default(autoincrement())
   clubname     String        @unique
   creationdate DateTime?     @default(now()) @db.Timestamp(6)
-  clubdesc     String? @default("")
-  clublogo     String? @default("")
+  clubdesc     String?       @default("")
+  clublogo     String?       @default("")
   postcount    Int?          @default(0)
   clubRules    clubRules[]
   clubmembers  clubmembers[]
@@ -58,12 +58,13 @@ model posts {
   userid      Int?
   clubid      Int?
   title       String    @db.VarChar(255)
-  description String @default("")
+  description String    @default("")
   timestamp   DateTime? @default(now()) @db.Timestamp(6)
-  likes       Int? @default(0)
+  postlikes   Int?      @default(0)
   imagepath   String?   @db.VarChar(255)
   clubs       clubs?    @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
   users       users?    @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+  likes       likes[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -73,11 +74,22 @@ model users {
   password         String        @db.VarChar(255)
   email            String        @unique
   role             String        @db.VarChar(50)
-  lastlogindate    DateTime?     @db.Timestamp(6) @updatedAt
+  lastlogindate    DateTime?     @updatedAt @db.Timestamp(6)
   registrationdate DateTime?     @default(now()) @db.Timestamp(6)
   clubmembers      clubmembers[]
   moderators       moderators[]
   posts            posts[]
+  likes            likes[]
+}
+
+model likes {
+  likeid Int    @id @unique @default(autoincrement())
+  userid Int?
+  postid Int?
+  users  users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+  posts  posts? @relation(fields: [postid], references: [postid], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([userid, postid])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

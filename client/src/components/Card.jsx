@@ -3,29 +3,48 @@ import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 export default function Card(props) {
   const isPostPage = location.pathname.includes("/post/");
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
   const isAdmin = auth?.user?.role === "admin";
   const [isMod, SetIsMod] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [postData, setPostData] = useState();
   useEffect(() => {
     const fetchClubData = async () => {
       if (isPostPage) {
         const userid = { userid: auth.user.userId };
         try {
-          const response = await axios.post(`/isMod/${props.cardInfo.club.clubid}`, userid);
-          console.log(response.data);
+          const response = await axios.post(
+            `/isMod/${props.cardInfo.club.clubid}`,
+            userid
+          );
           SetIsMod(response.data.value);
         } catch (error) {
           console.error(error);
         }
       }
     };
-
     fetchClubData();
-  }, []);
+
+    const fetchLike = async ()=>{
+      const data = {
+        userid: auth.user.userId,
+        postid: props.cardInfo.postid,
+      };
+      const check = await axios.post("/isliked",data);
+      setIsLiked(check.data.value);
+    }
+    fetchLike();
+
+    const fetchPostDetails = async ()=>{
+      const postDataa = await axios.get(`/post/${props.cardInfo.postid}`);
+      setPostData(postDataa.data);
+    }
+    fetchPostDetails();
+  }, [isLiked]);
   const getTimeAgo = (timestamp) => {
     const postTime = moment(timestamp);
     const now = moment();
@@ -51,14 +70,23 @@ export default function Card(props) {
     }
   };
 
-  const handleClick = async () => {
-    navigate("/post/3");
+  const handleLike = async () => {
+    const data = {
+      userid: auth.user.userId,
+      postid: props.cardInfo.postid,
+    };
+    if (isLiked === false) {
+      const response = await axios.post("/likepost", data);
+      setIsLiked(response.data.value);
+    } else {
+      const response = await axios.post("/unlikepost", data);
+      setIsLiked(response.data.value);
+    }
   };
 
   const handleDelete = async () => {
     try {
       const response = await axios.post(`/postdelete/${props.cardInfo.postid}`);
-      console.log(response.data);
       navigate(`/club/${props.cardInfo.club.clubid}`);
     } catch (error) {
       console.error(error);
@@ -90,7 +118,7 @@ export default function Card(props) {
                 </div>
               </button>
             </div>
-            {isPostPage && (
+            {isPostPage && (isAdmin || isMod) && (
               <div className="flex flex-row items-center justify-start gap-[20px]">
                 <Link
                   to={`/editpost/${props.cardInfo.postid}`}
@@ -133,13 +161,24 @@ export default function Card(props) {
             )}
           </Link>
           <div className="self-stretch flex flex-row items-center justify-between pt-0 px-0 pb-2">
-            <button className="cursor-pointer border-none p-0 bg-transparent flex items-center text-white">
-              <img
-                className="w-[30.1px] h-[27.6px] object-cover"
-                alt=""
-                src="/frame-450@2x.png"
-              />
-              <span className="ml-2">{props.cardInfo.likes}</span>
+            <button
+              onClick={handleLike}
+              className="cursor-pointer border-none p-0 bg-transparent flex items-center text-white">
+              {isLiked ? (
+                <img
+                  className="w-[30.1px] h-[27.6px] object-cover"
+                  alt=""
+                  src="/vector1.svg"
+                />
+              ) : (
+                <img
+                  className="w-[30.1px] h-[27.6px] object-cover"
+                  alt=""
+                  src="/frame-450@2x.png"
+                />
+              )}
+              {postData && (<span className="ml-2">{postData.postlikes}</span>)}
+              
             </button>
             <button className="cursor-pointer [border:none] p-0 bg-[transparent] w-[35px] relative h-[33.2px]">
               <img

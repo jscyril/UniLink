@@ -122,7 +122,7 @@ app.get("/", async (req, res) => {
       title: post.title,
       description: post.description,
       timestamp: post.timestamp,
-      likes: post.likes,
+      postlikes: post.postlikes,
       imagepath: post.imagepath ? post.imagepath : null,
       user: post.users ? post.users.username : null, // Retrieve username from related user
       club: post.clubs
@@ -152,11 +152,11 @@ app.get("/", async (req, res) => {
     const events = await prisma.posts.findMany({
       select: {
         title: true,
-        likes: true,
+        postlikes: true,
         postid: true,
       },
       orderBy: {
-        likes: "desc",
+        postlikes: "desc",
       },
     });
     const clubs = userClubs.map((clubs) => ({
@@ -272,7 +272,7 @@ app.get("/post/:id", async (req, res) => {
       title: post.title,
       description: post.description,
       timestamp: post.timestamp,
-      likes: post.likes,
+      postlikes: post.postlikes,
       members: members.length,
       imagepath: post.imagepath ? post.imagepath : null,
       user: post.users ? post.users.username : null,
@@ -325,7 +325,7 @@ app.get("/club/:id", async (req, res) => {
     title: post.title,
     description: post.description,
     timestamp: post.timestamp,
-    likes: post.likes,
+    postlikes: post.postlikes,
     imagepath: post.imagepath ? post.imagepath : null,
     user: post.users ? post.users.username : null,
     userid: post.users.userid,
@@ -363,6 +363,81 @@ app.post("/follow", async (req, res) => {
     res.json({ value: true, userclub: userclub });
   } else {
     res.json({ value: false });
+  }
+});
+
+app.post("/isliked", async (req, res) => {
+  const { userid, postid } = req.body;
+  const checkLike = await prisma.likes.findUnique({
+    where: {
+      userid_postid: { userid, postid },
+    },
+  });
+  if (checkLike !== null) {
+    res.json({ value: true });
+  } else {
+    res.json({ value: false });
+  }
+});
+
+app.post("/likepost", async (req, res) => {
+  const { userid, postid } = req.body;
+
+  try {
+    const like = await prisma.likes.create({
+      data: {
+        userid: userid,
+        postid: postid,
+      },
+    });
+
+    if (like) {
+      await prisma.posts.update({
+        where: {
+          postid: postid,
+        },
+        data: {
+          postlikes: {
+            increment: 1,
+          },
+        },
+      });
+
+      res.json({ value: true });
+    }
+  } catch (error) {
+    console.error("Error liking post:", error);
+    res.status(500).json({ error: "Failed to like post" });
+  }
+});
+
+app.post("/unlikepost", async (req, res) => {
+  const { userid, postid } = req.body;
+
+  try {
+    const like = await prisma.likes.delete({
+      where: {
+        userid_postid: { userid, postid },
+      },
+    });
+
+    if (like) {
+      await prisma.posts.update({
+        where: {
+          postid: postid,
+        },
+        data: {
+          postlikes: {
+            decrement: 1,
+          },
+        },
+      });
+
+      res.json({ value: false });
+    }
+  } catch (error) {
+    console.error("Error unliking post:", error);
+    res.status(500).json({ error: "Failed to unlike post" });
   }
 });
 

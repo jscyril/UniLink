@@ -3,11 +3,12 @@ import NavBar from "../components/NavBar";
 import SideNav from "../components/SideNav";
 import ClubInfoBar from "../components/ClubInfoBar";
 import Card from "../components/Card";
-import Cardopen from "../components/cardopen";
+
 import axios from "../api/axios";
 import { useParams } from "react-router-dom";
 import Reply from "../components/Reply";
 import Comments from "../components/Comments";
+
 export default function Postopen() {
   const [postData, setPostData] = useState({
     post: []

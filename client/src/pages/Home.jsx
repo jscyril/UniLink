@@ -5,9 +5,7 @@ import Card from "../components/Card";
 import EventsBar from "../components/EventBar";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 export default function Home() {
-  const [postValue, setPostValue] = useState({
-    post: [],
-  });
+  const [postValue, setPostValue] = useState();
   const axiosPrivate = useAxiosPrivate();
   useEffect(() => {
     let isMounted = true;
@@ -21,6 +19,7 @@ export default function Home() {
           throw new Error("Network response was not ok");
         }
         isMounted && setPostValue(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

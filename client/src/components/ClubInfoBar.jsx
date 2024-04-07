@@ -22,25 +22,24 @@ export default function ClubInfoBar({ clubInfos }) {
           setIsClicked(response.data.value);
           setUserclub(response.data.userclub);
           updateClubMembership(auth.user.userId, clubInfos.clubid); // Update club membership in Zustand store
-
         }
       } catch (error) {
         console.error(error);
       }
     };
     usedata();
-  }, [isClicked,clubs]);
+  }, [isClicked]);
 
   const handleClick = async () => {
     const data = {
       userid: auth.user.userId,
       clubid: clubInfos.clubid,
     };
-    if (!isClicked) {
+    if (isClicked === false) {
       try {
         await axios.post("/clubmember", data);
         updateClubMembership(auth.user.userId, clubInfos.clubid);
-        setIsClicked((prevIsClicked)=> !prevIsClicked);
+        setIsClicked((prevIsClicked) => !prevIsClicked);
         fetchClubs();
       } catch (error) {
         console.error(error);
@@ -49,7 +48,7 @@ export default function ClubInfoBar({ clubInfos }) {
       try {
         await axios.post("/clubmemberdelete", userclub);
         updateClubMembership(auth.user.userId, clubInfos.clubid);
-        setIsClicked((prevIsClicked)=> !prevIsClicked);
+        setIsClicked((prevIsClicked) => !prevIsClicked);
         fetchClubs(); // Update club membership in Zustand store
       } catch (error) {
         console.error(error);
