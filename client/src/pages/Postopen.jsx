@@ -21,6 +21,7 @@ export default function Postopen() {
         const response = await axios.get(`/post/${id}`);
         console.log("in postopen",response.data);
         setPostData(response.data);
+        console.log(response.data);
         setClubValue(response.data.club);
       } catch (error) {
         console.error("Error fetching data:", error);

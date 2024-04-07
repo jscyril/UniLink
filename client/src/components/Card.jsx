@@ -4,6 +4,7 @@ import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 export default function Card(props) {
   const isPostPage = location.pathname.includes("/post/");
   const { auth, setAuth } = useAuth();
@@ -13,8 +14,11 @@ export default function Card(props) {
   const [isLiked, setIsLiked] = useState(false);
   const [postData, setPostData] = useState();
   useEffect(() => {
+    console.log("passing the props works", props);
+
     const fetchClubData = async () => {
-      if (isPostPage) {
+      if (isPostPage && props.cardInfo && props.cardInfo.club) {
+        // Added null check for props.cardInfo.club
         const userid = { userid: auth.user.userId };
         try {
           const response = await axios.post(
@@ -27,24 +31,38 @@ export default function Card(props) {
         }
       }
     };
+
+    const fetchLike = async () => {
+      if (props.cardInfo && props.cardInfo.postid) {
+        const data = {
+          userid: auth.user.userId,
+          postid: props.cardInfo.postid,
+        };
+        try {
+          const check = await axios.post("/isliked", data);
+          setIsLiked(check.data.value);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    const fetchPostDetails = async () => {
+      try {
+        if (props.cardInfo && props.cardInfo.postid) {
+          const postDataa = await axios.get(`/post/${props.cardInfo.postid}`);
+          setPostData(postDataa.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchClubData();
-
-    const fetchLike = async ()=>{
-      const data = {
-        userid: auth.user.userId,
-        postid: props.cardInfo.postid,
-      };
-      const check = await axios.post("/isliked",data);
-      setIsLiked(check.data.value);
-    }
     fetchLike();
-
-    const fetchPostDetails = async ()=>{
-      const postDataa = await axios.get(`/post/${props.cardInfo.postid}`);
-      setPostData(postDataa.data);
-    }
     fetchPostDetails();
-  }, [isLiked]);
+  }, [isLiked, props.cardInfo]);
+
   const getTimeAgo = (timestamp) => {
     const postTime = moment(timestamp);
     const now = moment();
@@ -177,8 +195,7 @@ export default function Card(props) {
                   src="/frame-450@2x.png"
                 />
               )}
-              {postData && (<span className="ml-2">{postData.postlikes}</span>)}
-              
+              {postData && <span className="ml-2">{postData.postlikes}</span>}
             </button>
             <button className="cursor-pointer [border:none] p-0 bg-[transparent] w-[35px] relative h-[33.2px]">
               <img
