@@ -21,7 +21,7 @@ export default function Clubopen() {
     };
 
     fetchData();
-}, []);
+  }, []);
 
   return (
     <div className="w-full relative py-20 bg-gray-400 overflow-hidden flex flex-row items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
@@ -29,7 +29,10 @@ export default function Clubopen() {
         <NavBar />
 
         <div className=" flex flex-row items-start justify-between py-0 px-[38px] lg:w-auto lg:[align-self:unset] md:flex-col sm:flex-col sm:gap-[0px] sm:pl-0 sm:pr-0 sm:box-border">
-          <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
+          <div
+            className="  relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border
+"
+          >
             <SideNav />
           </div>
           {postValue && (
@@ -39,8 +42,11 @@ export default function Clubopen() {
               ))}
             </div>
           )}
-          <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
-          {clubValue && <ClubInfoBar clubInfos={clubValue} />}
+          <div
+            className="  relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border
+"
+          >
+            {clubValue && <ClubInfoBar clubInfos={clubValue} />}
           </div>
         </div>
       </main>

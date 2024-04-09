@@ -29,14 +29,20 @@ export default function EditPost() {
         <NavBar />
         {
           <div className=" flex flex-row items-start justify-between py-0 px-[38px] lg:w-auto lg:[align-self:unset] md:flex-col sm:flex-col sm:gap-[0px] sm:pl-0 sm:pr-0 sm:box-border">
-            <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
+            <div
+              className="  relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border
+"
+            >
               <SideNav />
             </div>
             <div className="lg:flex-row z-10">
-             { postValue && <EditPostComponent postInfo={postValue}/>}
+              {postValue && <EditPostComponent postInfo={postValue} />}
             </div>
 
-            <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
+            <div
+              className="  relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border
+"
+            >
               {clubValue && <ClubInfoBar clubInfos={clubValue} />}
             </div>
           </div>

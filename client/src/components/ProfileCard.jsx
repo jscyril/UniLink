@@ -110,7 +110,10 @@ export default function CardProfile() {
                       {userValue.user.username}
                     </h2>
                   </div>
-                  <Link to="/editprofile" className="cursor-pointer [border:none] p-0 bg-[transparent] w-[27.6px] relative h-[27.2px]">
+                  <Link
+                    to="/editprofile"
+                    className="cursor-pointer [border:none] p-0 bg-[transparent] w-[27.6px] relative h-[27.2px]"
+                  >
                     <img
                       className="absolute top-[0px] w-[27.6px] h-[27.2px] object-cover"
                       alt=""
@@ -140,7 +143,7 @@ export default function CardProfile() {
                       Clubs
                     </h2>
                     {userValue.user.clubs && (
-                      <div className="flex flex-row items-start justify-start gap-[15px]">
+                      <div className="flex flex-row flex-wrap items-start justify-start gap-[15px]">
                         {userValue?.user.clubs.map((club) => (
                           <button
                             className=" rounded-lg cursor-pointer py-0 px-[10px] bg-darkslategray-300 overflow-hidden flex flex-row items-center justify-center border-[2px] border-solid border-mediumslateblue"

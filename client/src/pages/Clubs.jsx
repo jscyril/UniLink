@@ -26,19 +26,25 @@ export default function Clubs() {
         <NavBar />
         {postValue && (
           <div className=" flex flex-row items-start justify-between py-0 px-[38px] lg:w-auto lg:[align-self:unset] md:flex-col sm:flex-col sm:gap-[0px] sm:pl-0 sm:pr-0 sm:box-border">
-            <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
+            <div
+              className="  relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border
+"
+            >
               <SideNav />
             </div>
 
             <div className="flex flex-row items-start z-10 justify-start lg:flex-1 sm:w-auto sm:[align-self:unset]">
-            <div className="w-[720px] box-border flex  rounded-md flex-col items-center justify-start py-3 px-5 gap-[30px_0px] border-solid border-darkslategray-100 border-[1px] lg:flex-col lg:gap-[30px_0px] md:w-auto md:[align-self:unset] md:flex-col sm:flex-1 sm:pl-0 sm:pr-0 sm:box-border">
-            {postValue.map((club) => (
+              <div className="w-[720px] box-border flex  rounded-md flex-col items-center justify-start py-3 px-5 gap-[30px_0px] border-solid border-darkslategray-100 border-[1px] lg:flex-col lg:gap-[30px_0px] md:w-auto md:[align-self:unset] md:flex-col sm:flex-1 sm:pl-0 sm:pr-0 sm:box-border">
+                {postValue.map((club) => (
                   <ClubList key={club.clubid} clubInfo={club} />
                 ))}
               </div>
             </div>
 
-            <div className=" relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
+            <div
+              className="  relative w-60 self-stretch flex flex-row items-start justify-start py-0 px-[38px] gap-[50px] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border
+"
+            >
               <EventsBar />
             </div>
           </div>

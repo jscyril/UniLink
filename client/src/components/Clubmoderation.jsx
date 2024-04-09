@@ -10,13 +10,8 @@ export default function Clubmoderation(props) {
         { data: { clubid: props.clubInfo.clubid } }
       );
       navigate("/clubmoderation");
-      if (import.meta.env.MODE !== "production") {
-        console.log(response.data);
-      }
     } catch (error) {
-      if (import.meta.env.MODE !== "production") {
-        console.log(error);
-      }
+      console.log(error);
     }
   };
 

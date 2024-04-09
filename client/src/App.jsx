@@ -1,6 +1,7 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import Home from "./pages/Home";
-import Post from "./pages/Postopen";
+import useAuth from "./hooks/useAuth";
 import Profile from "./pages/Profile";
 import Clubs from "./pages/Clubs";
 import Annoucement from "./pages/Announcement";
@@ -19,6 +20,33 @@ import Postopen from "./pages/Postopen";
 import EditPost from "./pages/EditPost";
 import Analytics from "./pages/Analytics";
 const App = () => {
+  const { auth } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect to unauthorized page if auth is null and user is not on a public page
+    if (
+      auth === null &&
+      window.location.pathname !== "/" &&
+      window.location.pathname !== "/signin" &&
+      window.location.pathname !== "/signup" &&
+      window.location.pathname !== "/unauthorized"
+    ) {
+      navigate("/unauthorized");
+    }
+  }, [auth, navigate]);
+
+  if (auth === null) {
+    return (
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />

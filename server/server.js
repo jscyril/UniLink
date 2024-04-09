@@ -158,6 +158,7 @@ app.get("/", async (req, res) => {
       orderBy: {
         postlikes: "desc",
       },
+      take: 5,
     });
     const clubs = userClubs.map((clubs) => ({
       clubid: clubs.clubid,
@@ -924,35 +925,238 @@ app.post("/addpost", upload.single("image"), async (req, res) => {
   }
 });
 
-app.post("/clubcreateupdate", async (req, res) => {
-  const data = req.body;
-
-  const createClub = await prisma.clubs.create({
-    data: {
-      clubname: data.clubname,
-      clubdesc: data.description,
-      clublogo: data.clublogo,
+app.get("/editprofile/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const userdata = await prisma.users.findUnique({
+    where: {
+      userid: id,
+    },
+    select: {
+      username: true,
+      email: true,
     },
   });
-  if (createClub) {
-    res.send("club created");
-  }
+
+  res.json(userdata);
 });
 
-app.post("/clubcreateupdate/:id", async (req, res) => {
-  const data = req.body;
+app.get("/clubcreateupdate/:id", async (req, res) => {
   const id = parseInt(req.params.id);
-  const updateClub = await prisma.clubs.update({
+  const modList = await prisma.moderators.findMany({
     where: {
       clubid: id,
     },
-    data: {
-      clubname: data.clubname,
-      clubdesc: data.description,
+    select: {
+      moderatorid: true,
+      userid: true,
+      users: {
+        select: {
+          username: true,
+        },
+      },
     },
   });
-  if (updateClub) {
-    res.send("club updated");
+
+  if (modList) {
+    res.json(modList);
+  } else {
+    res.send("mod list can not be sent");
+  }
+});
+
+app.get("/searchmods/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { name } = req.query;
+  try {
+    if (id) {
+      const searchResults = await prisma.clubmembers.findMany({
+        where: {
+          clubid: id,
+          users: {
+            username: {
+              contains: name,
+            },
+          },
+        },
+        include: {
+          users: {
+            select: {
+              username: true,
+            },
+          },
+        },
+      });
+      console.log(searchResults);
+      res.json(searchResults);
+    } else {
+      const searchResults = await prisma.users.findMany({
+        where: {
+          username: {
+            contains: name,
+          },
+        },
+        select: {
+          userid: true,
+          username: true,
+        },
+      });
+      if (searchResults) {
+        console.log(searchResults);
+        const newMod = searchResults.map((user) => ({
+          userclubid: null,
+          clubid: null,
+          userid: user.userid,
+          users: {
+            username: user.username,
+          },
+        }));
+        console.log(newMod);
+        res.json(newMod);
+      }
+    }
+  } catch (error) {
+    console.error("Error occured!", error);
+  }
+});
+
+app.post("/clubcreate", upload.single("clublogo"), async (req, res) => {
+  const clubdata = req.body;
+  const modlist = req.body.mods;
+  console.log(clubdata);
+  console.log(modlist);
+  try {
+    const { data, error } = await supabaseClient.storage
+      .from("club-images")
+      .upload(`images/${req.file.originalname}`, req.file.buffer, {
+        contentType: req.file.mimetype,
+        cacheControl: "3600",
+        upsert: true,
+      });
+
+    if (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ error: "Error uploading image to Supabase" });
+    }
+    console.log(data);
+
+    const imageurl = supabaseClient.storage
+      .from("club-images")
+      .getPublicUrl(data.path);
+
+    const createClub = await prisma.clubs.create({
+      data: {
+        clubname: clubdata.clubname,
+        clubdesc: clubdata.description,
+        clublogo: imageurl.data.publicUrl,
+      },
+    });
+    if (createClub) {
+      res.send("club created");
+    }
+  } catch (err) {
+    console.error("Error adding post:", err);
+    return res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
+app.patch("/clubupdate/:id", upload.single("clublogo"), async (req, res) => {
+  const clubdata = req.body;
+  const id = parseInt(req.params.id);
+  try {
+    if (req.file) {
+      const { data, error } = await supabaseClient.storage
+        .from("club-images")
+        .upload(`images/${req.file.originalname}`, req.file.buffer, {
+          contentType: req.file.mimetype,
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      if (error) {
+        console.log("Image upload error:", error);
+        return res
+          .status(500)
+          .json({ error: "Error uploading image to Supabase" });
+      }
+
+      console.log(data);
+
+      const imageurl = supabaseClient.storage
+        .from("club-images")
+        .getPublicUrl(data.path);
+
+      const updateClub = await prisma.clubs.update({
+        where: {
+          clubid: id,
+        },
+        data: {
+          clubname: clubdata.clubname,
+          clubdesc: clubdata.description,
+          clublogo: imageurl.data.publicUrl,
+        },
+      });
+      if (updateClub) {
+        res.status(200).send("Club has been updated");
+      }
+    } else {
+      const updateClub = await prisma.clubs.update({
+        where: {
+          clubid: id,
+        },
+        data: {
+          clubname: clubdata.clubname,
+          clubdesc: clubdata.description,
+        },
+      });
+      if (updateClub) {
+        res.status(200).send("Club has been updated");
+      }
+    }
+  } catch (err) {
+    console.error("Error adding post:", err);
+    return res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
+app.post("/addmod", async (req, res) => {
+  const modinfo = req.body;
+  try {
+    const result = await prisma.moderators.create({
+      data: {
+        userid: modinfo.userid,
+        clubid: modinfo.clubid,
+      },
+    });
+    if (result) {
+      res.status(200).json({
+        message: "Added new mod",
+        newMod: {
+          moderatorid: result.moderatorid,
+          userid: result.userid,
+          users: {
+            username: modinfo.users.username,
+          },
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error occured, error message: ", error.message);
+  }
+});
+
+app.delete("/removemod/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const result = await prisma.moderators.delete({
+    where: {
+      moderatorid: id,
+    },
+  });
+  if (result) {
+    res.json(result);
+  } else {
+    res.status(400).send("Failed to delete moderator from the club");
   }
 });
 
