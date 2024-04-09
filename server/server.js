@@ -175,6 +175,91 @@ app.get("/", async (req, res) => {
   }
 });
 
+app.get("/analytics", async (req, res) => {
+  try {
+    const signins = await prisma.analytics.findMany({
+      where: {
+        eventType: "signin",
+      },
+      include: {
+        users: {
+          select: {
+            username: true,
+            userid: true,
+          },
+        },
+      },
+      orderBy: {
+        timestamp: "desc",
+      },
+    });
+
+    const signups = await prisma.analytics.findMany({
+      where: {
+        eventType: "signup",
+      },
+      include: {
+        users: {
+          select: {
+            username: true,
+            userid: true,
+          },
+        },
+      },
+      orderBy: {
+        timestamp: "desc",
+      },
+    });
+
+    const addposts = await prisma.analytics.findMany({
+      where: {
+        eventType: "add-post",
+      },
+      include: {
+        posts: {
+          select: {
+            title: true,
+            postid: true,
+          },
+        },
+      },
+      orderBy: {
+        timestamp: "desc",
+      },
+    });
+
+    const createClubs = await prisma.analytics.findMany({
+      where: {
+        eventType: "create-club",
+      },
+      include: {
+        clubs: {
+          select: {
+            clubname: true,
+            clubid: true,
+          },
+        },
+      },
+      orderBy: {
+        timestamp: "desc",
+      },
+    });
+
+    const tableData = {
+      signInTable: signins,
+      signUpTable: signups,
+      addPostTable: addposts,
+      createClubTable: createClubs,
+    };
+
+    console.log(tableData.signInTable.length);
+    res.json(tableData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/clubs", async (req, res) => {
   const clubs = await prisma.clubs.findMany({
     select: {
@@ -185,6 +270,59 @@ app.get("/clubs", async (req, res) => {
     },
   });
   res.json(clubs);
+});
+
+app.get("/editprofile/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const userdata = await prisma.users.findUnique({
+    where: {
+      userid: id,
+    },
+    select: {
+      username: true,
+      email: true,
+    },
+  });
+
+  res.json(userdata);
+});
+
+app.get("/clubcreateupdate/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const modList = await prisma.moderators.findMany({
+    where: {
+      clubid: id,
+    },
+    select: {
+      moderatorid: true,
+      userid: true,
+    },
+  });
+
+  if (modList) {
+    res.json(modList);
+  } else {
+    res.send("mod list can not be sent");
+  }
+});
+
+app.get("/clubmoderator/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const user = await prisma.users.findUnique({
+    where: {
+      userid: id,
+    },
+    select: {
+      username: true,
+      userid: true,
+      email: true,
+    },
+  });
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(400);
+  }
 });
 
 app.get("/profile", async (req, res) => {
@@ -222,6 +360,16 @@ app.get("/profile", async (req, res) => {
   };
   // res.send(result);
   res.json(user);
+});
+
+app.get("/clubmoderation", async (req, res) => {
+  try {
+    const clublist = await prisma.clubs.findMany();
+    // console.log(clublist);
+    res.json(clublist);
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 app.get("/clubs", async (req, res) => {
@@ -346,37 +494,48 @@ app.get("/club/:id", async (req, res) => {
 });
 
 app.post("/follow", async (req, res) => {
-  const data = req.body;
-  const userid = data.userid;
-  const clubid = data.clubid;
-  const userclub = await prisma.clubmembers.findUnique({
-    where: {
-      userid_clubid: { userid, clubid },
-    },
-    select: {
-      userclubid: true,
-      userid: true,
-      clubid: true,
-    },
-  });
-  if (userclub) {
-    res.json({ value: true, userclub: userclub });
-  } else {
-    res.json({ value: false });
+  try {
+    const data = req.body;
+    const userid = data.userid;
+    const clubid = data.clubid;
+    const userclub = await prisma.clubmembers.findUnique({
+      where: {
+        userid_clubid: { userid, clubid },
+      },
+      select: {
+        userclubid: true,
+        userid: true,
+        clubid: true,
+      },
+    });
+
+    if (userclub) {
+      res.json({ value: true, userclub: userclub });
+    } else {
+      res.json({ value: false });
+    }
+  } catch (error) {
+    console.error("Error fetching club membership:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
   }
 });
 
 app.post("/isliked", async (req, res) => {
-  const { userid, postid } = req.body;
-  const checkLike = await prisma.likes.findUnique({
-    where: {
-      userid_postid: { userid, postid },
-    },
-  });
-  if (checkLike !== null) {
-    res.json({ value: true });
-  } else {
-    res.json({ value: false });
+  try {
+    const { userid, postid } = req.body;
+    const checkLike = await prisma.likes.findUnique({
+      where: {
+        userid_postid: { userid, postid },
+      },
+    });
+    if (checkLike !== null) {
+      res.json({ value: true });
+    } else {
+      res.json({ value: false });
+    }
+  } catch (error) {
+    console.error("Error checking like:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
   }
 });
 
@@ -402,7 +561,13 @@ app.post("/likepost", async (req, res) => {
           },
         },
       });
-
+      await prisma.analytics.create({
+        data: {
+          eventType: "like-post",
+          userid: userid,
+          postid: postid,
+        },
+      });
       res.json({ value: true });
     }
   } catch (error) {
@@ -433,6 +598,13 @@ app.post("/unlikepost", async (req, res) => {
         },
       });
 
+      await prisma.analytics.create({
+        data: {
+          eventType: "unlike-post",
+          userid: userid,
+          postid: postid,
+        },
+      });
       res.json({ value: false });
     }
   } catch (error) {
@@ -442,61 +614,116 @@ app.post("/unlikepost", async (req, res) => {
 });
 
 app.post("/clubmember", async (req, res) => {
-  const data = req.body;
-  const adduser = await prisma.clubmembers.create({
-    data: {
-      userid: data.userid,
-      clubid: data.clubid,
-    },
-  });
-  if (adduser) {
-    res.status(200);
-  } else {
-    res.status(400);
+  try {
+    const data = req.body;
+    const adduser = await prisma.clubmembers.create({
+      data: {
+        userid: data.userid,
+        clubid: data.clubid,
+      },
+    });
+
+    if (adduser) {
+      await prisma.analytics.create({
+        data: {
+          eventType: "add-clubmember",
+          userid: data.userid,
+          clubid: data.clubid,
+        },
+      });
+
+      res.status(200).json({ message: "User added to the club successfully" });
+    } else {
+      res.status(400).json({ message: "Failed to add user to the club" });
+    }
+  } catch (error) {
+    console.error("Error adding user to the club:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
   }
 });
 
 app.post("/postdelete/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
-  const deletePost = await prisma.posts.delete({
-    where: {
-      postid: id,
-    },
-  });
-  if (deletePost) {
-    res.send("post deleted");
-  } else {
-    res.send("couldnot delete post");
+  try {
+    const id = parseInt(req.params.id);
+
+    // Deleting the post
+    const deletePost = await prisma.posts.delete({
+      where: {
+        postid: id,
+      },
+    });
+
+    // Analytics code for tracking post deletion
+    await prisma.analytics.create({
+      data: {
+        eventType: "delete-post",
+        postid: id,
+      },
+    });
+
+    if (deletePost) {
+      res.send("post deleted");
+    } else {
+      res.send("could not delete post");
+    }
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
   }
 });
 
 app.post("/clubmemberdelete", async (req, res) => {
-  const data = req.body;
-  const userclubid = data.userclubid;
-  const deleteUserClub = await prisma.clubmembers.delete({
-    where: {
-      userclubid: userclubid,
-    },
-  });
-  if (deleteUserClub) {
-    res.send("deleted");
-  } else {
-    res.send("error not deleted line 318 server.js");
+  try {
+    const data = req.body;
+    const userclubid = data.userclubid;
+    const userid = data.userid;
+    const clubid = data.clubid;
+
+    // Deleting the club member
+    const deleteUserClub = await prisma.clubmembers.delete({
+      where: {
+        userclubid: userclubid,
+      },
+    });
+
+    // Analytics code for tracking club member deletion
+    await prisma.analytics.create({
+      data: {
+        eventType: "delete-clubmember",
+        userid: userid,
+        clubid: clubid,
+      },
+    });
+
+    if (deleteUserClub) {
+      res.send("deleted");
+    } else {
+      res.send("error not deleted");
+    }
+  } catch (error) {
+    console.error("Error deleting club member:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
   }
 });
 
 app.post("/isMod/:id", async (req, res) => {
-  const clubid = parseInt(req.params.id);
-  const userid = req.body.userid;
-  const ismod = await prisma.moderators.findUnique({
-    where: {
-      userid_clubid: { userid, clubid },
-    },
-  });
-  if (ismod) {
-    res.json({ value: true });
-  } else {
-    res.json({ value: false });
+  try {
+    const clubid = parseInt(req.params.id);
+    const userid = req.body.userid;
+    const ismod = await prisma.moderators.findUnique({
+      where: {
+        userid_clubid: { userid, clubid },
+      },
+    });
+
+    if (ismod) {
+      res.json({ value: true });
+    } else {
+      res.json({ value: false });
+    }
+  } catch (error) {
+    console.error("Error checking moderator:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
   }
 });
 
@@ -524,6 +751,13 @@ app.post("/signup", async (req, res) => {
         email: email,
         password: hashedPassword,
         role: "user",
+      },
+    });
+
+    await prisma.analytics.create({
+      data: {
+        eventType: "signup",
+        userid: newUser.userid,
       },
     });
     req.session.user = {
@@ -571,6 +805,13 @@ app.post("/signin", async (req, res) => {
         userId: user.userid,
         role: user.role,
       };
+      await prisma.analytics.create({
+        data: {
+          eventType: "signin",
+          userid: user.userid,
+        },
+      });
+
       userData = req.session.user;
       const accessToken = generateAccessToken(userData);
       const refreshToken = jwt.sign(
@@ -597,16 +838,6 @@ app.post("/signin", async (req, res) => {
   }
 });
 
-app.get("/clubmoderation", async (req, res) => {
-  try {
-    const clublist = await prisma.clubs.findMany();
-    // console.log(clublist);
-    res.json(clublist);
-  } catch (error) {
-    console.error(error);
-  }
-});
-
 app.post("/logout", (req, res) => {
   // Destroy session to log user out
   req.session.destroy((err) => {
@@ -619,12 +850,18 @@ app.post("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-app.delete("/clubmoderation", async (req, res) => {
+app.post("/clubmoderation", async (req, res) => {
   const id = req.body;
   try {
     const deleteClub = await prisma.clubs.delete({
       where: {
         clubid: id.clubid,
+      },
+    });
+    await prisma.analytics.create({
+      data: {
+        eventType: "delete-club",
+        clubid: clubid,
       },
     });
     res.send("deleted successfully");
@@ -668,6 +905,14 @@ app.post("/addpost", upload.single("image"), async (req, res) => {
         imagepath: imageurl.data.publicUrl,
       },
     });
+    await prisma.analytics.create({
+      data: {
+        eventType: "add-post",
+        userid: parseInt(postData.userid),
+        clubid: parseInt(postData.clubid),
+        postid: post.postid,
+      },
+    });
     if (post) {
       res.json({ message: "Post added successfully", fileURL: data.fullPath });
     } else {
@@ -676,40 +921,6 @@ app.post("/addpost", upload.single("image"), async (req, res) => {
   } catch (err) {
     console.error("Error adding post:", err);
     return res.status(500).json({ error: "An unexpected error occurred" });
-  }
-});
-
-app.get("/editprofile/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
-  const userdata = await prisma.users.findUnique({
-    where: {
-      userid: id,
-    },
-    select: {
-      username: true,
-      email: true,
-    },
-  });
-
-  res.json(userdata);
-});
-
-app.get("/clubcreateupdate/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
-  const modList = await prisma.moderators.findMany({
-    where: {
-      clubid: id,
-    },
-    select: {
-      moderatorid: true,
-      userid: true,
-    },
-  });
-
-  if (modList) {
-    res.json(modList);
-  } else {
-    res.send("mod list can not be sent");
   }
 });
 
@@ -745,62 +956,60 @@ app.post("/clubcreateupdate/:id", async (req, res) => {
   }
 });
 
-app.get("/clubmoderator/:id", async (req, res) => {
-  const id = parseInt(req.params.id);
-  const user = await prisma.users.findUnique({
-    where: {
-      userid: id,
-    },
-    select: {
-      username: true,
-      userid: true,
-      email: true,
-    },
-  });
-  if (user) {
-    res.json(user);
-  } else {
-    res.status(400);
-  }
-});
-
 app.patch("/editprofile", async (req, res) => {
   const userdata = req.body;
-  if (!userdata.newpassword && !userdata.oldpassword) {
-    const updateUser = await prisma.users.update({
-      where: {
-        userid: userdata.userid,
-      },
-      data: {
-        username: userdata.username,
-        email: userdata.email,
-      },
-    });
-  } else {
-    const user = await prisma.users.findUnique({
-      where: {
-        userid: userdata.userid,
-      },
-    });
-    if (user) {
-      const passwordMatch = await bcrypt.compare(
-        userdata.oldpassword,
-        user.password
-      );
-      if (passwordMatch) {
-        const hashedPassword = await bcrypt.hash(userdata.newpassword, 10);
-        const updateUser = await prisma.users.update({
-          where: {
-            userid: userdata.userid,
-          },
-          data: {
-            username: userdata.username,
-            email: userdata.email,
-            password: hashedPassword,
-          },
-        });
+
+  try {
+    if (!userdata.newpassword && !userdata.oldpassword) {
+      const updateUser = await prisma.users.update({
+        where: {
+          userid: userdata.userid,
+        },
+        data: {
+          username: userdata.username,
+          email: userdata.email,
+        },
+      });
+      res.send("Profile updated successfully");
+    } else {
+      const user = await prisma.users.findUnique({
+        where: {
+          userid: userdata.userid,
+        },
+      });
+      if (user) {
+        const passwordMatch = await bcrypt.compare(
+          userdata.oldpassword,
+          user.password
+        );
+        if (passwordMatch) {
+          const hashedPassword = await bcrypt.hash(userdata.newpassword, 10);
+          const updateUser = await prisma.users.update({
+            where: {
+              userid: userdata.userid,
+            },
+            data: {
+              username: userdata.username,
+              email: userdata.email,
+              password: hashedPassword,
+            },
+          });
+          res.send("Profile updated successfully");
+        } else {
+          res.status(401).json({ error: "Incorrect Password!" });
+          return;
+        }
       }
     }
+    await prisma.analytics.create({
+      data: {
+        eventType: "update-profile",
+        userid: userdata.userid,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ error: "An unexpected error occurred" });
   }
 });
 

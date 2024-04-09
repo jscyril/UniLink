@@ -5,7 +5,7 @@ export default function Clubmoderation(props) {
   const navigate = useNavigate();
   const handleDelete = async (event) => {
     try {
-      const response = await axios.delete(
+      const response = await axios.post(
         "http://localhost:3000/clubmoderation",
         { data: { clubid: props.clubInfo.clubid } }
       );

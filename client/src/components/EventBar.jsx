@@ -21,7 +21,7 @@ export default function EventsBar() {
     fetchData();
   }, []);
   return (
-    <div className="w-[235px] flex flex-col items-center justify-start gap-[18px] text-5xl text-mediumslateblue lg:hidden lg:h-auto md:hidden text-left">
+    <div className=" fixed w-[235px] flex flex-col items-center justify-start gap-[18px] text-5xl text-mediumslateblue lg:hidden lg:h-auto md:hidden text-left">
       <h2 className="m-0 relative text-inherit font-light font-inherit">
         Trending Events
       </h2>

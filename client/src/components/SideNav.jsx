@@ -21,7 +21,7 @@ export default function SideNav() {
   };
 
   return (
-    <div className=" sticky w-[235px] flex flex-col items-center justify-start gap-[24px] lg:hidden sm:hidden">
+    <div className=" fixed w-[235px] flex flex-col items-center justify-start gap-[24px] lg:hidden sm:hidden">
       <div className="self-stretch flex flex-col items-start justify-start gap-[22px]">
         <Link
           to="/home"

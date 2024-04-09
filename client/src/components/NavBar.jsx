@@ -8,7 +8,7 @@ export default function NavBar() {
   const { auth, setAuth } = useAuth(); // Use the useAuth hook to access authentication context
   const isAdmin = auth?.user?.role === "admin";
   const isClubPage = location.pathname.includes("/club/");
-  const [isMod, SetIsMod] =useState(false);
+  const [isMod, SetIsMod] = useState(false);
   const navigate = useNavigate();
   const { id } = useParams();
   useEffect(() => {
@@ -26,20 +26,19 @@ export default function NavBar() {
     fetchData();
 
     const fetchClubData = async () => {
-      if(isClubPage){
-        const userid = {userid: auth.user.userId}
+      if (isClubPage) {
+        const userid = { userid: auth.user.userId };
         try {
-          const response = await axios.post(`/isMod/${id}`,userid);
+          const response = await axios.post(`/isMod/${id}`, userid);
           console.log(response.data);
           SetIsMod(response.data.value);
-        }catch(error){
+        } catch (error) {
           console.error(error);
         }
       }
     };
 
     fetchClubData();
-
   }, []);
   const handleDropdownClick = () => {
     setShowLogout(!showLogout);
@@ -60,12 +59,12 @@ export default function NavBar() {
     navigate("/");
   };
   return (
-    <header className=" self-stretch box-border h-14 flex flex-row items-center justify-between py-0 px-9 text-left text-sm text-white font-inter border-b-[1px] border-solid border-gray-300 md:self-stretch md:w-auto md:h-12 sm:flex sm:self-stretch sm:w-auto sm:pl-3 sm:pr-3 sm:box-border sm:max-w-[420px]">
+    <div className="fixed top-0 left-0 w-full z-20">
+    <header className=" self-stretch bg-gray-400 box-border h-14 flex flex-row items-center justify-between py-0 px-9 text-left text-sm text-white font-inter border-b-[1px] border-solid border-gray-300 md:self-stretch md:w-auto md:h-12 sm:flex sm:self-stretch sm:w-auto sm:pl-3 sm:pr-3 sm:box-border sm:max-w-[420px]">
       <button className=" bg-transparent">
         <Link
           to="/home"
-          className="cursor-pointer [border:none] p-0 bg-[transparent] h-[55px] flex flex-row items-center justify-start gap-[12px] sm:flex sm:items-end sm:justify-start no-underline"
-        >
+          className="cursor-pointer [border:none] p-0 bg-[transparent] h-[55px] flex flex-row items-center justify-start gap-[12px] sm:flex sm:items-end sm:justify-start no-underline">
           <img
             className="w-10 relative h-[43px] object-cover sm:flex"
             alt=""
@@ -90,7 +89,7 @@ export default function NavBar() {
           </div>
         </button>
       </Link>
-      {isClubPage && (isMod||isAdmin) &&(
+      {isClubPage && (isMod || isAdmin) && (
         <Link to={`/addpost/${id}`}>
           <button className=" bg-transparent cursor-pointer">
             <img
@@ -118,12 +117,10 @@ export default function NavBar() {
               className="rounded bg-gray-300 border p-2 text-center shadow-md hover:shadow-lg transition duration-300"
               style={{
                 width: "calc(101px + 20px)", // Adjust the calculation as needed
-              }}
-            >
+              }}>
               <button
                 className="text-white hover:bg-red-500 hover:text-black bg-transparent border border-red-500 rounded p-2 cursor-pointer transition duration-300"
-                onClick={handleLogoutClick}
-              >
+                onClick={handleLogoutClick}>
                 Log Out
               </button>
             </div>
@@ -131,8 +128,7 @@ export default function NavBar() {
         )}
         <button
           className="cursor-pointer [border:none] p-0 bg-[transparent] flex flex-col items-end justify-start relative left-[-10px]"
-          onClick={handleDropdownClick}
-        >
+          onClick={handleDropdownClick}>
           <div className="w-6 relative h-4">
             <div className="absolute top-[-0.7px] left-[-0.7px] box-border w-[25.5px] h-[1.5px] border-t-[1.5px] border-solid border-white" />
             <div className="absolute top-[7.3px] left-[-0.7px] box-border w-[25.5px] h-[1.5px] border-t-[1.5px] border-solid border-white" />
@@ -141,5 +137,6 @@ export default function NavBar() {
         </button>
       </div>
     </header>
+     </div>
   );
 }

@@ -24,7 +24,7 @@ export default function Clubopen() {
 }, []);
 
   return (
-    <div className="w-full relative bg-gray-400 overflow-hidden flex flex-row items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
+    <div className="w-full relative py-20 bg-gray-400 overflow-hidden flex flex-row items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
       <main className="h-fit w-screen flex-1 flex flex-col items-center justify-start gap-[40px] text-left text-xs text-white font-inter lg:flex-1 lg:self-stretch lg:h-auto md:flex-1 sm:flex-1">
         <NavBar />
 
@@ -33,7 +33,7 @@ export default function Clubopen() {
             <SideNav />
           </div>
           {postValue && (
-            <div className="lg:flex-row">
+            <div className="lg:flex-row z-10">
               {postValue?.post.map((post) => (
                 <Card key={post.postid} cardInfo={post} />
               ))}

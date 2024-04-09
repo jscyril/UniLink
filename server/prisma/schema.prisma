@@ -39,32 +39,35 @@ model clubs {
   clubmembers  clubmembers[]
   moderators   moderators[]
   posts        posts[]
+  analytics    analytics[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model moderators {
-  moderatorid Int    @id @unique @default(autoincrement())
+  moderatorid Int         @id @unique @default(autoincrement())
   userid      Int?
   clubid      Int?
-  clubs       clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
-  users       users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+  clubs       clubs?      @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  users       users?      @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+  analytics   analytics[]
 
   @@unique([userid, clubid])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model posts {
-  postid      Int       @id @unique @default(autoincrement())
+  postid      Int         @id @unique @default(autoincrement())
   userid      Int?
   clubid      Int?
-  title       String    @db.VarChar(255)
-  description String    @default("")
-  timestamp   DateTime? @default(now()) @db.Timestamp(6)
-  postlikes   Int?      @default(0)
-  imagepath   String?   @db.VarChar(255)
-  clubs       clubs?    @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
-  users       users?    @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+  title       String      @db.VarChar(255)
+  description String      @default("")
+  timestamp   DateTime?   @default(now()) @db.Timestamp(6)
+  postlikes   Int?        @default(0)
+  imagepath   String?     @db.VarChar(255)
+  clubs       clubs?      @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  users       users?      @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
   likes       likes[]
+  analytics   analytics[]
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -80,16 +83,34 @@ model users {
   moderators       moderators[]
   posts            posts[]
   likes            likes[]
+  analytics        analytics[]
 }
 
 model likes {
-  likeid Int    @id @unique @default(autoincrement())
-  userid Int?
-  postid Int?
-  users  users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
-  posts  posts? @relation(fields: [postid], references: [postid], onDelete: NoAction, onUpdate: NoAction)
+  likeid    Int         @id @unique @default(autoincrement())
+  userid    Int?
+  postid    Int?
+  users     users?      @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+  posts     posts?      @relation(fields: [postid], references: [postid], onDelete: NoAction, onUpdate: NoAction)
+  analytics analytics[]
 
   @@unique([userid, postid])
+}
+
+model analytics {
+  analyticsid Int         @id @unique @default(autoincrement())
+  eventType   String
+  userid      Int?
+  clubid      Int?
+  postid      Int?
+  likeid      Int?
+  moderatorid Int?
+  timestamp   DateTime    @default(now()) @db.Timestamp(6)
+  users       users?      @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
+  clubs       clubs?      @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  posts       posts?      @relation(fields: [postid], references: [postid], onDelete: NoAction, onUpdate: NoAction)
+  likes       likes?      @relation(fields: [likeid], references: [likeid], onDelete: NoAction, onUpdate: NoAction)
+  moderators  moderators? @relation(fields: [moderatorid], references: [moderatorid], onDelete: NoAction, onUpdate: NoAction)
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

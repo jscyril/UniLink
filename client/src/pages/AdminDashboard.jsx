@@ -14,7 +14,7 @@ const AdminDashboard = () => {
             Welcome to the admin dashboard! Here you can manage various aspects
             of the application.
           </p>
-          <div className="space-y-6">
+          <div className="space-y-6 flex flex-col">
             <Link to="/clubmoderation" className="no-underline">
               <div className="bg-gray-400 rounded-xl overflow-hidden">
                 <div className="bg-indigo-700 py-4 px-6">
@@ -37,16 +37,18 @@ const AdminDashboard = () => {
                 </p>
               </div>
             </div>
-            <div className="bg-gray-400 rounded-xl overflow-hidden">
-              <div className="bg-indigo-700 py-4 px-6">
-                <h3 className="text-lg font-semibold text-white mb-2 font-inter">
-                  Generate Report
-                </h3>
-                <p className="text-sm text-white font-inter">
-                  Analyze application usage and statistics.
-                </p>
+            <Link to="/analytics" className="no-underline">
+              <div className="bg-gray-400 rounded-xl overflow-hidden">
+                <div className="bg-indigo-700 py-4 px-6">
+                  <h3 className="text-lg font-semibold text-white mb-2 font-inter">
+                    Generate Report
+                  </h3>
+                  <p className="text-sm text-white font-inter">
+                    Analyze application usage and statistics.
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

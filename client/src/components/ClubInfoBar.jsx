@@ -56,7 +56,7 @@ export default function ClubInfoBar({ clubInfos }) {
     }
   };
   return (
-    <div className="flex flex-col items-start justify-start gap-[15px_0px] text-13xl lg:hidden">
+    <div className=" fixed flex flex-col items-start justify-start gap-[15px_0px] text-13xl lg:hidden">
       <div className="w-[260px] flex flex-col items-start justify-start py-0 px-[18px] box-border">
         <h2 className="m-0 w-[222px] relative text-inherit font-normal font-inherit inline-block">
           {clubInfos?.clubname}

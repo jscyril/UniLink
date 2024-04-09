@@ -93,13 +93,12 @@ export default function ClubCreateupdate() {
   };
 
   return (
-    <div className="w-full relative bg-gray-400 overflow-hidden flex flex-col items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
+    <div className="w-full relative py-20 bg-gray-400 overflow-hidden flex flex-col items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
       <main className="self-stretch h-screen flex flex-col items-center justify-start gap-[10px] text-left text-5xl text-white font-inter lg:self-stretch lg:w-auto lg:flex-1 md:self-stretch md:w-auto sm:self-stretch sm:w-auto">
         <NavBar />
-        <div className="self-stretch flex-1 flex flex-row items-start justify-between py-0 px-[21px] lg:w-auto lg:[align-self:unset] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
+        <div className="self-stretch flex-1 flex z-10 flex-row items-start justify-between py-0 px-[21px] lg:w-auto lg:[align-self:unset] md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
           <div className="flex-1 flex flex-col items-center justify-start py-7 px-[420px] lg:flex-1 md:flex-[unset] md:self-stretch sm:flex-[unset] sm:self-stretch">
             <form
-              onSubmit={handleSubmit}
               className="self-stretch flex flex-col items-start justify-center py-3 px-6 gap-[34px] border-solid border-darkslategray-100 border-[1px] rounded-md"
             >
               <div className="self-stretch flex flex-row items-center justify-start gap-[25px]">
@@ -172,7 +171,8 @@ export default function ClubCreateupdate() {
               </div>
 
               <button
-                type="submit"
+                type="button"
+                onClick={handleSubmit}
                 className=" rounded-md cursor-pointer py-1 px-2.5 bg-[transparent] rounded-8xs flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue relative left-[255px]"
               >
                 <div className="relative text-5xl font-inter text-white text-left">
