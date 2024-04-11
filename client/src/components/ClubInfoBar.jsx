@@ -3,7 +3,8 @@ import useAuth from "../hooks/useAuth";
 import useClubStore from "../store/dataStore";
 import axios from "../api/axios";
 
-export default function ClubInfoBar({ clubInfos }) {
+export default function ClubInfoBar() {
+  const [clubValue, setClubValue] = useState();
   const [isClicked, setIsClicked] = useState(false);
   const { auth } = useAuth();
   const [userclub, setUserclub] = useState();
@@ -85,7 +86,8 @@ export default function ClubInfoBar({ clubInfos }) {
               ? "cursor-pointer py-[9px] px-14 bg-[transparent] rounded-full overflow-hidden flex flex-row items-center justify-center border-[1.7px] border-solid border-red-600"
               : "cursor-pointer py-[9px] px-14 bg-[transparent] rounded-full overflow-hidden flex flex-row items-center justify-center border-[1.7px] border-solid border-mediumslateblue"
           }`}
-          onClick={handleClick}>
+          onClick={handleClick}
+        >
           <div className="relative text-sm font-inter text-left text-slate-200">
             {isClicked ? "Leave CLub" : "Join Club"}
           </div>

@@ -4,12 +4,16 @@ import { useNavigate } from "react-router-dom";
 export default function Clubmoderation(props) {
   const navigate = useNavigate();
   const handleDelete = async (event) => {
+    event.preventDefault();
+    console.log("CLUB ID HERE IS:", props.clubInfo.clubid);
     try {
       const response = await axios.post(
         "http://localhost:3000/clubmoderation",
-        { data: { clubid: props.clubInfo.clubid } }
+        { clubid: props.clubInfo.clubid }
       );
-      navigate("/clubmoderation");
+      if (response.statusText) {
+        navigate("/clubmoderation");
+      }
     } catch (error) {
       console.log(error);
     }

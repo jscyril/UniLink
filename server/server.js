@@ -297,10 +297,16 @@ app.get("/clubcreateupdate/:id", async (req, res) => {
     select: {
       moderatorid: true,
       userid: true,
+      users: {
+        select: {
+          username: true,
+        },
+      },
     },
   });
 
   if (modList) {
+    console.log(modList);
     res.json(modList);
   } else {
     res.send("mod list can not be sent");
@@ -644,9 +650,8 @@ app.post("/clubmember", async (req, res) => {
 });
 
 app.post("/postdelete/:id", async (req, res) => {
+  const id = parseInt(req.params.id);
   try {
-    const id = parseInt(req.params.id);
-
     // Deleting the post
     const deletePost = await prisma.posts.delete({
       where: {
@@ -655,12 +660,12 @@ app.post("/postdelete/:id", async (req, res) => {
     });
 
     // Analytics code for tracking post deletion
-    await prisma.analytics.create({
-      data: {
-        eventType: "delete-post",
-        postid: id,
-      },
-    });
+    // await prisma.analytics.create({
+    //   data: {
+    //     eventType: "delete-post",
+    //     postid: id,
+    //   },
+    // });
 
     if (deletePost) {
       res.send("post deleted");
@@ -852,22 +857,46 @@ app.post("/logout", (req, res) => {
 });
 
 app.post("/clubmoderation", async (req, res) => {
-  const id = req.body;
+  const id = req.body.clubid;
+  console.log(id);
   try {
-    const deleteClub = await prisma.clubs.delete({
+    const clubMembers = await prisma.clubmembers.findMany({
       where: {
-        clubid: id.clubid,
+        clubid: id,
       },
     });
+    if (clubMembers.length > 0) {
+      // Delete club members
+      const deleteMembers = await prisma.clubmembers.deleteMany({
+        where: {
+          clubid: id,
+        },
+      });
+
+      const deleteMods = await prisma.moderators.deleteMany({
+        where: {
+          clubid: id,
+        },
+      });
+    }
+    const deleteClub = await prisma.clubs.delete({
+      where: {
+        clubid: id,
+      },
+    });
+    console.log("Club and its members deleted successfully");
+
     await prisma.analytics.create({
       data: {
         eventType: "delete-club",
-        clubid: clubid,
+        clubid: id,
       },
     });
-    res.send("deleted successfully");
+    res.status(200).send("Club deleted successfully");
   } catch (error) {
     console.error(error);
+  } finally {
+    await prisma.$disconnect();
   }
 });
 
@@ -882,7 +911,7 @@ app.post("/addpost", upload.single("image"), async (req, res) => {
       .upload(`images/${req.file.originalname}`, req.file.buffer, {
         contentType: req.file.mimetype,
         cacheControl: "3600",
-        upsert: false,
+        upsert: true,
       });
 
     if (error) {
@@ -919,6 +948,85 @@ app.post("/addpost", upload.single("image"), async (req, res) => {
     } else {
       res.send("could not add post");
     }
+  } catch (err) {
+    console.error("Error adding post:", err);
+    return res.status(500).json({ error: "An unexpected error occurred" });
+  }
+});
+
+app.patch("/editpost/:id", upload.single("image"), async (req, res) => {
+  const postData = req.body;
+  const id = parseInt(req.params.id);
+  try {
+    let post = null;
+    if (req.file) {
+      const { data, error } = await supabaseClient.storage
+        .from("post-images")
+        .upload(`images/${req.file.originalname}`, req.file.buffer, {
+          contentType: req.file.mimetype,
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      if (error) {
+        console.log(error);
+        return res
+          .status(500)
+          .json({ error: "Error uploading image to Supabase" });
+      }
+      const imageurl = supabaseClient.storage
+        .from("post-images")
+        .getPublicUrl(data.path);
+
+      post = await prisma.posts.update({
+        where: {
+          postid: id,
+        },
+        data: {
+          clubid: parseInt(postData.clubid),
+          userid: parseInt(postData.userid),
+          title: postData.title,
+          description: postData.description,
+          imagepath: imageurl.data.publicUrl,
+        },
+      });
+
+      if (post) {
+        res.json({
+          message: "Post added successfully",
+          fileURL: data.fullPath,
+        });
+      } else {
+        res.send("could not add post");
+      }
+    } else {
+      post = await prisma.posts.update({
+        where: {
+          postid: id,
+        },
+        data: {
+          clubid: parseInt(postData.clubid),
+          userid: parseInt(postData.userid),
+          title: postData.title,
+          description: postData.description,
+        },
+      });
+      if (post) {
+        res.json({
+          message: "Post edited successfully",
+        });
+      } else {
+        res.send("Error occured, failed to edit post");
+      }
+    }
+    await prisma.analytics.create({
+      data: {
+        eventType: "edit-post",
+        userid: parseInt(postData.userid),
+        clubid: parseInt(postData.clubid),
+        postid: post.postid,
+      },
+    });
   } catch (err) {
     console.error("Error adding post:", err);
     return res.status(500).json({ error: "An unexpected error occurred" });
@@ -1022,8 +1130,6 @@ app.get("/searchmods/:id", async (req, res) => {
 app.post("/clubcreate", upload.single("clublogo"), async (req, res) => {
   const clubdata = req.body;
   const modlist = req.body.mods;
-  console.log(clubdata);
-  console.log(modlist);
   try {
     const { data, error } = await supabaseClient.storage
       .from("club-images")

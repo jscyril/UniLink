@@ -32,20 +32,19 @@ export default function ClubCreate() {
       }
     };
     fetchData();
+  }, [id]);
 
+  useEffect(() => {
     const fetchOptions = async () => {
       try {
         const response = await axios.get(`/clubcreateupdate/${id}`);
         setModlist(response.data);
-        console.log(modlist);
-        // console.log(response.data);
       } catch (error) {
         console.error("Error fetching options:", error);
       }
     };
-
     fetchOptions();
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     // Fetch search results based on searchQuery
@@ -67,7 +66,6 @@ export default function ClubCreate() {
       }
     };
 
-    // Fetch only if searchQuery is not empty
     if (searchQuery) {
       if (searchQuery.trim() !== "") {
         fetchSearchResults();

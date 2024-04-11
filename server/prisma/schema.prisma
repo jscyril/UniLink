@@ -21,7 +21,7 @@ model clubmembers {
   userclubid Int    @id @unique @default(autoincrement())
   userid     Int?
   clubid     Int?
-  clubs      clubs? @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  clubs      clubs? @relation(fields: [clubid], references: [clubid], onDelete: SetNull, onUpdate: NoAction)
   users      users? @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
 
   @@unique([userid, clubid], map: "unique_user_club")
@@ -47,7 +47,7 @@ model moderators {
   moderatorid Int         @id @unique @default(autoincrement())
   userid      Int?
   clubid      Int?
-  clubs       clubs?      @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  clubs       clubs?      @relation(fields: [clubid], references: [clubid], onDelete: SetNull, onUpdate: NoAction)
   users       users?      @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
   analytics   analytics[]
 
@@ -106,8 +106,8 @@ model analytics {
   likeid      Int?
   moderatorid Int?
   timestamp   DateTime    @default(now()) @db.Timestamp(6)
-  users       users?      @relation(fields: [userid], references: [userid], onDelete: NoAction, onUpdate: NoAction)
-  clubs       clubs?      @relation(fields: [clubid], references: [clubid], onDelete: NoAction, onUpdate: NoAction)
+  users       users?      @relation(fields: [userid], references: [userid], onDelete: SetNull, onUpdate: SetNull)
+  clubs       clubs?      @relation(fields: [clubid], references: [clubid], onDelete: SetNull, onUpdate: SetNull)
   posts       posts?      @relation(fields: [postid], references: [postid], onDelete: NoAction, onUpdate: NoAction)
   likes       likes?      @relation(fields: [likeid], references: [likeid], onDelete: NoAction, onUpdate: NoAction)
   moderators  moderators? @relation(fields: [moderatorid], references: [moderatorid], onDelete: NoAction, onUpdate: NoAction)

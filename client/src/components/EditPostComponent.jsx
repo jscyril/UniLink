@@ -1,22 +1,101 @@
 import { useEffect, useState, useRef } from "react";
 import axios from "../api/axios";
+import { useParams, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
-export default function EditPostComponent(props) {
+export default function EditPostComponent() {
+  const { auth } = useAuth();
+  let { id } = useParams();
+  const Navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedImg, setSelectedImg] = useState();
   const [imagepath, setImagepath] = useState("");
+  const [postValue, setPostValue] = useState();
 
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/post/${id}`);
+        if (response.statusText) {
+          setPostValue(response.data);
+          setTitle(response.data.title);
+          setDescription(response.data.description);
+          setImagepath(response.data.imagepath);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const hiddenFileInput = useRef(null);
+
   const handleClick = (event) => {
+    event.preventDefault();
     hiddenFileInput.current.click();
   };
   const handleChange = (event) => {
     const fileUploaded = event.target.files[0];
   };
 
-  const handleSubmit = () => {};
+  const handleImageUpload = async (event) => {
+    event.preventDefault();
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedImg(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagepath(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setSelectedImg(file);
+    }
+    console.log(file);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const postData = new FormData();
+    postData.append("title", title);
+    postData.append("description", description);
+    postData.append("image", selectedImg);
+    postData.append("clubid", postValue.club.clubid);
+    postData.append("userid", auth.user.userId);
+
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/editpost/${id}`,
+        postData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Data sent to server:", response.data);
+      Navigate(`/post/${id}`);
+    } catch (error) {
+      console.error("Error sending data to server:", error);
+      // Handle error response
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error("Error status:", error.response.status);
+        console.error("Error data:", error.response.data);
+        // setError(error.response.data.message);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received:", error.message);
+      } else {
+        // Something happened in setting up the request that triggered an error
+        console.error("Request setup error:", error.message);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col h-auto items-start justify-center py-0 px-7 gap-[20px] border-b-[1px] lg:self-stretch lg:w-auto md:self-stretch md:w-auto sm:self-stretch sm:w-auto">
       <div className="w-[720px] flex flex-row h-auto items-start justify-start lg:flex-1 sm:w-auto sm:[align-self:unset]">
@@ -27,12 +106,12 @@ export default function EditPostComponent(props) {
                 <img
                   className="w-10 relative rounded-[50%] h-10 object-cover"
                   alt=""
-                  src={props.postInfo.club.clublogo}
+                  src={postValue?.club?.clublogo}
                 />
-                <div className="relative">{props.postInfo.club.clubname}</div>
+                <div className="relative">{postValue?.club.clubname}</div>
                 <button className="cursor-pointer py-0 px-2.5 bg-[transparent] rounded-7xl overflow-hidden flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue">
                   <div className="relative text-xs font-inter text-white text-left">
-                  {props.postInfo.user}
+                    {postValue?.user}
                   </div>
                 </button>
               </div>
@@ -40,12 +119,13 @@ export default function EditPostComponent(props) {
             <button className="cursor-pointer [border:none] py-0 px-[30px] bg-mediumslateblue rounded-7xl overflow-hidden flex flex-row items-center justify-center">
               <div
                 onClick={handleSubmit}
-                className="relative text-base font-inter text-black text-left">
+                className="relative text-base font-inter text-black text-left"
+              >
                 Done
               </div>
             </button>
           </div>
-          <form >
+          <form>
             <div className="self-stretch rounded-lg h-auto flex flex-col items-center justify-between sm:items-center sm:justify-center">
               <div className="flex flex-col items-start justify-start gap-[15px]">
                 <div className="flex flex-col items-start justify-start gap-[9px]">
@@ -54,7 +134,7 @@ export default function EditPostComponent(props) {
                   </div>
                   <input
                     name="title"
-                    value={props.postInfo.title}
+                    value={title}
                     onChange={(e) => {
                       setTitle(e.target.value);
                     }}
@@ -69,17 +149,17 @@ export default function EditPostComponent(props) {
                 </div>
                 <textarea
                   className="[outline:none] bg-gray-700 w-[600px] relative rounded-lg box-border h-[130px] border-[1px] border-solid border-mediumslateblue text-white"
-                  value={props.postInfo.description}
+                  value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </div>
-              {props.postInfo.imagepath && (
-              <img
-                className="self-stretch relative max-w-full overflow-hidden py-3 min-h-screen h-screen object-contain"
-                alt=""
-                src={props.postInfo.imagepath}
-              />
-            )}
+              {postValue?.imagepath && (
+                <img
+                  className="self-stretch relative max-w-full overflow-hidden py-3 min-h-screen h-screen object-contain"
+                  alt=""
+                  src={imagepath}
+                />
+              )}
               <div className="flex flex-col items-start justify-start gap-[22px]">
                 <div className="flex flex-col items-start justify-start gap-[21px]">
                   <div className="relative font-light sm:text-base text-3xl mt-3">
@@ -87,7 +167,8 @@ export default function EditPostComponent(props) {
                   </div>
                   <button
                     onClick={handleClick}
-                    className="cursor-pointer py-2 px-[283px] bg-gray-700 rounded-lg overflow-hidden flex flex-row items-start justify-start border-[1px] border-dashed border-mediumslateblue">
+                    className="cursor-pointer py-2 px-[283px] bg-gray-700 rounded-lg overflow-hidden flex flex-row items-start justify-start border-[1px] border-dashed border-mediumslateblue"
+                  >
                     <img
                       className="w-[27px] relative h-[27.5px] object-cover"
                       alt=""
@@ -96,9 +177,11 @@ export default function EditPostComponent(props) {
                   </button>
                   <input
                     type="file"
-                    onChange={handleChange}
+                    accept="image/*"
+                    onChange={handleImageUpload}
                     ref={hiddenFileInput}
-                    style={{ display: "none" }}
+                    name="image"
+                    className="hidden"
                   />
                 </div>
               </div>

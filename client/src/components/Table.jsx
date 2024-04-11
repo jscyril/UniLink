@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AnalyticsTable from "./analyticsTable";
+import AnalyticsTable from "./AnalyticsTable";
 export default function Table(props) {
   const [total, setTotal] = useState();
   const [month, setMonth] = useState();
@@ -78,23 +78,23 @@ export default function Table(props) {
 
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
-    
+
     // Get time in 12-hour format
     let hours = date.getHours();
     const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'pm' : 'am';
+    const ampm = hours >= 12 ? "pm" : "am";
     hours = hours % 12;
     hours = hours ? hours : 12; // the hour '0' should be '12'
-    
+
     // Get day, month, and year
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
     const year = date.getFullYear();
-    
+
     // Construct formatted string
-    const timeStr = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+    const timeStr = `${hours}:${minutes < 10 ? "0" : ""}${minutes} ${ampm}`;
     const dateStr = `${day}-${month}-${year}`;
-    
+
     return `${timeStr} ${dateStr}`;
   };
   return (

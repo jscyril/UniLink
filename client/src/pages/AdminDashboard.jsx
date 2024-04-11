@@ -6,7 +6,7 @@ const AdminDashboard = () => {
     <>
       <NavBar />
       <div className="flex items-center justify-center min-h-screen bg-gray-400">
-        <div className="max-w-xl w-full bg-gray-400 rounded-md p-8 border-[2px] border-solid border-indigo-700">
+        <div className="max-w-xl w-full bg-gray-400 rounded-md p-8 border-[2px] border-solid border-indigo-700 relative top-7">
           <h2 className="text-3xl font-bold mb-4 font-inter text-indigo-500 text-center">
             Admin Dashboard
           </h2>
