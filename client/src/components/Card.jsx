@@ -110,7 +110,7 @@ export default function Card(props) {
   };
   return (
     <div
-      key={props.cardInfo.postid}
+      // key={props.cardInfo.postid}
       className=" flex flex-row items-start justify-start lg:flex-1"
     >
       <div className=" flex flex-col items-center justify-start gap-[12px_0px] border-[1px] mb-2 rounded-md border-solid border-darkslategray-100 lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col">

@@ -1,35 +1,46 @@
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import useClubStore from "../store/dataStore";
+import { useParams } from "react-router-dom";
 import axios from "../api/axios";
 
 export default function ClubInfoBar() {
-  const [clubValue, setClubValue] = useState();
+  const { id } = useParams();
+  const [clubInfos, setClubInfos] = useState();
   const [isClicked, setIsClicked] = useState(false);
   const { auth } = useAuth();
   const [userclub, setUserclub] = useState();
   const { updateClubMembership } = useClubStore();
-  const { clubs } = useClubStore();
   const { fetchClubs } = useClubStore();
+
   useEffect(() => {
-    const usedata = async () => {
+    const fetchData = async () => {
       try {
-        const data = {
-          userid: auth.user.userId,
-          clubid: clubInfos.clubid,
-        };
-        const response = await axios.post("/follow", data);
-        if (response.data.value) {
-          setIsClicked(response.data.value);
-          setUserclub(response.data.userclub);
-          updateClubMembership(auth.user.userId, clubInfos.clubid); // Update club membership in Zustand store
+        const response = await axios.get(`/post/${id}`);
+        if (response.statusText) {
+          setClubInfos(response.data.club);
+          const data = {
+            userid: auth.user.userId,
+            clubid: response.data.club.clubid,
+          };
+          try {
+            const response = await axios.post("/follow", data);
+            if (response.statusText) {
+              setIsClicked(response.data.value);
+              setUserclub(response.data.userclub);
+              updateClubMembership(auth.user.userId, data.clubid); // Update club membership in Zustand store
+            }
+          } catch (error) {
+            console.error(error.message);
+          }
         }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching data:", error.message);
       }
     };
-    usedata();
-  }, [isClicked]);
+
+    fetchData();
+  }, [id, isClicked]);
 
   const handleClick = async () => {
     const data = {

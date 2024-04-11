@@ -504,7 +504,7 @@ app.post("/follow", async (req, res) => {
   try {
     const data = req.body;
     const userid = data.userid;
-    const clubid = data.clubid;
+    const clubid = req.body.clubid;
     const userclub = await prisma.clubmembers.findUnique({
       where: {
         userid_clubid: { userid, clubid },
