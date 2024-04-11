@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import AnalyticsTable from "./AnalyticsTable";
 export default function Table(props) {
   const [total, setTotal] = useState();
   const [month, setMonth] = useState();
@@ -147,7 +146,6 @@ export default function Table(props) {
               </th>
             </tr>
             {props?.tableInfo.map((row) => (
-              // <AnalyticsTable key={row.analyticsid} rowInfo={row} />
               <tr key={props?.rowInfo?.analyticsid}>
                 <td className="h-[19px] px-3 py-1 text-base font-inter text-white text-center sm:hidden">
                   {row?.eventType}
