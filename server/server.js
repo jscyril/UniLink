@@ -1159,6 +1159,12 @@ app.post("/clubcreate", upload.single("clublogo"), async (req, res) => {
       },
     });
     if (createClub) {
+      await prisma.analytics.create({
+        data:{
+          clubid: createClub.clubid,
+          eventType: "create-club"
+        }
+      })
       res.send("club created");
     }
   } catch (err) {

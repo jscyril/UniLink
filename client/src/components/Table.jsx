@@ -154,7 +154,7 @@ export default function Table(props) {
                   {row?.analyticsid}
                 </td>
                 <td className="h-[19px] px-3 py-1 text-base font-inter text-white text-center sm:hidden">
-                  {row?.users.username}
+                  { row?.clubs?.clubname || row?.posts?.title || row?.users?.username}
                 </td>
                 <td className="h-[19px] px-3 py-1 text-base font-inter text-white text-center sm:hidden">
                   {formatTimestamp(row.timestamp)}
