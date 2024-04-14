@@ -1,9 +1,11 @@
+import { Link } from "react-router-dom";
+
 export default function Notifications(props) {
   return (
-    <div
+    <Link
       key={props.cardInfo.postid}
-      className="self-stretch rounded-lg flex flex-col items-start justify-center py-2 px-4 border-[1.5px] border-solid border-darkslategray-100"
-    >
+      to={`/post/${props.cardInfo.postid}`}
+      className=" no-underline text-inherit self-stretch rounded-lg flex flex-col items-start justify-center py-2 px-4 border-[1.5px] border-solid border-darkslategray-100">
       <div className="self-stretch flex flex-row items-center justify-between">
         <div className="w-[136px] flex flex-row items-start justify-start gap-[0px_14px]">
           <div className="flex flex-col items-center justify-center">
@@ -34,6 +36,6 @@ export default function Notifications(props) {
           src="../ellipse-45@2x.png"
         />
       </div>
-    </div>
+    </Link>
   );
 }
