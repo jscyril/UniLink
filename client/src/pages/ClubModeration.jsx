@@ -30,7 +30,7 @@ export default function ClubModeration() {
         <div className="self-stretch flex-1 z-10 flex flex-row items-start justify-between py-0 px-[290px] lg:self-stretch lg:w-auto lg:pl-[220px] lg:pr-[220px] lg:box-border md:flex-col md:pl-5 md:pr-5 md:box-border sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
           <div className="flex-1 h-auto flex flex-row items-start justify-center md:w-auto md:self-stretch md:flex-[unset] sm:flex-[unset] sm:self-stretch">
             <div className="flex-1 flex flex-col items-start justify-start py-7 px-[22px] gap-[18px] border-[1px] border-solid border-darkslategray-100  lg:flex-1 md:flex-1 rounded-md">
-              <Link to={"/clubcreateupdate"}>
+              <Link to={"/clubcreateupdate"} className=" no-underline">
                 <button className="cursor-pointer py-0.5 px-2.5 bg-[transparent] rounded overflow-hidden flex flex-row items-center justify-center border-[1.5px] border-solid border-mediumslateblue">
                   <div className="relative text-5xl font-inter text-white text-left rounded-md">
                     Add Club
