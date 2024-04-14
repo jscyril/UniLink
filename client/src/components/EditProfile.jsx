@@ -69,14 +69,14 @@ export default function EditProfile() {
           navigate("/profile");
         }
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
       }
     }
   };
 
   return (
     <div className="flex flex-row items-start justify-start lg:flex-1 md:self-stretch md:w-auto sm:self-stretch sm:w-auto">
-      <div className="w-[720px] box-border flex flex-col items-center justify-start py-0 px-5 border-r-[1px] border-solid border-darkslategray-100 border-l-[1px] lg:flex-1 lg:flex-col lg:gap-[12px_30px] md:flex-1 md:flex-col sm:w-auto sm:[align-self:unset] sm:pl-0 sm:pr-0 sm:box-border">
+      <div className=" rounded-md w-[720px] box-border flex flex-col items-center justify-start py-0 px-5 border-solid border-darkslategray-100 border-[1px] lg:flex-1 lg:flex-col lg:gap-[12px_30px] md:flex-1 md:flex-col sm:w-auto sm:[align-self:unset] sm:pl-0 sm:pr-0 sm:box-border">
         <div className="self-stretch flex flex-col items-center justify-start lg:self-stretch lg:w-auto md:self-stretch md:w-auto">
           <div className="self-stretch flex flex-col items-center justify-start gap-[58px]">
             <img
@@ -93,18 +93,18 @@ export default function EditProfile() {
                   Username:
                 </div>
                 <input
-                  className="[outline:none] bg-[transparent] flex-1 relative rounded-sm box-border h-[34px] border-[1px] border-solid border-mediumslateblue text-white"
+                  className="[outline:none] bg-[transparent] flex-1 relative rounded box-border h-[34px] border-[1px] border-solid border-mediumslateblue text-white"
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
-              <div className="self-stretch flex flex-row items-center justify-center py-0 px-10 gap-[139px] sm:gap-[139px_90px] sm:pl-5 sm:pr-5 sm:box-border">
+              <div className="  self-stretch flex flex-row items-center justify-center py-0 px-10 gap-[139px] sm:gap-[139px_90px] sm:pl-5 sm:pr-5 sm:box-border">
                 <div className="relative text-9xl font-inter text-white text-left sm:text-base">
                   Email:
                 </div>
                 <input
-                  className="[outline:none] bg-[transparent] flex-1 relative rounded-sm box-border h-[34px] border-[1px] border-solid border-mediumslateblue text-white"
+                  className="[outline:none] bg-[transparent] flex-1 relative rounded box-border h-[34px] border-[1px] border-solid border-mediumslateblue text-white"
                   type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -115,7 +115,7 @@ export default function EditProfile() {
                   Old Password:
                 </div>
                 <input
-                  className="[outline:none] bg-[transparent] flex-1 relative rounded-sm box-border h-[34px] border-[1px] border-solid border-mediumslateblue text-white"
+                  className="[outline:none] bg-[transparent] flex-1 relative rounded box-border h-[34px] border-[1px] border-solid border-mediumslateblue text-white"
                   type="password"
                   onChange={(e) => SetOldpassword(e.target.value)}
                 />
@@ -125,14 +125,14 @@ export default function EditProfile() {
                   New Password:
                 </div>
                 <input
-                  className="[outline:none] bg-[transparent] flex-1 relative rounded-sm box-border h-[34px] border-[1px] border-solid border-mediumslateblue text-white"
+                  className="[outline:none] bg-[transparent] flex-1 relative rounded box-border h-[34px] border-[1px] border-solid border-mediumslateblue text-white"
                   type="password"
                   onChange={(e) => SetNewpassword(e.target.value)}
                 />
               </div>
               <button
                 type="submit"
-                className="cursor-pointer py-1 px-2.5 bg-[transparent] rounded-8xs flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue"
+                className="cursor-pointer py-1 px-2.5 bg-[transparent] flex flex-row items-center justify-center border-[1px] border-solid border-mediumslateblue relative bottom-3 rounded-md"
               >
                 <div className="relative text-5xl font-inter text-mediumslateblue text-left">
                   Update

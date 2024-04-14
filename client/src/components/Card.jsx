@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 export default function Card(props) {
   const isPostPage = location.pathname.includes("/post/");
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
   const navigate = useNavigate();
   const isAdmin = auth?.user?.role === "admin";
   const [isMod, SetIsMod] = useState(false);

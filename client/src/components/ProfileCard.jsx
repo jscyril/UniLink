@@ -80,12 +80,8 @@ export default function CardProfile() {
       }
     }
     if (days > 0) {
-      joinMessage += days + (days === 1 ? " day" : " days");
+      joinMessage += days + (days === 1 ? " day ago" : " days ago");
     }
-
-    // Append "back" to the message
-    joinMessage += " back";
-
     return joinMessage;
   }
   const joinDate = userValue.user.registrationdate;

@@ -1,31 +1,29 @@
 import { useEffect, useState } from "react";
 import useAuth from "../hooks/useAuth";
 import useClubStore from "../store/dataStore";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "../api/axios";
 
 export default function ClubInfoBar() {
   const { id } = useParams();
+  const location = useLocation();
   const [clubInfos, setClubInfos] = useState();
   const [isClicked, setIsClicked] = useState(false);
   const { auth } = useAuth();
   const [userclub, setUserclub] = useState();
   const { updateClubMembership } = useClubStore();
   const { fetchClubs } = useClubStore();
-  const isPost = location.pathname.includes("/post/");
-
   useEffect(() => {
+    let paramLocation;
+    if (location.pathname.includes("post")) {
+      paramLocation = "post";
+    } else if (location.pathname.includes("club")) {
+      paramLocation = "club";
+    }
+
     const fetchData = async () => {
       try {
-        let request = {
-          fetch: "",
-        };
-        if(isPost){
-          request.fetch=`/post/${id}`;
-        } else{
-          request.fetch=`/club/${id}`
-        }
-        const response = await axios.get(request.fetch);
+        const response = await axios.get(`/${paramLocation}/${id}`);
         if (response.statusText) {
           setClubInfos(response.data.club);
           const data = {
@@ -49,7 +47,7 @@ export default function ClubInfoBar() {
     };
 
     fetchData();
-  }, [id, isClicked]);
+  }, [id, isClicked, location.pathname]);
 
   const handleClick = async () => {
     const data = {
