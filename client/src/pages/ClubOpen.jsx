@@ -21,7 +21,7 @@ export default function Clubopen() {
     };
 
     fetchData();
-  }, []);
+  }, [id]);
 
   return (
     <div className="w-full relative py-20 bg-gray-400 overflow-hidden flex flex-row items-start justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
