@@ -27,16 +27,18 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </Link>
-            <div className="bg-gray-400 rounded-xl overflow-hidden">
-              <div className="bg-indigo-700 py-4 px-6">
-                <h3 className="text-lg font-semibold text-white mb-2 font-inter">
-                  Users
-                </h3>
-                <p className="text-sm text-white font-inter">
-                  Manage user accounts and permissions.
-                </p>
+            <Link to="/upcoming" className="no-underline">
+              <div className="bg-gray-400 rounded-xl overflow-hidden">
+                <div className="bg-indigo-700 py-4 px-6">
+                  <h3 className="text-lg font-semibold text-white mb-2 font-inter">
+                    Users
+                  </h3>
+                  <p className="text-sm text-white font-inter">
+                    Manage user accounts and permissions.
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
             <Link to="/analytics" className="no-underline">
               <div className="bg-gray-400 rounded-xl overflow-hidden">
                 <div className="bg-indigo-700 py-4 px-6">

@@ -19,6 +19,7 @@ import EditProfilePage from "./pages/EditProfilePage";
 import Postopen from "./pages/Postopen";
 import EditPost from "./pages/EditPost";
 import Analytics from "./pages/Analytics";
+import FeatureNotImplementedPage from "./pages/Upcoming";
 const App = () => {
   const { auth } = useAuth();
   const navigate = useNavigate();
@@ -70,6 +71,7 @@ const App = () => {
         <Route path="/club/:id" element={<ClubOpen />} />
         <Route path="/editprofile" element={<EditProfilePage />} />
         <Route path="/editpost/:id" element={<EditPost />} />
+        <Route path="/upcoming/" element={<FeatureNotImplementedPage />} />
       </Route>
     </Routes>
   );
