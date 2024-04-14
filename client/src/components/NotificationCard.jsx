@@ -25,7 +25,7 @@ export default function NotificationCard() {
 
   return (
     <div className=" flex flex-row items-start justify-start lg:flex-1 md:self-stretch md:w-auto ">
-      <div className="w-[834px] rounded-lg box-border flex flex-col items-center justify-start py-4 px-5 gap-[12px_0px]  lg:flex-1 lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col border-[1px] border-solid border-darkslategray-100">
+      <div className="w-[760px] rounded-lg box-border flex flex-col items-center justify-start py-4 px-5 gap-[12px_0px]  lg:flex-1 lg:flex-col lg:gap-[12px_0px] md:w-auto md:[align-self:unset] md:flex-col border-[1px] border-solid border-darkslategray-100">
         <div className="self-stretch flex flex-row items-start justify-center py-0 px-4 gap-[0px_12px] text-5xl">
           <img
             className="w-8 relative h-[27.6px] overflow-hidden shrink-0 object-cover"
