@@ -12,11 +12,20 @@ export default function ClubInfoBar() {
   const [userclub, setUserclub] = useState();
   const { updateClubMembership } = useClubStore();
   const { fetchClubs } = useClubStore();
+  const isPost = location.pathname.includes("/post/");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/post/${id}`);
+        let request = {
+          fetch: "",
+        };
+        if(isPost){
+          request.fetch=`/post/${id}`;
+        } else{
+          request.fetch=`/club/${id}`
+        }
+        const response = await axios.get(request.fetch);
         if (response.statusText) {
           setClubInfos(response.data.club);
           const data = {
