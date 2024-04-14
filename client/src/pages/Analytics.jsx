@@ -36,8 +36,8 @@ export default function Analytics() {
     fetchTables();
   }, [selected]);
   return (
-    <div className="w-[1440px] py-20 h-[1337px] relative bg-gray-400 overflow-hidden flex flex-col items-start justify-start gap-[0px] hover:bg-gray-400 hover:flex hover:w-[1440px] hover:h-[1337px] hover:flex-col hover:gap-[0px] hover:items-start hover:justify-start lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
-      <main className="self-stretch h-[1295.709228515625px] flex flex-col items-center justify-start gap-[40px] w-auto hover:flex hover:self-stretch hover:w-auto hover:h-[1295.709228515625px] hover:flex-col hover:gap-[40px] hover:items-center hover:justify-start lg:self-stretch lg:w-auto lg:flex-1 md:self-stretch md:w-auto sm:self-stretch sm:w-auto">
+    <div className="w-[1440px] py-20 h-auto relative bg-gray-400 overflow-hidden flex flex-col items-start justify-start gap-[0px] lg:w-auto lg:[align-self:unset] lg:gap-[0px] md:w-auto md:[align-self:unset] sm:w-auto sm:[align-self:unset]">
+      <main className="self-stretch h-auto flex flex-col items-center justify-start gap-[40px] w-auto  lg:self-stretch lg:w-auto lg:flex-1 md:self-stretch md:w-auto sm:self-stretch sm:w-auto">
         <NavBar />
         <div className="self-stretch flex-1 flex flex-row items-stretch justify-stretch py-0 px-[258px] box-border w-auto gap-[50px md:flex-col sm:flex-col sm:gap-[50px] sm:pl-0 sm:pr-0 sm:box-border">
           <div className="flex-1 flex flex-row items-start justify-center lg:flex-1 md:flex-[unset] md:self-stretch sm:flex-[unset] sm:self-stretch">

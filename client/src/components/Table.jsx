@@ -146,15 +146,15 @@ export default function Table(props) {
               </th>
             </tr>
             {props?.tableInfo.map((row) => (
-              <tr key={props?.rowInfo?.analyticsid}>
+              <tr key={row.analyticsid}>
                 <td className="h-[19px] px-3 py-1 text-base font-inter text-white text-center sm:hidden">
-                  {row?.eventType}
+                  {row.eventType}
                 </td>
                 <td className="h-[19px] px-3 py-1 text-base font-inter text-white text-center sm:hidden">
-                  {row?.analyticsid}
+                  {row.analyticsid}
                 </td>
                 <td className="h-[19px] px-3 py-1 text-base font-inter text-white text-center sm:hidden">
-                  { row?.clubs?.clubname || row?.posts?.title || row?.users?.username}
+                  { row.clubs?.clubname || row.posts?.title || row.users?.username}
                 </td>
                 <td className="h-[19px] px-3 py-1 text-base font-inter text-white text-center sm:hidden">
                   {formatTimestamp(row.timestamp)}

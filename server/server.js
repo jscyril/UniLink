@@ -253,7 +253,6 @@ app.get("/analytics", async (req, res) => {
       createClubTable: createClubs,
     };
 
-    console.log(tableData.signInTable.length);
     res.json(tableData);
   } catch (error) {
     console.error(error);
