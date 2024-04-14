@@ -108,7 +108,7 @@ model analytics {
   timestamp   DateTime    @default(now()) @db.Timestamp(6)
   users       users?      @relation(fields: [userid], references: [userid], onDelete: SetNull, onUpdate: SetNull)
   clubs       clubs?      @relation(fields: [clubid], references: [clubid], onDelete: SetNull, onUpdate: SetNull)
-  posts       posts?      @relation(fields: [postid], references: [postid], onDelete: NoAction, onUpdate: NoAction)
+  posts       posts?      @relation(fields: [postid], references: [postid], onDelete: SetNull, onUpdate: SetNull)
   likes       likes?      @relation(fields: [likeid], references: [likeid], onDelete: NoAction, onUpdate: NoAction)
   moderators  moderators? @relation(fields: [moderatorid], references: [moderatorid], onDelete: NoAction, onUpdate: NoAction)
 }

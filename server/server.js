@@ -471,7 +471,6 @@ app.get("/club/:id", async (req, res) => {
     },
     orderBy: {
       postid: "desc",
-      postid: "desc",
     },
   });
 
@@ -906,47 +905,75 @@ app.post("/addpost", upload.single("image"), async (req, res) => {
   console.log("\n\nLOGGING REQ.BODY\n\n", postData);
 
   try {
-    const { data, error } = await supabaseClient.storage
-      .from("post-images")
-      .upload(`images/${req.file.originalname}`, req.file.buffer, {
-        contentType: req.file.mimetype,
-        cacheControl: "3600",
-        upsert: true,
+    if (req.file) {
+      const { data, error } = await supabaseClient.storage
+        .from("post-images")
+        .upload(`images/${req.file.originalname}`, req.file.buffer, {
+          contentType: req.file.mimetype,
+          cacheControl: "3600",
+          upsert: true,
+        });
+
+      if (error) {
+        console.log(error);
+        return res
+          .status(500)
+          .json({ error: "Error uploading image to Supabase" });
+      }
+      console.log(data);
+
+      const imageurl = supabaseClient.storage
+        .from("post-images")
+        .getPublicUrl(data.path);
+
+      const post = await prisma.posts.create({
+        data: {
+          clubid: parseInt(postData.clubid),
+          userid: parseInt(postData.userid),
+          title: postData.title,
+          description: postData.description,
+          imagepath: imageurl.data.publicUrl,
+        },
       });
 
-    if (error) {
-      console.log(error);
-      return res
-        .status(500)
-        .json({ error: "Error uploading image to Supabase" });
-    }
-    console.log(data);
+      await prisma.analytics.create({
+        data: {
+          eventType: "add-post",
+          userid: parseInt(postData.userid),
+          clubid: parseInt(postData.clubid),
+          postid: post.postid,
+        },
+      });
 
-    const imageurl = supabaseClient.storage
-      .from("post-images")
-      .getPublicUrl(data.path);
-
-    const post = await prisma.posts.create({
-      data: {
-        clubid: parseInt(postData.clubid),
-        userid: parseInt(postData.userid),
-        title: postData.title,
-        description: postData.description,
-        imagepath: imageurl.data.publicUrl,
-      },
-    });
-    await prisma.analytics.create({
-      data: {
-        eventType: "add-post",
-        userid: parseInt(postData.userid),
-        clubid: parseInt(postData.clubid),
-        postid: post.postid,
-      },
-    });
-    if (post) {
-      res.json({ message: "Post added successfully", fileURL: data.fullPath });
+      if (post) {
+        res.json({ message: "Post added successfully" });
+      } else {
+        res.send("could not add post");
+      }
     } else {
-      res.send("could not add post");
+      const post = await prisma.posts.create({
+        data: {
+          clubid: parseInt(postData.clubid),
+          userid: parseInt(postData.userid),
+          title: postData.title,
+          description: postData.description,
+        },
+      });
+
+      await prisma.analytics.create({
+        data: {
+          eventType: "add-post",
+          userid: parseInt(postData.userid),
+          clubid: parseInt(postData.clubid),
+          postid: post.postid,
+        },
+      });
+
+      if (post) {
+        res.json({ message: "Post added successfully" });
+      } else {
+        res.send("could not add post");
+      }
     }
   } catch (err) {
     console.error("Error adding post:", err);
@@ -1159,12 +1186,6 @@ app.post("/clubcreate", upload.single("clublogo"), async (req, res) => {
       },
     });
     if (createClub) {
-      await prisma.analytics.create({
-        data:{
-          clubid: createClub.clubid,
-          eventType: "create-club"
-        }
-      })
       res.send("club created");
     }
   } catch (err) {
@@ -1274,7 +1295,6 @@ app.delete("/removemod/:id", async (req, res) => {
 
 app.patch("/editprofile", async (req, res) => {
   const userdata = req.body;
-
   try {
     if (!userdata.newpassword && !userdata.oldpassword) {
       const updateUser = await prisma.users.update({
@@ -1298,6 +1318,7 @@ app.patch("/editprofile", async (req, res) => {
           userdata.oldpassword,
           user.password
         );
+        console.log(passwordMatch);
         if (passwordMatch) {
           const hashedPassword = await bcrypt.hash(userdata.newpassword, 10);
           const updateUser = await prisma.users.update({
