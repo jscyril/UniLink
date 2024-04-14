@@ -94,7 +94,7 @@ export default function CardProfile() {
   // userValue.user.clubs.map((club) => console.log(club.clubname));
   return (
     <div className="flex flex-row items-start justify-start lg:flex-1 md:self-stretch md:w-auto sm:self-stretch sm:w-auto">
-      <div className="w-[720px] h-[450px] box-border flex flex-col items-center justify-start py-0 px-5 border-[1px] rounded-md border-solid border-darkslategray-100 lg:flex-1 lg:flex-col lg:gap-[30px] md:flex-1 md:flex-col sm:w-auto sm:[align-self:unset] sm:pl-0 sm:pr-0 sm:box-border">
+      <div className="w-[747px] h-[450px] box-border flex flex-col items-center justify-start py-0 px-5 border-[1px] rounded-md border-solid border-darkslategray-100 lg:flex-1 lg:flex-col lg:gap-[30px] md:flex-1 md:flex-col sm:w-auto sm:[align-self:unset] sm:pl-0 sm:pr-0 sm:box-border">
         <div className="self-stretch flex flex-col items-center justify-start lg:self-stretch lg:w-auto">
           <div className="w-[620px] rounded-lg flex flex-col items-start justify-start lg:self-stretch lg:w-auto lg:h-auto md:self-stretch md:w-auto">
             {userValue && (
