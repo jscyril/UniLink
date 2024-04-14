@@ -36,7 +36,7 @@ export default function NotificationCard() {
             Announcements
           </h3>
         </div>
-        {postValue?.post.map((post) => (
+        {postValue?.post.slice(0,5).map((post) => (
           <Notifications key={post.postid} cardInfo={post} />
         ))}
       </div>
