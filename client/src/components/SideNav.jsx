@@ -10,7 +10,11 @@ export default function SideNav() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchClubs();
+    const loadWait = async () => {
+      await fetchClubs();
+    };
+
+    loadWait();
   }, [fetchClubs]);
 
   const handleClick = async (clubid) => {

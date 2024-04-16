@@ -104,75 +104,82 @@ function generateAccessToken(user) {
 // app.get("/", homeHandler);
 
 app.get("/", async (req, res) => {
-  try {
-    const posts = await prisma.posts.findMany({
-      include: {
-        users: {
-          select: { username: true }, // Select only username from users table
-        },
-        clubs: {
-          select: { clubname: true, clublogo: true }, // Select only clubname from clubs table
-        },
-      },
-      orderBy: { postid: "desc" },
-    });
-    // Transform the data to remove unwanted fields
-    const transformedPosts = posts.map((post) => ({
-      postid: post.postid,
-      title: post.title,
-      description: post.description,
-      timestamp: post.timestamp,
-      postlikes: post.postlikes,
-      imagepath: post.imagepath ? post.imagepath : null,
-      user: post.users ? post.users.username : null, // Retrieve username from related user
-      club: post.clubs
-        ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
-        : null,
-    }));
-
-    const userClubs = await prisma.clubmembers.findMany({
-      where: {
-        userid: userData.userId,
-      },
-      include: {
-        clubs: {
-          select: {
-            clubid: true,
-            clubname: true,
+  if (userData) {
+    try {
+      const posts = await prisma.posts.findMany({
+        include: {
+          users: {
+            select: { username: true }, // Select only username from users table
+          },
+          clubs: {
+            select: { clubname: true, clublogo: true }, // Select only clubname from clubs table
           },
         },
-      },
-      orderBy: {
-        clubs: {
-          clubname: "asc",
+        orderBy: { postid: "desc" },
+      });
+      // Transform the data to remove unwanted fields
+      const transformedPosts = posts.map((post) => ({
+        postid: post.postid,
+        title: post.title,
+        description: post.description,
+        timestamp: post.timestamp,
+        postlikes: post.postlikes,
+        imagepath: post.imagepath ? post.imagepath : null,
+        user: post.users ? post.users.username : null, // Retrieve username from related user
+        club: post.clubs
+          ? { clubname: post.clubs.clubname, clublogo: post.clubs.clublogo }
+          : null,
+      }));
+
+      const userClubs = await prisma.clubmembers.findMany({
+        where: {
+          userid: userData.userId,
         },
-      },
-      take: 5,
+        include: {
+          clubs: {
+            select: {
+              clubid: true,
+              clubname: true,
+            },
+          },
+        },
+        orderBy: {
+          clubs: {
+            clubname: "asc",
+          },
+        },
+        take: 5,
+      });
+      const events = await prisma.posts.findMany({
+        select: {
+          title: true,
+          postlikes: true,
+          postid: true,
+        },
+        orderBy: {
+          postlikes: "desc",
+        },
+        take: 5,
+      });
+      const clubs = userClubs.map((clubs) => ({
+        clubid: clubs.clubid,
+        clubname: clubs.clubs ? clubs.clubs.clubname : null,
+      }));
+      res.json({
+        username: userData.username,
+        clubs: clubs,
+        post: transformedPosts,
+        events: events,
+      });
+    } catch (error) {
+      console.error("Error retrieving posts:", error);
+      throw error;
+    }
+  } else {
+    res.status(400).json({
+      message: "Error occured, are you signed in?",
+      loggedin: req.session.user,
     });
-    const events = await prisma.posts.findMany({
-      select: {
-        title: true,
-        postlikes: true,
-        postid: true,
-      },
-      orderBy: {
-        postlikes: "desc",
-      },
-      take: 5,
-    });
-    const clubs = userClubs.map((clubs) => ({
-      clubid: clubs.clubid,
-      clubname: clubs.clubs ? clubs.clubs.clubname : null,
-    }));
-    res.json({
-      username: userData.username,
-      clubs: clubs,
-      post: transformedPosts,
-      events: events,
-    });
-  } catch (error) {
-    console.error("Error retrieving posts:", error);
-    throw error;
   }
 });
 

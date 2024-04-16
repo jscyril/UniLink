@@ -19,7 +19,6 @@ export default function Home() {
           throw new Error("Network response was not ok");
         }
         isMounted && setPostValue(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching data, home page:", error.message);
       }
