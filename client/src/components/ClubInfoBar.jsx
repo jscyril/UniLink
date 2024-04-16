@@ -11,13 +11,15 @@ export default function ClubInfoBar() {
   const [isClicked, setIsClicked] = useState(false);
   const { auth } = useAuth();
   const [userclub, setUserclub] = useState();
-  const { updateClubMembership } = useClubStore();
-  const { fetchClubs } = useClubStore();
+  const { updateClubMembership, fetchClubs } = useClubStore();
   useEffect(() => {
     let paramLocation;
     if (location.pathname.includes("post")) {
       paramLocation = "post";
-    } else if (location.pathname.includes("club")||location.pathname.includes("create")) {
+    } else if (
+      location.pathname.includes("club") ||
+      location.pathname.includes("create")
+    ) {
       paramLocation = "club";
     }
 
@@ -56,19 +58,20 @@ export default function ClubInfoBar() {
     };
     if (isClicked === false) {
       try {
-        await axios.post("/clubmember", data);
-        updateClubMembership(auth.user.userId, clubInfos.clubid);
+        const response = await axios.post("/clubmember", data);
+        await updateClubMembership(auth.user.userId, clubInfos.clubid);
         setIsClicked((prevIsClicked) => !prevIsClicked);
-        fetchClubs();
+        setUserclub(response.data.userclub);
+        await fetchClubs();
       } catch (error) {
         console.error(error);
       }
     } else {
       try {
         await axios.post("/clubmemberdelete", userclub);
-        updateClubMembership(auth.user.userId, clubInfos.clubid);
+        await updateClubMembership(data.userid, data.clubid);
         setIsClicked((prevIsClicked) => !prevIsClicked);
-        fetchClubs(); // Update club membership in Zustand store
+        await fetchClubs(); // Update club membership in Zustand store
       } catch (error) {
         console.error(error);
       }

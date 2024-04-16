@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import axios from "../api/axios";
 export default function EventsBar() {
   const [eventValue, setEventValue] = useState({
     events: [],
@@ -9,12 +9,11 @@ export default function EventsBar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000");
-        if (!response.ok) {
+        const response = await axios.get("http://localhost:3000");
+        if (!response.statusText) {
           throw new Error("Network response was not ok");
         }
-        const data = await response.json();
-        setEventValue(data);
+        setEventValue(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

@@ -37,7 +37,6 @@ const Joinbutton = ({ clubInfos }) => {
     if (!isClicked) {
       try {
         const response = await axios.post("/clubmember", data);
-        console.log(response.data.userclub);
         setUserclub(response.data.userclub);
         await updateClubMembership(data.userid, data.clubid);
         await fetchClubs();
