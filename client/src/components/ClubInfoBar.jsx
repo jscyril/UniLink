@@ -17,7 +17,7 @@ export default function ClubInfoBar() {
     let paramLocation;
     if (location.pathname.includes("post")) {
       paramLocation = "post";
-    } else if (location.pathname.includes("club")) {
+    } else if (location.pathname.includes("club")||location.pathname.includes("create")) {
       paramLocation = "club";
     }
 

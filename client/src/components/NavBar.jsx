@@ -90,7 +90,7 @@ export default function NavBar() {
         </button>
       </Link>
       {isClubPage && (isMod || isAdmin) && (
-        <Link to={`/addpost/${id}`}>
+        <Link to={`/create/${id}`}>
           <button className=" bg-transparent cursor-pointer">
             <img
               className="w-[18px] relative h-5 object-cover sm:flex"
