@@ -21,10 +21,12 @@ export default function ClubList(props) {
   return (
     <div
       key={props.clubInfo.clubid}
-      className="self-stretch flex flex-col items-center justify-start gap-[20px_0px] lg:w-auto lg:[align-self:unset] p-4 box-content rounded-md border-[1px] border-solid border-darkslategray-100">
+      className="self-stretch flex flex-col items-center justify-start gap-[20px_0px] lg:w-auto lg:[align-self:unset] p-4 box-content rounded-md border-[1px] border-solid border-darkslategray-100"
+    >
       <Link
         to={`/club/${props.clubInfo.clubid}`}
-        className="self-stretch flex flex-col items-center justify-start gap-[20px_0px] lg:w-auto lg:[align-self:unset] p-4 box-content rounded-md border-solid border-darkslategray-100">
+        className="self-stretch flex flex-col items-center justify-start gap-[20px_0px] lg:w-auto lg:[align-self:unset] p-4 box-content rounded-md border-solid border-darkslategray-100"
+      >
         <img
           className="w-[400px] relative rounded-full h-[400px] object-cover"
           alt=""

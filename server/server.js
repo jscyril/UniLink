@@ -636,8 +636,10 @@ app.post("/clubmember", async (req, res) => {
           clubid: data.clubid,
         },
       });
-
-      res.status(200).json({ message: "User added to the club successfully" });
+      res.status(200).json({
+        message: "User added to the club successfully",
+        userclub: adduser,
+      });
     } else {
       res.status(400).json({ message: "Failed to add user to the club" });
     }

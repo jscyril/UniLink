@@ -22,7 +22,7 @@ const useClubStore = create((set) => ({
         clubid: clubId,
       };
       const response = await axios.post("/follow", data);
-      if (response.data.value) {
+      if (response.data) {
         set((state) => ({
           clubs: state.clubs.map((club) =>
             club.clubid === clubId
