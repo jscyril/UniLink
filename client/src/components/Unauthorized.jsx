@@ -1,9 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 const UnauthorizedPage = () => {
   const navigate = useNavigate();
+  const { auth } = useAuth();
 
   const goBack = () => {
-    navigate(-1);
+    if (auth) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
   };
 
   return (

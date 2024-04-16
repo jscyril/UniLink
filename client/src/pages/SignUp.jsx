@@ -71,7 +71,7 @@ export default function SignUp() {
             </Link>
             <div className="flex flex-col items-center justify-start gap-[4px_0px] text-5xl text-white">
               <div className="flex flex-row items-start justify-start gap-[0px_60px]">
-                <Link to="/signIn" className=" text-inherit no-underline">
+                <Link to="/signin" className=" text-inherit no-underline">
                   <div className="relative">Sign In</div>
                 </Link>
                 <div className="relative text-mediumslateblue">Sign Up</div>

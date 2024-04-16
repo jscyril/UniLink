@@ -69,7 +69,7 @@ export default function SignIn() {
             <div className="flex flex-col items-center justify-start gap-[4px_0px] text-5xl">
               <div className="flex flex-row items-start justify-start gap-[0px_60px]">
                 <div className="relative">Sign In</div>
-                <Link to="/signUp" className=" no-underline">
+                <Link to="/signup" className=" no-underline">
                   <div className="relative text-white">Sign Up</div>
                 </Link>
               </div>

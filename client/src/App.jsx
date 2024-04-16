@@ -37,6 +37,19 @@ const App = () => {
   //   }
   // }, [auth, navigate]);
 
+  useEffect(() => {
+    // Redirect to unauthorized page if auth is null and user is not on a public page
+    console.log(window.location.pathname);
+    if (
+      auth === null &&
+      !["/", "/signin", "/signup", "/unauthorized"].includes(
+        window.location.pathname
+      )
+    ) {
+      navigate("/unauthorized");
+    }
+  }, [auth, navigate]);
+
   if (auth === null) {
     return (
       <Routes>
@@ -66,7 +79,7 @@ const App = () => {
           <Route path="/post/:id" element={<Postopen />} />
           <Route path="/clubs" element={<Clubs />} />
           <Route path="/announcements" element={<Annoucement />} />
-          <Route path="/addpost/:id" element={<CreatePost />} />
+          <Route path="/create/:id" element={<CreatePost />} />
           <Route path="/club/:id" element={<ClubOpen />} />
           <Route path="/editprofile" element={<EditProfilePage />} />
           <Route path="/editpost/:id" element={<EditPost />} />
