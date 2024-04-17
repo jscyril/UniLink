@@ -107,10 +107,9 @@ export default function ClubInfoBar() {
               ? "cursor-pointer py-[9px] px-14 bg-[transparent] rounded-full overflow-hidden flex flex-row items-center justify-center border-[1.7px] border-solid border-red-600"
               : "cursor-pointer py-[9px] px-14 bg-[transparent] rounded-full overflow-hidden flex flex-row items-center justify-center border-[1.7px] border-solid border-mediumslateblue"
           }`}
-          onClick={handleClick}
-        >
+          onClick={handleClick}>
           <div className="relative text-sm font-inter text-left text-slate-200">
-            {isClicked ? "Leave CLub" : "Join Club"}
+            {isClicked ? "Leave Club" : "Join Club"}
           </div>
         </button>
       </div>
