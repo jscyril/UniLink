@@ -16,7 +16,7 @@ import fs from "fs";
 
 const prisma = new PrismaClient();
 const app = express();
-const port = 3000;
+const port = "0.0.0.0";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const imagesFolderPath = join(__dirname, "../unilink/public");
