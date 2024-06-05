@@ -8,7 +8,9 @@ export default function CardProfile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/profile");
+        const response = await fetch(
+          "https://unilink-i3u4.onrender.com/profile"
+        );
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

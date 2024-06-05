@@ -16,7 +16,7 @@ export default function EditProfile() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/editprofile/${auth.user.userId}`
+          `https://unilink-i3u4.onrender.com/editprofile/${auth.user.userId}`
         );
         if (response.status) {
           setUserdata(response.data);
@@ -41,7 +41,7 @@ export default function EditProfile() {
       console.log(user);
       try {
         const response = await axios.patch(
-          "http://localhost:3000/editprofile",
+          "https://unilink-i3u4.onrender.com/editprofile",
           user
         );
         console.log("Data sent to server:", response.data);
@@ -61,7 +61,7 @@ export default function EditProfile() {
       };
       try {
         const response = await axios.patch(
-          "http://localhost:3000/editprofile",
+          "https://unilink-i3u4.onrender.com/editprofile",
           user
         );
         console.log("Data sent to server:", response.data);

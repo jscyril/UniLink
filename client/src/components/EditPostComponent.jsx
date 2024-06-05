@@ -68,7 +68,7 @@ export default function EditPostComponent() {
 
     try {
       const response = await axios.patch(
-        `http://localhost:3000/editpost/${id}`,
+        `https://unilink-i3u4.onrender.com/editpost/${id}`,
         postData,
         {
           headers: {

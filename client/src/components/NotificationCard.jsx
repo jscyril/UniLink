@@ -9,7 +9,7 @@ export default function NotificationCard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000");
+        const response = await fetch("https://unilink-i3u4.onrender.com");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -36,7 +36,7 @@ export default function NotificationCard() {
             Announcements
           </h3>
         </div>
-        {postValue?.post.slice(0,5).map((post) => (
+        {postValue?.post.slice(0, 5).map((post) => (
           <Notifications key={post.postid} cardInfo={post} />
         ))}
       </div>

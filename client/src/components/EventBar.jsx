@@ -9,7 +9,7 @@ export default function EventsBar() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3000");
+        const response = await axios.get("https://unilink-i3u4.onrender.com");
         if (!response.statusText) {
           throw new Error("Network response was not ok");
         }

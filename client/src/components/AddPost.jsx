@@ -26,7 +26,7 @@ export default function AddPost({ handleFile }) {
     console.log(selectedImg);
     try {
       const response = await axios.post(
-        `http://localhost:3000/addpost`,
+        `https://unilink-i3u4.onrender.com/addpost`,
         postData,
         {
           headers: {

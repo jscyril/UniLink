@@ -11,7 +11,7 @@ export default function Annoucement() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000");
+        const response = await fetch("https://unilink-i3u4.onrender.com");
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

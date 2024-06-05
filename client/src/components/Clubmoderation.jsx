@@ -8,7 +8,7 @@ export default function Clubmoderation(props) {
     console.log("CLUB ID HERE IS:", props.clubInfo.clubid);
     try {
       const response = await axios.post(
-        "http://localhost:3000/clubmoderation",
+        "https://unilink-i3u4.onrender.com/clubmoderation",
         { clubid: props.clubInfo.clubid }
       );
       if (response.statusText) {
