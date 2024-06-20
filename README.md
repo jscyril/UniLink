@@ -17,19 +17,3 @@ UniLink is a purpose-built forum designed exclusively for our college community,
     Frontend: HTML, CSS, JavaScript, React (for interactive user interface).
     Backend: Node.js, Express (handling server-side logic and API endpoints).
     Databases: PostgreSQL (for structured data management).
-
-## Screenshots:
-- Home Page:
-![image](https://github.com/jscyril/UniLink/assets/112850923/ff67248c-33bb-4d9c-a776-911cab2182fd)
-
-- Club Page:
-![image](https://github.com/jscyril/UniLink/assets/112850923/e1a3ce84-7e84-4f30-a538-61c8cce39e4a)
-
-- Profile Page:
-![image](https://github.com/jscyril/UniLink/assets/112850923/963a8da2-4d3a-466d-875c-affdf8c59553)
-
-- Post Page:
-![image](https://github.com/jscyril/UniLink/assets/112850923/4e0112dc-e23a-4c52-a602-2271a6b41be6)
-
-
-
