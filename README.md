@@ -19,4 +19,4 @@ UniLink is a purpose-built forum designed exclusively for our college community,
     Databases: PostgreSQL (for structured data management).
 
 ## Preview
-![UniLink Preview](https://github.com/jscyril/UniLink/blob/6b874e3db8756f783d8f9cb4548fbe2f75ea20fd/2024-06-29%2021-54-43.gif)
+![UniLink Preview](https://github.com/jscyril/UniLink/blob/2e0388ba387999fde1db774d630d9c8664836962/preview.mp4)
