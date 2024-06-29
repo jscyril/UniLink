@@ -18,6 +18,5 @@ UniLink is a purpose-built forum designed exclusively for our college community,
     Backend: Node.js, Express (handling server-side logic and API endpoints).
     Databases: PostgreSQL (for structured data management).
 
-## Video Preview
-[![Watch the video](https://drive.google.com/file/d/1oed88yRC6jLcS8EOeUvIXw4Vp1wGx1HA/view?usp=drive_link)](https://drive.google.com/file/d/1eP8ysg9aF02vEL8BayqW3YGK3iKbku9q/view?usp=sharing
-)
+## Preview
+![UniLink Preview](https://github.com/jscyril/UniLink/blob/6b874e3db8756f783d8f9cb4548fbe2f75ea20fd/2024-06-29%2021-54-43.gif)
