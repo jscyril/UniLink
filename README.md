@@ -1,6 +1,11 @@
 # UniLink
 
 UniLink is a purpose-built forum designed exclusively for our college community, inspired from Reddit's structure and Discord’s key features. The platform aims to serve as a hub for students to engage in discussions, share information, and foster a sense of community within our college. The project involves creating an interactive online space where members can create and explore various sub-communities tailored to different interests, academic disciplines, sports, clubs, events, and more. UniLink enables users to participate in discussions, share content, and stay updated on campus activities through an intuitive and user-friendly interface.
+
+## Preview
+
+https://github.com/jscyril/UniLink/assets/112850923/d820dcb2-d84e-415a-93ad-677193f74ebe
+
 ## KEY FEATURES:
 
     Sub-College Clubs: Segregation of discussions into distinct sub-communities representing diverse interests, clubs, events, academic departments, and extracurricular activities within the college.
@@ -17,10 +22,3 @@ UniLink is a purpose-built forum designed exclusively for our college community,
     Frontend: HTML, CSS, JavaScript, React (for interactive user interface).
     Backend: Node.js, Express (handling server-side logic and API endpoints).
     Databases: PostgreSQL (for structured data management).
-
-## Preview
-
-
-
-https://github.com/jscyril/UniLink/assets/112850923/d820dcb2-d84e-415a-93ad-677193f74ebe
-
